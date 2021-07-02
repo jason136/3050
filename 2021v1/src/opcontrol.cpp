@@ -90,21 +90,18 @@ void opcontrol() {
 			 if(abs(left) < DEAD_STICK) { left = 0; }
 			 if(abs(right) < DEAD_STICK) { right = 0; }
 
-      /*
        if(DEBUG_ON) {
 				 std::cout << "Scaling: " << scaling ;
 				 std::cout << " Left: " << left ;
 			 }
-			 */
 
        // lets do JOY stick scaling as well
 			 left = (left * scaling);
 			 right = (right * scaling);
-       /*
+
 			 if(DEBUG_ON) {
 				std::cout << " Left Scaled: " << left << "\n" ;
 			}
-			*/
 	  	 chassisSetOpcontrol(left, right);
     }
 		else if (DRIVE_MODE == 5) {    // CURRENTLY DECOMMISSIONED UNTIL FURTHER DEVELOPMENT

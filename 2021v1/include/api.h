@@ -73,4 +73,6 @@
 #include "pros/vision.hpp"
 #endif
 
+#include "pros/apix.h"
+
 #endif  // _PROS_API_H_
