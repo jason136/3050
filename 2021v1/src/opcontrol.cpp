@@ -5,9 +5,6 @@
 #include "lift.h"
 #include "tray.h"
 
-// ALL OTHER MODULE INCLUDES HERE
-
-
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -26,15 +23,10 @@ void opcontrol() {
 
 	int left = 0;					// left motor speed control
 	int right = 0;				// right motor speed control
-
 	double scaling = 1.0;
-
 	extern int selection;
 
-	bool autoRun = true;
-
 	while (true) {
-
 		if (DRIVE_MODE == 1) {
 			// We want to do X-Drive TANK control
 			int rightX = master.get_analog(ANALOG_RIGHT_X);
@@ -46,7 +38,10 @@ void opcontrol() {
 			if(abs(rightY) < DEAD_STICK) { rightY = 0; }
 			if(abs(leftX) < DEAD_STICK) { leftX = 0; }
 			if(abs(leftY) < DEAD_STICK) { leftY = 0; }
-
+			rightX = (rightX * scaling);
+			rightY = (rightY * scaling);
+			leftX = (leftX * scaling);
+			leftY = (leftY * scaling);
 
 			setIndividualMotor((rightY - average(rightX, leftX)),
 				 								 (leftY + average(rightX, leftX)),
@@ -64,6 +59,10 @@ void opcontrol() {
 			if(abs(rightY) < DEAD_STICK) { rightY = 0; }
 			if(abs(leftX) < DEAD_STICK) { leftX = 0; }
 			if(abs(leftY) < DEAD_STICK) { leftY = 0; }
+			rightX = (rightX * scaling);
+			rightY = (rightY * scaling);
+			leftX = (leftX * scaling);
+			leftY = (leftY * scaling);
 
 			setIndividualMotor((rightY - leftX - rightX),
 			 									 (rightY + leftX + rightX),
@@ -75,9 +74,10 @@ void opcontrol() {
 	    left = master.get_analog(ANALOG_LEFT_Y);
 		  right = master.get_analog(ANALOG_LEFT_X);
 
-			// implemenet dead stick control
 			if(abs(left) < DEAD_STICK) { left = 0; }
 			if(abs(right) < DEAD_STICK) { right = 0; }
+			right = (right * scaling);
+			left = (left * scaling);
 
 			 chassisSetOpcontrol(left + right, left - right);
     }
@@ -89,22 +89,12 @@ void opcontrol() {
 			 // implemenet dead stick control
 			 if(abs(left) < DEAD_STICK) { left = 0; }
 			 if(abs(right) < DEAD_STICK) { right = 0; }
+ 			right = (right * scaling);
+ 			left = (left * scaling);
 
-       if(DEBUG_ON) {
-				 std::cout << "Scaling: " << scaling ;
-				 std::cout << " Left: " << left ;
-			 }
-
-       // lets do JOY stick scaling as well
-			 left = (left * scaling);
-			 right = (right * scaling);
-
-			 if(DEBUG_ON) {
-				std::cout << " Left Scaled: " << left << "\n" ;
-			}
 	  	 chassisSetOpcontrol(left, right);
     }
-		else if (DRIVE_MODE == 5) {    // CURRENTLY DECOMMISSIONED UNTIL FURTHER DEVELOPMENT
+		else if (DRIVE_MODE == 5) {    // decomissioned until further testing
 			int leftX;
 		  int leftY;
 
@@ -141,6 +131,7 @@ void opcontrol() {
 
 		}
 
+		// end chassis control, below is other modules only
 		if (master.get_digital(DIGITAL_R1)) {
 			rollerForward(600);
 		}

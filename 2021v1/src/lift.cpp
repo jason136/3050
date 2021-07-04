@@ -7,8 +7,9 @@ pros::Motor liftMotor(LIFT_MOTOR);
 void liftSetZero(int speed) {
   // resets encoders of the lift Motor
   liftMotor.tare_position();
+
   if(DEBUG_ON){
-    std::cout << "Lift ZERO point reset \n";
+    std::cout << "lift encoder reset \n";
   }
 }
 
@@ -16,13 +17,13 @@ void liftRaiseManual(int speed) {
   // Raises lift manual based using speed provided
   // Don't allow movement past lowest point and past upper point of mechanical limits of lift
   // We can't use encoder for that as it will bypass it - we need likely mechanical switch for safety
-  // So for now there is NO SAFETY stop
-  if(DEBUG_ON){
-    std::cout << "In Lift Raise Manual function -- Speed: " << speed ;
-    std::cout << " Current Encoder: " << liftMotor.get_position() << "\n";
-  }
+  // For now there is NO SAFETY stop
   liftMotor.move_velocity(speed);
-  pros::delay(2);
+
+  if(DEBUG_ON){
+    std::cout << "life manual raise speed: " << speed ;
+    std::cout << " Lift Encoder: " << liftMotor.get_position() << "\n";
+  }
 }
 
 void liftRaiseForEncoder(int speed, int encDegrees) {
@@ -31,7 +32,6 @@ void liftRaiseForEncoder(int speed, int encDegrees) {
   // mechanical cability
   int moveDegrees = liftMotor.get_position() + encDegrees;   // take current position and add
                                                               // requested movement to it
-
   // allow movement we are within bounderies
   int upperBound = moveDegrees + 5;
   int lowerBound = moveDegrees - 5;
@@ -40,25 +40,27 @@ void liftRaiseForEncoder(int speed, int encDegrees) {
     moveDegrees = 0;  // Can't move past below 0 point!
   }
 
+  // reset lift encoders
+  liftMotor.tare_position();
   if (!((moveDegrees > lowerBound) && (moveDegrees < upperBound))) {
     // we can move
     liftMotor.move_absolute(moveDegrees, speed); // Moves given position
     while (!((liftMotor.get_position() < upperBound) && (liftMotor.get_position() > lowerBound))) {
-        // Continue running this loop as long as the motor is not within +-5 units of its goal
+      // Continue running this loop as long as the motor is not within +-5 units of its goal
+      pros::delay(2);
+
+      if(DEBUG_ON) {
+        std::cout << "EncDegrees " << encDegrees << " moveDegrees: " << moveDegrees;
+        std::cout << " Current Deg: " << liftMotor.get_position() << "\n";
         pros::delay(2);
+      }
     }
-  }
-  if(DEBUG_ON) {
-    std::cout << "EncDegrees " << encDegrees << " moveDegrees: " << moveDegrees;
-    std::cout << " Current Deg: " << liftMotor.get_position() << "\n";
-    pros::delay(2);
   }
 }
 
-void liftLockMode() {
+float liftBrakeMode() {
   // get the current lift lock mode of the break
-  std::cout << "Brake Mode: " << liftMotor.get_brake_mode() << "\n";
-  pros::delay(10);
+  return liftMotor.get_brake_mode();
 }
 
 void liftLock() {
@@ -72,9 +74,7 @@ void liftLock() {
 }
 
 void liftEncoderValue() {
-  // gets the encoder value and prints it to the std::std::cout
-  std::cout << "Lift Encoder: -- M1: " << liftMotor.get_position();
-  pros::delay(2);
+  std::cout << "Lift Encoder: " << liftMotor.get_position();
 }
 
 void liftRaise(int speed, int level) {
@@ -122,7 +122,6 @@ void liftRaise(int speed, int level) {
       break;
   }
   if(DEBUG_ON){
-    std::cout << "Lift Encoder: -- M1: " << liftMotor.get_position();
-    pros::delay(2);           // Give thread time to catch up.
+    std::cout << "Lift Encoder: " << liftMotor.get_position();
   }
 }
