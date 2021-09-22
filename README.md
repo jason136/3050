@@ -1,2 +1,3 @@
 # VEX3050B
-Team code for Vex team 3050C at PVPHS
+
+Operating code for Vex robotics team 3050B at PVPHS. 
