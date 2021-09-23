@@ -5,6 +5,7 @@
 #include "chassis.h"
 #include "lift.h"
 #include "roller.h"
+#include "screen.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.

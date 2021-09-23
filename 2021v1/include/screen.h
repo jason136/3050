@@ -5,6 +5,6 @@
 
 void drawScreen();
 
-
+extern int autonomousPreSet;
 
 #endif
