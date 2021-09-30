@@ -17,22 +17,16 @@
 	lv_style_t * autonButtonStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(235, 235, 52), LV_COLOR_MAKE(0, 0, 0),
 	LV_COLOR_MAKE(255, 38, 0), LV_COLOR_MAKE(0, 255, 68), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
-	lv_obj_t * autonButtons = (lv_obj_t*)malloc(sizeof(lv_obj_t) * 8);
-
-
-	for (int x = 0; x < 8; x++) {
-		autonButtons[x] = lv_btn_create(parent, NULL);
-	}
+	lv_obj_t * autonButtons = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 8);
 
 static lv_res_t btn_click_action(lv_obj_t * btn) {
 		uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
 
-		if(id == 0) {
+		if(id > -1) {
 			char buffer[100];
 		 sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
 		 lv_label_set_text(label, buffer);
-		 btnSetToggled(btn, buttonToggle);
-		 buttonToggle = !buttonToggle;
+		 lv_btn_toggle(btn);
 		}
 		return LV_RES_OK;
 }
@@ -61,16 +55,42 @@ void initialize() {
 	pros::Motor right_roller_motor(RIGHT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor left_roller_motor(LEFT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-	autonButtons[0] = createBtn(lv_scr_act(), 25, 25, 100, 50, 1, "butt1");
-	autonButton = createBtn(lv_scr_act(), 25, 25, 100, 50, 2, "butt2");
+  memcpy(&autonButtons[0], createBtn(lv_scr_act(), 100, 100, 100, 50, 0, "btn0"), sizeof(lv_obj_t));
+	setBtnStyle(autonButtonStyle, &autonButtons[0]);
 
-	lv_obj_set_free_num(autonButton, 0);
-	lv_btn_set_action(autonButton, LV_BTN_ACTION_CLICK, btn_click_action);
-	setBtnStyle(autonButtonStyle, autonButton);
+  autonButton = createBtn(lv_scr_act(), 80, 50, 150, 50, 1, "btn1");
+  setBtnStyle(autonButtonStyle, autonButton);
+  memcpy(&autonButtons[1], autonButton, sizeof(lv_obj_t));
+
+  autonButton = createBtn(lv_scr_act(), 240, 50, 150, 50, 2, "btn2");
+  setBtnStyle(autonButtonStyle, autonButton);
+  memcpy(&autonButtons[2], autonButton, sizeof(lv_obj_t));
+
+  memcpy(&autonButtons[3], createBtn(lv_scr_act(), 25, 75, 100, 50, 3, "btn3"), sizeof(lv_obj_t));
+
+  memcpy(&autonButtons[4], createBtn(lv_scr_act(), 125, 75, 100, 50, 4, "btn4"), sizeof(lv_obj_t));
+
+  memcpy(&autonButtons[5], createBtn(lv_scr_act(), 250, 75, 100, 50, 5, "btn5"), sizeof(lv_obj_t));
+
+  memcpy(&autonButtons[6], createBtn(lv_scr_act(), 300, 100, 100, 50, 6, "btn6"), sizeof(lv_obj_t));
+
+  memcpy(&autonButtons[7], createBtn(lv_scr_act(), 300, 100, 100, 50, 7, "btn7"), sizeof(lv_obj_t));
+
+//memcpy(&autonButtons[0], createBtn(lv_scr_act(), 25, 25, 100, 50, 1, "butt1"), sizeof(lv_obj_t));
+
+	for (int x = 0; x < 8; x++) {
+    lv_obj_set_free_num(&autonButtons[0], 0);
+	  lv_btn_set_action(&autonButtons[x], LV_BTN_ACTION_CLICK, btn_click_action);
+	}
+
+  // autonButton = createBtn(lv_scr_act(), 25, 25, 100, 50, 0, "btn0");
+	// lv_obj_set_free_num(autonButton, 0);
+	// lv_btn_set_action(autonButton, LV_BTN_ACTION_CLICK, btn_click_action);
+	// setBtnStyle(autonButtonStyle, autonButton);
 
 	label = lv_label_create(lv_scr_act(), NULL);
-	lv_label_set_text(label, "Button has not been clicked yet"); //sets label text
-	lv_obj_align(label, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0); //set the position to center
+	lv_label_set_text(label, "Button has not been clicked yet");
+	lv_obj_align(label, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0);
 
 }
 

@@ -39,23 +39,23 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
 
     btnStyle[0].body.main_color = rel;
     btnStyle[0].body.grad_color = rel;
-    btnStyle[0].body.border.width = 10;
+    btnStyle[0].body.border.width = 5;
     btnStyle[0].text.color = textColor;
 
     btnStyle[1].body.main_color = pr;
     btnStyle[1].body.grad_color = pr;
-    btnStyle[1].body.border.width = 10;
+    btnStyle[1].body.border.width = 5;
     btnStyle[1].text.color = textColor;
 
     btnStyle[2].body.main_color = tglRel;
     btnStyle[2].body.grad_color = tglRel;
-    btnStyle[2].body.border.width = 10;
+    btnStyle[2].body.border.width = 5;
     btnStyle[2].body.border.color = tglBorder;
     btnStyle[2].text.color = textColor;
 
     btnStyle[3].body.main_color = tglPr;
     btnStyle[3].body.grad_color = tglPr;
-    btnStyle[3].body.border.width = 10;
+    btnStyle[3].body.border.width = 5;
     btnStyle[3].body.border.color = tglBorder;
     btnStyle[3].text.color = textColor;
 
