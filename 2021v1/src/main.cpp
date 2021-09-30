@@ -7,6 +7,36 @@
 #include "roller.h"
 #include "screen.h"
 
+  lv_obj_t * autonButton;
+	bool buttonToggle = false;
+  lv_obj_t * autonButtunLabel;
+  lv_obj_t * label;
+  lv_obj_t * testImage;
+
+	lv_style_t * defaultStyle = &lv_style_plain;
+	lv_style_t * autonButtonStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(235, 235, 52), LV_COLOR_MAKE(0, 0, 0),
+	LV_COLOR_MAKE(255, 38, 0), LV_COLOR_MAKE(0, 255, 68), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+
+	lv_obj_t * autonButtons = (lv_obj_t*)malloc(sizeof(lv_obj_t) * 8);
+
+
+	for (int x = 0; x < 8; x++) {
+		autonButtons[x] = lv_btn_create(parent, NULL);
+	}
+
+static lv_res_t btn_click_action(lv_obj_t * btn) {
+		uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
+
+		if(id == 0) {
+			char buffer[100];
+		 sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
+		 lv_label_set_text(label, buffer);
+		 btnSetToggled(btn, buttonToggle);
+		 buttonToggle = !buttonToggle;
+		}
+		return LV_RES_OK;
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -31,7 +61,17 @@ void initialize() {
 	pros::Motor right_roller_motor(RIGHT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor left_roller_motor(LEFT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-	drawScreen();
+	autonButtons[0] = createBtn(lv_scr_act(), 25, 25, 100, 50, 1, "butt1");
+	autonButton = createBtn(lv_scr_act(), 25, 25, 100, 50, 2, "butt2");
+
+	lv_obj_set_free_num(autonButton, 0);
+	lv_btn_set_action(autonButton, LV_BTN_ACTION_CLICK, btn_click_action);
+	setBtnStyle(autonButtonStyle, autonButton);
+
+	label = lv_label_create(lv_scr_act(), NULL);
+	lv_label_set_text(label, "Button has not been clicked yet"); //sets label text
+	lv_obj_align(label, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0); //set the position to center
+
 }
 
 /**
