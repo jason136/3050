@@ -7,8 +7,6 @@
 
 using namespace pros;
 
-
-
 lv_obj_t * createBtn(lv_obj_t * parent, lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height,
    int id, const char * title);
 
@@ -21,6 +19,6 @@ void btnSetToggled(lv_obj_t * btn, bool toggled);
 
 static lv_res_t btn_click_action(lv_obj_t * btn);
 
-void drawScreen();
+lv_obj_t * createPage();
 
 #endif

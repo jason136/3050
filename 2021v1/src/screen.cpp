@@ -40,11 +40,13 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
     btnStyle[0].body.main_color = rel;
     btnStyle[0].body.grad_color = rel;
     btnStyle[0].body.border.width = 5;
+    btnStyle[2].body.border.color = tglBorder;
     btnStyle[0].text.color = textColor;
 
     btnStyle[1].body.main_color = pr;
     btnStyle[1].body.grad_color = pr;
     btnStyle[1].body.border.width = 5;
+    btnStyle[2].body.border.color = tglBorder;
     btnStyle[1].text.color = textColor;
 
     btnStyle[2].body.main_color = tglRel;
@@ -71,6 +73,14 @@ void setBtnStyle(lv_style_t * btnStyle, lv_obj_t * btn) {
 
 void btnSetToggled(lv_obj_t * btn, bool toggled) {
     if(toggled != (lv_btn_get_state(btn) >= 2)) lv_btn_toggle(btn);
+}
+
+lv_obj_t * createPage() {
+  lv_obj_t * page = lv_page_create(lv_scr_act(), NULL);
+  lv_obj_set_size(page, 480, 240);
+  lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_set_hidden(page, true);
+  return page;
 }
 
 /*
