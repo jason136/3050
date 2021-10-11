@@ -7,13 +7,14 @@
 #include "roller.h"
 #include "screen.h"
 
-  lv_obj_t * autonSelect;
+  extern const lv_img_dsc_t field_image;
 
+  lv_obj_t * autonSelect;
   lv_obj_t * autonButton;
 	bool buttonToggle = false;
   lv_obj_t * autonButtunLabel;
   lv_obj_t * label;
-  lv_obj_t * testImage;
+  lv_obj_t * fieldImage;
 
 	lv_style_t * defaultStyle = &lv_style_plain;
 
@@ -72,12 +73,12 @@ void initialize() {
   autonSelect = createPage();
   lv_obj_set_hidden(autonSelect, false);
 
-  autonButton = createBtn(autonSelect, 70, 100, 150, 50, 1, "btn0");
-  setBtnStyle(blueStyle, autonButton);
+  autonButton = createBtn(autonSelect, 70, 0, 150, 50, 1, "btn0");
+  setBtnStyle(redStyle, autonButton);
   memcpy(&autonButtons[0], autonButton, sizeof(lv_obj_t));
 
   autonButton = createBtn(autonSelect, 230, 0, 150, 50, 1, "btn1");
-  setBtnStyle(redStyle, autonButton);
+  setBtnStyle(blueStyle, autonButton);
   memcpy(&autonButtons[1], autonButton, sizeof(lv_obj_t));
 
   autonButton = createBtn(autonSelect, 50, 60, 80, 50, 1, "btn2");
@@ -96,13 +97,21 @@ void initialize() {
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[5], autonButton, sizeof(lv_obj_t));
 
-  autonButton = createBtn(autonSelect, 380, 160, 80, 50, 1, "btn4");
+  autonButton = createBtn(autonSelect, 380, 160, 80, 50, 2, "btn4");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[6], autonButton, sizeof(lv_obj_t));
 
-	for (int x = 0; x < 8; x++) {
+	for (int x = 0; x < 7; x++) {
 	  lv_btn_set_action(&autonButtons[x], LV_BTN_ACTION_CLICK, btn_click_action);
 	}
+
+  LV_IMG_DECLARE(field_image);
+  lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(img1, &field_image);
+  lv_obj_set_size(img1, 170, 170);
+  lv_obj_set_pos(img1, 150, 68);
+
+
 
   // autonButton = createBtn(lv_scr_act(), 25, 25, 100, 50, 0, "btn0");
 	// lv_obj_set_free_num(autonButton, 0);

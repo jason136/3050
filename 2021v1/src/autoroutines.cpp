@@ -12,10 +12,6 @@
  **/
 
  void skillRun() {
-   pros::lcd::print(2, "Auto: autoSkills");
-   if (DEBUG_ON) {
-     std::cout << "Running Auto - autoSkills Code " << "\n";
-   }
 
    // Old code below use only for reference. ie delete
    liftSetZero(0);
@@ -40,30 +36,18 @@
  }
 
  void autoRedLeft() {
-   pros::lcd::print(2, "Auto:  autoRedLeft");
-   if (DEBUG_ON) {
-     std::cout << "Running Auto - autoRedLeft Code " << "\n";
-   }
 
    // Code Here
 
  }
 
  void autoBlueLeft() {
-   pros::lcd::print(2, "Auto:  autoBlueLeft");
-   if (DEBUG_ON) {
-     std::cout << "Running Auto - autoBlueLeft Code " << "\n";
-   }
 
    // Code Here
 
  }
 
  void autoRedRight() {
-   pros::lcd::print(2, "Auto:  autoRedRight");
-   if (DEBUG_ON) {
-     std::cout << "Running Auto - autoRedRight Code " << "\n";
-   }
 
    // Code Here
 
@@ -71,10 +55,6 @@
 
 
  void autoBlueRight() {
-    pros::lcd::print(2, "Auto:  autoBlueRight");
-    if (DEBUG_ON) {
-      std::cout << "Running Auto - autoBlueRight Code " << "\n";
-    }
 
     // Code Here penis
 

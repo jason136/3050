@@ -26,7 +26,7 @@
 // LEGACY Port Assignments
 
 // GLOBAL DEBUGGING Variables
-#define DEBUG_ON true
+#define DEBUG_ON false
 
 #define VEXNET_MANUAL true        // turns opcontrol into allowing for
                                   // testing autonomous code
