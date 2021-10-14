@@ -22,7 +22,7 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 	int left = 0;					// left motor speed control
-	int right = 0;				// right motor speed control
+	int right = 0;					// right motor speed control
 	double scaling = 1.0;
 	extern int selection;
 
@@ -70,30 +70,33 @@ void opcontrol() {
 												 (rightY + leftX - rightX));
 		}
 		else if (DRIVE_MODE == 3) {
-			// We are wanting to do standard ARCADE control
-	    left = master.get_analog(ANALOG_LEFT_Y);
-		  right = master.get_analog(ANALOG_LEFT_X);
+       		// we are wanting to do standard TANK Control
+			left = master.get_analog(ANALOG_LEFT_Y);
+			right = master.get_analog(ANALOG_RIGHT_Y);
 
+			// implemenet dead stick control
 			if(abs(left) < DEAD_STICK) { left = 0; }
 			if(abs(right) < DEAD_STICK) { right = 0; }
-			right = (right * scaling);
-			left = (left * scaling);
-
-			 chassisSetOpcontrol(left + right, left - right);
-    }
-		else if (DRIVE_MODE == 4) {
-       // we are wanting to do standard TANK Control
-			 left = master.get_analog(ANALOG_LEFT_Y);
-			 right = master.get_analog(ANALOG_RIGHT_Y);
-
-			 // implemenet dead stick control
-			 if(abs(left) < DEAD_STICK) { left = 0; }
-			 if(abs(right) < DEAD_STICK) { right = 0; }
+			// implement scaling
  			right = (right * scaling);
  			left = (left * scaling);
 
-	  	 chassisSetOpcontrol(left, right);
-    }
+	  	 	chassisSetOpcontrol(left, right);
+    	}
+		else if (DRIVE_MODE == 4) {
+			// We are wanting to do standard ARCADE control
+	    	left = master.get_analog(ANALOG_LEFT_Y);
+		  	right = master.get_analog(ANALOG_LEFT_X);
+
+			// implemenet dead stick control
+			if(abs(left) < DEAD_STICK) { left = 0; }
+			if(abs(right) < DEAD_STICK) { right = 0; }
+			// implement scaling
+			right = (right * scaling);
+			left = (left * scaling);
+
+			chassisSetOpcontrol(left + right, left - right);
+    	}
 		else if (DRIVE_MODE == 5) {    // decomissioned until further testing
 			int leftX;
 		  int leftY;

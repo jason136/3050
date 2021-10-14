@@ -1,5 +1,5 @@
 #include "main.h"
-#include "init.h"
+#include "api.h"
 #include "portdef.h"
 #include "auto.h"
 #include "chassis.h"
@@ -9,9 +9,10 @@
 
   extern const lv_img_dsc_t field_image;
 
+  int selection;
+
   lv_obj_t * autonSelect;
   lv_obj_t * autonButton;
-	bool buttonToggle = false;
   lv_obj_t * autonButtunLabel;
   lv_obj_t * label;
   lv_obj_t * fieldImage;
@@ -73,31 +74,30 @@ void initialize() {
   autonSelect = createPage();
   lv_obj_set_hidden(autonSelect, false);
 
-  autonButton = createBtn(autonSelect, 70, 0, 150, 50, 1, "btn0");
-  setBtnStyle(redStyle, autonButton);
-  memcpy(&autonButtons[0], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 230, 0, 150, 50, 1, "btn1");
-  setBtnStyle(blueStyle, autonButton);
-  memcpy(&autonButtons[1], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 50, 60, 80, 50, 1, "btn2");
+  autonButton = createBtn(autonSelect, 50, 60, 80, 50, 1, "1");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[2], autonButton, sizeof(lv_obj_t));
 
-  autonButton = createBtn(autonSelect, 320, 60, 80, 50, 1, "btn3");
+  autonButton = createBtn(autonSelect, 320, 60, 80, 50, 1, "1");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[3], autonButton, sizeof(lv_obj_t));
 
-  autonButton = createBtn(autonSelect, 50, 120, 80, 50, 1, "btn2");
+  autonButton = createBtn(autonSelect, 50, 120, 80, 50, 1, "2");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[4], autonButton, sizeof(lv_obj_t));
 
-  autonButton = createBtn(autonSelect, 320, 120, 80, 50, 1, "btn3");
+  autonButton = createBtn(autonSelect, 320, 120, 80, 50, 1, "2");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[5], autonButton, sizeof(lv_obj_t));
 
-  autonButton = createBtn(autonSelect, 380, 160, 80, 50, 2, "btn4");
+  autonButton = createBtn(autonSelect, 70, 0, 150, 50, 1, "Red");
+  setBtnStyle(redStyle, autonButton);
+  memcpy(&autonButtons[0], autonButton, sizeof(lv_obj_t));
+  autonButton = createBtn(autonSelect, 230, 0, 150, 50, 2, "Blue");
+  setBtnStyle(blueStyle, autonButton);
+  memcpy(&autonButtons[1], autonButton, sizeof(lv_obj_t));
+
+  autonButton = createBtn(autonSelect, 400, 120, 140, 50, 2, "select");
   setBtnStyle(autonLocStyle, autonButton);
   memcpy(&autonButtons[6], autonButton, sizeof(lv_obj_t));
 
@@ -109,7 +109,7 @@ void initialize() {
   lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(img1, &field_image);
   lv_obj_set_size(img1, 170, 170);
-  lv_obj_set_pos(img1, 150, 68);
+  lv_obj_set_pos(img1, 160, 68);
 
 
 

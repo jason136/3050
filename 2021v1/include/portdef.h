@@ -3,10 +3,10 @@
 
 // Motor Port Definitions
 // Drive Base Motors
-#define FRONT_RIGHT_MOTOR_PORT 1
-#define FRONT_LEFT_MOTOR_PORT 2
-#define BACK_RIGHT_MOTOR_PORT 3
-#define BACK_LEFT_MOTOR_PORT 4
+#define FRONT_RIGHT_MOTOR_PORT 20
+#define FRONT_LEFT_MOTOR_PORT 10
+#define BACK_RIGHT_MOTOR_PORT 8
+#define BACK_LEFT_MOTOR_PORT 1
 
 // Tray Motor
 #define TRAY_MOTOR_PORT 5

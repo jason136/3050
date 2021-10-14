@@ -4,10 +4,9 @@
 // header file.
 
 #define WHEEL_DIAMETER 4      // diameter of drive wheels
-#define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal measured
-                              // of chassis.
+#define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal 
 
-#define DRIVE_MODE 2          // 1 for x-drive TANK
+#define DRIVE_MODE 3          // 1 for x-drive TANK
                               // 2 for x-drive ARDCADE
                               // 3 for standard TANK
                               // 4 for standard ARCADE
@@ -24,8 +23,8 @@
 #define MOTOR_MAX_SPEED 200   // Robot has 36 gearset (RED) for 18 gearset (GREEN) -- 200
                               // for 06 (BLUE) -- 600
 
-void driveRobot(int speed);   // function declaration - drives robot forward/backward
-                              // indefinite untill next action
+// function declaration - drives robot forward/backward indefinite untill next action
+void driveRobot(int speed);   
 
 // Sets the speeds of the left and right wheels of the chassis
 void chassisSetOpcontrol(int left, int right);

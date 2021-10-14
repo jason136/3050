@@ -25,7 +25,7 @@ void chassisSetOpcontrol(int left, int right) {
   back_right_motor.move(right);
   back_left_motor.move(left);
 
-  if(DEBUG_ON){
+  if(true) {
     std::cout << "Right RPM: " << front_right_motor.get_actual_velocity();
     std::cout << "Left RPM: " << front_left_motor.get_actual_velocity() << "\n";
   }
@@ -37,7 +37,7 @@ void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
   back_right_motor.move_velocity(BRight);
   back_left_motor.move_velocity(BLeft);
 
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
     std::cout << "Front Right RPM: " << front_right_motor.get_actual_velocity();
     std::cout << "Front Left RPM: " << front_left_motor.get_actual_velocity();
     std::cout << "Back Right RPM: " << back_right_motor.get_actual_velocity();
@@ -52,7 +52,7 @@ void chassisStopDrive() {
   back_right_motor.move(0);
   back_left_motor.move(0);
 
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
     std::cout << "chassis stop \n";
   }
 }
@@ -63,7 +63,7 @@ void resetChassisEncoders() {
   back_right_motor.tare_position();
   back_left_motor.tare_position();
 
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
     std::cout << "chassis clear encoders \n";
   }
 }
@@ -109,7 +109,7 @@ void driveForDistancePID(int distance, int speed) {
   // we have reached our desired distance, stop the motors.
   chassisStopDrive();
 
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
     std::cout << "Encoder Left: " << front_left_motor.get_position();
     std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
   }
@@ -153,7 +153,7 @@ void pivotTurn(int speed, long turnAngle) {
   // We first need to reset all the encoders
   resetChassisEncoders();
 
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
     std::cout << " RESET -- Encoder Left: " << front_left_motor.get_position();
     std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
     std::cout << "motorUpper: " << motorUpper << " motorLower: " << motorLower << "\n";
@@ -179,7 +179,7 @@ void pivotTurn(int speed, long turnAngle) {
         std::cout << " Encoder Right: " << front_left_motor.get_position() << "\n";
       } */
   }
-  if(DEBUG_ON){
+  if(DEBUG_ON) {
       std::cout << "Encoder Left: " << front_left_motor.get_position();
       std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
   }

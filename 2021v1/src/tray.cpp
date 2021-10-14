@@ -12,7 +12,7 @@ void trayBackward(int speed) {
   trayMotor.move_velocity(-speed);
 }
 
-void trayStop(int speed) {
+void trayStop() {
   trayMotor.move_velocity(0);
 }
 
@@ -28,9 +28,9 @@ void rollerSpinForEncoder(int speed, int encDegrees) {
 }
 
 void trayLock() {
+  trayMotor.move_velocity(0);
   if(trayMotor.get_brake_mode() != 2 ) {
     trayMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-  trayMotor.move_velocity(0);
   pros::delay(2);
 }

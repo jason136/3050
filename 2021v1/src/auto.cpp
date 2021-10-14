@@ -8,9 +8,8 @@
 
 /**
  * This is where all the various autonomous routines are located
- * and subsequently called by the autonomous() selector based on LCD input
+ * and subsequently called by the autonomous() selector based on GUI input
  **/
-
  void skillRun() {
 
    // Old code below use only for reference. ie delete
