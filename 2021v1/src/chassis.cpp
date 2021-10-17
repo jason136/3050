@@ -28,6 +28,7 @@ void chassisSetOpcontrol(int left, int right) {
   if(true) {
     std::cout << "Right RPM: " << front_right_motor.get_actual_velocity();
     std::cout << "Left RPM: " << front_left_motor.get_actual_velocity() << "\n";
+    std::cout << typeid(front_right_motor.get_actual_velocity()).name() << '\n';
   }
 }
 
@@ -188,14 +189,15 @@ void pivotTurn(int speed, long turnAngle) {
   chassisStopDrive();
 }
 
-double* getDiag() {
-  double buffer[4] = {
-    front_right_motor.get_actual_velocity(), 
-    front_left_motor.get_actual_velocity(),
-    back_right_motor.get_actual_velocity(),
-    back_left_motor.get_actual_velocity()
-  };
-  return buffer;
+void getDiag(double * buffer) {
+  // buffer[0] = front_right_motor.get_actual_velocity();
+  // buffer[1] = front_left_motor.get_actual_velocity();
+  // buffer[2] = back_right_motor.get_actual_velocity();
+  // buffer[3] = back_left_motor.get_actual_velocity();
+  buffer[0] = 5.0;
+  buffer[1] = 5.0;
+  buffer[2] = 5.0;
+  buffer[3] = 5.0;
 }
 
 int average(int x, int y) {

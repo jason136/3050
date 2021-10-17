@@ -23,7 +23,6 @@ void drawMenu();
 
 void drawAuton();
 
-extern char motorData[500];
 extern lv_obj_t * diagLabel;
 
 void drawDiag();

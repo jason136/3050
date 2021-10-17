@@ -50,7 +50,7 @@ void driveForDistancePID(int distance, int speed);
 void pivotTurn(int speed, long angle);
 
 // return motor diagnostics data for screen
-double* getDiag();
+void getDiag(double * buffer);
 
 int average(int x, int y);
 

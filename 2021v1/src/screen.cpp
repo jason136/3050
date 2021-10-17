@@ -87,10 +87,12 @@ lv_obj_t * diagScreen = lv_obj_create(NULL, NULL);
 
 lv_obj_t * tempButton;
 lv_obj_t * menuButton;
+lv_obj_t * toggledBtn;
+
 lv_obj_t * autonButtunLabel;
 lv_obj_t * autonLabel;
+lv_obj_t * diagLabel = NULL;
 lv_obj_t * fieldImage;
-lv_obj_t * toggledBtn;
 
 lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
 LV_COLOR_MAKE(100, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
@@ -109,6 +111,7 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
     switch(id) {
       case 0:
         lv_obj_clean(lv_scr_act());
+        diagLabel = NULL;
         drawMenu();
         break;
       case 1:
@@ -132,7 +135,7 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
       toggledBtn = btn;
       btnSetToggled(btn, true);
       char buffer[100];
-      sprintf(buffer, "Autonomous routine \nselected: %i", autonomousPreSet);
+      sprintf(buffer, "Auton routine \nselected: %i", autonomousPreSet);
       lv_label_set_text(autonLabel, buffer);
       }
     }
@@ -186,7 +189,7 @@ void drawAuton() {
   
   menuButton = createBtn(lv_scr_act(), 20, 184, 140, 50, 0, "Menu", standardStyle);
 
-  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 50, 106, "Skills", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 50, 107, "Skills", standardStyle);
   memcpy(&autonObjs[6], tempButton, sizeof(lv_obj_t));
   
   LV_IMG_DECLARE(field_image);
@@ -196,16 +199,16 @@ void drawAuton() {
   lv_obj_align(imageObj, NULL, LV_ALIGN_IN_TOP_MID, 0, 8);
 
 	autonLabel = lv_label_create(lv_scr_act(), NULL);
-	lv_label_set_text(autonLabel, "Autonomous routine \nselected: ");
-	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, 5, 85);
+	lv_label_set_text(autonLabel, "Auton routine \nselected: ");
+	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 90);
 }
-
-char motorData[500] = "";
-lv_obj_t * diagLabel = lv_label_create(lv_scr_act(), NULL);
 
 void drawDiag() {
   lv_scr_load(diagScreen);
-  lv_obj_align(diagLabel, NULL, LV_ALIGN_IN_RIGHT_MID, 10, 0);
-  sprintf(motorData, "hello");
-  lv_label_set_text(diagLabel, motorData);
+  
+  diagLabel = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_align(diagLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
+
+  menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", standardStyle);
+	lv_obj_align(menuButton, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -10, -10);
 }

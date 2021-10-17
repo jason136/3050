@@ -6,6 +6,9 @@
 #include "tray.h"
 #include "screen.h"
 
+char motorData[500];
+double buffer[4];
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -169,17 +172,18 @@ void opcontrol() {
 		pros::delay(20);
 
 		// Send data to Diagnostics screen when it's active
-		if (diagLabel != nullptr) {
-			double * buffer = getDiag();
+		if (diagLabel != NULL) {
+			getDiag(&buffer[0]);
 			sprintf(motorData, 
-			"Front Right Motor Velocity: %d" 
-			"Front Left Motor Velocity: %d" 
-			"Back Right Motor Velocity: %d" 
-			"Back Left Motor Velocity: %d",
-			buffer[0], 
+			"Fnt R Mtr V: %d\n" 
+			"Fnt L Mtr V: %d\n" 
+			"Bck R Mtr V: %d\n" 
+			"Bck L Mtr V: %d\n",
+			buffer[0],
 			buffer[1],
 			buffer[2],
 			buffer[3]);
+  			lv_label_set_text(diagLabel, motorData);
 		}
 	}
 }
