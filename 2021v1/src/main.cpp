@@ -7,46 +7,7 @@
 #include "roller.h"
 #include "screen.h"
 
-  extern const lv_img_dsc_t field_image;
-
-  int selection;
-
-  lv_obj_t * autonSelect;
-  lv_obj_t * autonButton;
-  lv_obj_t * autonButtunLabel;
-  lv_obj_t * label;
-  lv_obj_t * fieldImage;
-
-	lv_style_t * defaultStyle = &lv_style_plain;
-
-  lv_style_t * redStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
-  LV_COLOR_MAKE(102, 51, 51), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
-
-  lv_style_t * blueStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
-	LV_COLOR_MAKE(46, 46, 107), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
-
-	lv_style_t * autonLocStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
-	LV_COLOR_MAKE(89, 89, 42), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
-
-	lv_obj_t * autonButtons = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 8);
-
-static lv_res_t btn_click_action(lv_obj_t * btn) {
-		uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
-
-		switch (id) {
-      case 1:
-        char buffer[100];
-        sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
-        lv_label_set_text(label, buffer);
-        lv_btn_toggle(btn);
-        break;
-      case 2:
-        lv_obj_set_hidden(autonSelect, true);
-        break;
-		}
-		return LV_RES_OK;
-}
-
+  
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -70,58 +31,8 @@ void initialize() {
 
 	pros::Motor right_roller_motor(RIGHT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor left_roller_motor(LEFT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-  autonSelect = createPage();
-  lv_obj_set_hidden(autonSelect, false);
-
-  autonButton = createBtn(autonSelect, 50, 60, 80, 50, 1, "1");
-  setBtnStyle(autonLocStyle, autonButton);
-  memcpy(&autonButtons[2], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 320, 60, 80, 50, 1, "1");
-  setBtnStyle(autonLocStyle, autonButton);
-  memcpy(&autonButtons[3], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 50, 120, 80, 50, 1, "2");
-  setBtnStyle(autonLocStyle, autonButton);
-  memcpy(&autonButtons[4], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 320, 120, 80, 50, 1, "2");
-  setBtnStyle(autonLocStyle, autonButton);
-  memcpy(&autonButtons[5], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 70, 0, 150, 50, 1, "Red");
-  setBtnStyle(redStyle, autonButton);
-  memcpy(&autonButtons[0], autonButton, sizeof(lv_obj_t));
-  autonButton = createBtn(autonSelect, 230, 0, 150, 50, 2, "Blue");
-  setBtnStyle(blueStyle, autonButton);
-  memcpy(&autonButtons[1], autonButton, sizeof(lv_obj_t));
-
-  autonButton = createBtn(autonSelect, 400, 120, 140, 50, 2, "select");
-  setBtnStyle(autonLocStyle, autonButton);
-  memcpy(&autonButtons[6], autonButton, sizeof(lv_obj_t));
-
-	for (int x = 0; x < 7; x++) {
-	  lv_btn_set_action(&autonButtons[x], LV_BTN_ACTION_CLICK, btn_click_action);
-	}
-
-  LV_IMG_DECLARE(field_image);
-  lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(img1, &field_image);
-  lv_obj_set_size(img1, 170, 170);
-  lv_obj_set_pos(img1, 160, 68);
-
-
-
-  // autonButton = createBtn(lv_scr_act(), 25, 25, 100, 50, 0, "btn0");
-	// lv_obj_set_free_num(autonButton, 0);
-	// lv_btn_set_action(autonButton, LV_BTN_ACTION_CLICK, btn_click_action);
-	// setBtnStyle(autonButtonStyle, autonButton);
-
-	label = lv_label_create(autonSelect, NULL);
-	lv_label_set_text(label, "Button has not been clicked yet");
-	lv_obj_align(label, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0);
-
+  
+  drawAuton();
 }
 
 /**

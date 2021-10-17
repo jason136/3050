@@ -8,7 +8,7 @@ extern Controller partner;
 extern Motor front_right_motor;
 extern Motor intake;
 
-extern int autonomousPreSet;
+int autonomousPreSet;
 
 /**
  * Code for controlling screen graphics and such
@@ -18,7 +18,7 @@ extern int autonomousPreSet;
  **/
 
  lv_obj_t * createBtn(lv_obj_t * parent, lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height,
-    int id, const char * title) {
+    int id, const char * title, lv_style_t * style) {
     lv_obj_t * btn = lv_btn_create(parent, NULL);
     lv_obj_set_pos(btn, x, y);
     lv_obj_set_size(btn, width, height);
@@ -27,6 +27,8 @@ extern int autonomousPreSet;
     lv_obj_t * label = lv_label_create(btn, NULL);
     lv_label_set_text(label, title);
     lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_MID, 0, 5);
+    setBtnStyle(style, btn);
+	  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_action);
 
     return btn;
 }
@@ -75,41 +77,85 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
     if(toggled != (lv_btn_get_state(btn) >= 2)) lv_btn_toggle(btn);
 }
 
-lv_obj_t * createPage() {
-  lv_obj_t * page = lv_page_create(lv_scr_act(), NULL);
-  lv_obj_set_size(page, 480, 240);
-  lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
-  lv_obj_set_hidden(page, true);
-  return page;
+extern const lv_img_dsc_t field_image;
+int selection;
+
+lv_obj_t * autonScreen = lv_obj_create(NULL, NULL);
+
+lv_obj_t * autonButton;
+lv_obj_t * menuButton;
+lv_obj_t * autonButtunLabel;
+lv_obj_t * label;
+lv_obj_t * fieldImage;
+lv_obj_t * toggledBtn;
+
+lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
+LV_COLOR_MAKE(100, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+
+lv_style_t * blueStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
+LV_COLOR_MAKE(0, 0, 100), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+
+lv_style_t * autonLocStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
+LV_COLOR_MAKE(80, 80, 40), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+
+lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 12);
+
+static lv_res_t btn_click_action(lv_obj_t * btn) {
+		uint8_t id = lv_obj_get_free_num(btn);
+		if (id >= 100 && id < 150) {
+      if (autonomousPreSet != id - 100 && toggledBtn != nullptr) {
+        btnSetToggled(toggledBtn, false);
+      }
+      autonomousPreSet = id - 100;
+      toggledBtn = btn;
+      btnSetToggled(btn, true);
+      char buffer[100];
+      sprintf(buffer, "Autonomous routine \nselected: %i", autonomousPreSet);
+      lv_label_set_text(label, buffer);
+    }
+    else if (id == 150) {
+
+    }
+		return LV_RES_OK;
 }
 
-/*
-  lv_btn_set_action(testButton, LV_BTN_ACTION_CLICK, btn_click_action);
-  testLabel = lv_label_create(lv_scr_act(), NULL); //create label and puts it on the screen
-  lv_label_set_text(testLabel, "Button has not been clicked yet"); //sets label text
-  lv_obj_align(testLabel, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0); //set the position to center
-*/
+void drawAuton() {
 
-  //testButtonStyle = createBtnStyle(defaultStyle, LV_COLOR_MAKE(150, 0, 0), LV_COLOR_MAKE(150, 150, 0),
-  //LV_COLOR_MAKE(150, 0, 0), LV_COLOR_MAKE(150, 150, 0), LV_COLOR_MAKE(150, 150, 150), LV_COLOR_MAKE(0, 0, 0),
-  //testButton);
+  autonButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 101, "1", redStyle);
+  memcpy(&autonObjs[0], autonButton, sizeof(lv_obj_t));
 
-  //setBtnStyle(testButtonStyle, testButton);
+  autonButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
+  memcpy(&autonObjs[1], autonButton, sizeof(lv_obj_t));
 
-  /*
-  lv_img_set_src(testImage, "../tomfoolery/hidden_meme.bin");
-  lv_obj_align(testImage, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-  */
+  autonButton = createBtn(lv_scr_act(), 45, 70, 100, 50, 103, "3", redStyle);
+  memcpy(&autonObjs[2], autonButton, sizeof(lv_obj_t));
+
+  autonButton = createBtn(lv_scr_act(), 335, 70, 100, 50, 104, "4", blueStyle);
+  memcpy(&autonObjs[3], autonButton, sizeof(lv_obj_t));
+
+  autonButton = createBtn(lv_scr_act(), 45, 130, 100, 50, 105, "5", redStyle);
+  memcpy(&autonObjs[4], autonButton, sizeof(lv_obj_t));
+
+  autonButton = createBtn(lv_scr_act(), 335, 130, 100, 50, 106, "6", blueStyle);
+  memcpy(&autonObjs[5], autonButton, sizeof(lv_obj_t));
+  
+  menuButton = createBtn(lv_scr_act(), 20, 184, 140, 50, 150, "Menu", autonLocStyle);
+
+  autonButton = createBtn(lv_scr_act(), 170, 184, 140, 50, 106, "Skills", autonLocStyle);
+  memcpy(&autonObjs[6], autonButton, sizeof(lv_obj_t));
+  
+  LV_IMG_DECLARE(field_image);
+  lv_obj_t * imageObj = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(imageObj, &field_image);
+  lv_obj_set_size(imageObj, 170, 170);
+  lv_obj_align(imageObj, NULL, LV_ALIGN_IN_TOP_MID, 0, 8);
+
+	label = lv_label_create(lv_scr_act(), NULL);
+	lv_label_set_text(label, "Autonomous routine \nselected: ");
+	lv_obj_align(label, NULL, LV_ALIGN_IN_RIGHT_MID, 5, 85);
+}
 
 
-/*
-    myButton = lv_btn_create(lv_scr_act(), NULL); //create button, lv_scr_act() is deafult screen object
-    lv_obj_set_free_num(myButton, 0); //set button is to 0
-    lv_btn_set_action(myButton, LV_BTN_ACTION_CLICK, btn_click_action); //set function to be called on button click
-
-    lv_btn_set_style(myButton, LV_BTN_STYLE_REL, &myButtonStyleREL); //set the relesed style
-    lv_btn_set_style(myButton, LV_BTN_STYLE_PR, &myButtonStylePR); //set the pressed style
-
-    lv_obj_set_size(myButton, 200, 50); //set the button size
-    lv_obj_align(myButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10); //set the position to top mid
-*/
+// char buffer[100];
+// sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
+// lv_label_set_text(label, buffer);

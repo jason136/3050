@@ -17,6 +17,6 @@ void btnSetToggled(lv_obj_t * btn, bool toggled);
 
 static lv_res_t btn_click_action(lv_obj_t * btn);
 
-lv_obj_t * createPage();
+void drawAuton();
 
 #endif
