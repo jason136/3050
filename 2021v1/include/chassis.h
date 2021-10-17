@@ -46,8 +46,11 @@ void turnRight(int speed);
 void driveForDistancePID(int distance, int speed);
 
 // make a pivot turn to the right or left for a given angle - angle
-//should be greater the 10 and less equal to 360
+// should be greater the 10 and less equal to 360
 void pivotTurn(int speed, long angle);
+
+// return motor diagnostics data for screen
+double* getDiag();
 
 int average(int x, int y);
 

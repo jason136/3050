@@ -4,6 +4,7 @@
 #include "roller.h"
 #include "lift.h"
 #include "tray.h"
+#include "screen.h"
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -128,9 +129,9 @@ void opcontrol() {
 			if(abs(leftY) < DEAD_STICK) { leftY = 0; }
 
 			setIndividualMotor((rightX - leftX - rightX),
-			 									 (rightX + leftX + rightX),
-												 (rightX - leftX + rightX),
-												 (rightX + leftX - rightX));
+			 					(rightX + leftX + rightX),
+								(rightX - leftX + rightX),
+								(rightX + leftX - rightX));
 
 		}
 
@@ -166,5 +167,19 @@ void opcontrol() {
 		}
 
 		pros::delay(20);
+
+		// Send data to Diagnostics screen when it's active
+		if (diagLabel != nullptr) {
+			double * buffer = getDiag();
+			sprintf(motorData, 
+			"Front Right Motor Velocity: %d" 
+			"Front Left Motor Velocity: %d" 
+			"Back Right Motor Velocity: %d" 
+			"Back Left Motor Velocity: %d",
+			buffer[0], 
+			buffer[1],
+			buffer[2],
+			buffer[3]);
+		}
 	}
 }

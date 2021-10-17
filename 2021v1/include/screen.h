@@ -17,6 +17,15 @@ void btnSetToggled(lv_obj_t * btn, bool toggled);
 
 static lv_res_t btn_click_action(lv_obj_t * btn);
 
+void loadScreen();
+
+void drawMenu();
+
 void drawAuton();
+
+extern char motorData[500];
+extern lv_obj_t * diagLabel;
+
+void drawDiag();
 
 #endif

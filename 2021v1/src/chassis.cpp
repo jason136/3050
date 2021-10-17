@@ -188,6 +188,16 @@ void pivotTurn(int speed, long turnAngle) {
   chassisStopDrive();
 }
 
+double* getDiag() {
+  double buffer[4] = {
+    front_right_motor.get_actual_velocity(), 
+    front_left_motor.get_actual_velocity(),
+    back_right_motor.get_actual_velocity(),
+    back_left_motor.get_actual_velocity()
+  };
+  return buffer;
+}
+
 int average(int x, int y) {
   return((x + y) / 2);
 }
