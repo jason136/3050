@@ -23,8 +23,7 @@ void drawMenu();
 
 void drawAuton();
 
-extern lv_obj_t * diagLabel;
-
 void drawDiag();
+void updateDiag(char * buffer);
 
 #endif

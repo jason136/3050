@@ -25,7 +25,7 @@ void chassisSetOpcontrol(int left, int right) {
   back_right_motor.move(right);
   back_left_motor.move(left);
 
-  if(true) {
+  if(DEBUG_ON) {
     std::cout << "Right RPM: " << front_right_motor.get_actual_velocity();
     std::cout << "Left RPM: " << front_left_motor.get_actual_velocity() << "\n";
     std::cout << typeid(front_right_motor.get_actual_velocity()).name() << '\n';
@@ -189,15 +189,19 @@ void pivotTurn(int speed, long turnAngle) {
   chassisStopDrive();
 }
 
-void getDiag(double * buffer) {
-  // buffer[0] = front_right_motor.get_actual_velocity();
-  // buffer[1] = front_left_motor.get_actual_velocity();
-  // buffer[2] = back_right_motor.get_actual_velocity();
-  // buffer[3] = back_left_motor.get_actual_velocity();
-  buffer[0] = 5.0;
-  buffer[1] = 5.0;
-  buffer[2] = 5.0;
-  buffer[3] = 5.0;
+void getChassisDiag(double * buffer) {
+  buffer[0] = front_right_motor.get_actual_velocity();
+  buffer[1] = front_left_motor.get_actual_velocity();
+  buffer[2] = back_right_motor.get_actual_velocity();
+  buffer[3] = back_left_motor.get_actual_velocity();
+  buffer[4] = back_left_motor.get_temperature();
+  buffer[5] = back_left_motor.get_temperature();
+  buffer[6] = back_left_motor.get_temperature();
+  buffer[7] = back_left_motor.get_temperature();
+  buffer[8] = back_left_motor.get_efficiency();
+  buffer[9] = back_left_motor.get_efficiency();
+  buffer[10] = back_left_motor.get_efficiency();
+  buffer[11] = back_left_motor.get_efficiency();
 }
 
 int average(int x, int y) {

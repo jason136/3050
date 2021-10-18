@@ -6,9 +6,6 @@
 #include "tray.h"
 #include "screen.h"
 
-char motorData[500];
-double buffer[4];
-
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -28,7 +25,9 @@ void opcontrol() {
 	int left = 0;					// left motor speed control
 	int right = 0;					// right motor speed control
 	double scaling = 1.0;
-	extern int selection;
+
+	double buffer[12];
+	char chassisData[400];
 
 	while (true) {
 		if (DRIVE_MODE == 1) {
@@ -171,19 +170,22 @@ void opcontrol() {
 
 		pros::delay(20);
 
-		// Send data to Diagnostics screen when it's active
-		if (diagLabel != NULL) {
-			getDiag(&buffer[0]);
-			sprintf(motorData, 
-			"Fnt R Mtr V: %d\n" 
-			"Fnt L Mtr V: %d\n" 
-			"Bck R Mtr V: %d\n" 
-			"Bck L Mtr V: %d\n",
-			buffer[0],
-			buffer[1],
-			buffer[2],
-			buffer[3]);
-  			lv_label_set_text(diagLabel, motorData);
+		// Get
+		getChassisDiag(buffer);
+	  sprintf(chassisData,
+	  "Fn R Mtr V: %f -- T: %f -- E: %f\n"
+	  "Fn L Mtr V: %f -- T: %f -- E: %f\n"
+	  "Bk R Mtr V: %f -- T: %f -- E: %f\n"
+	  "Bk L Mtr V: %f -- T: %f -- E: %f\n",
+	  buffer[0], buffer[4], buffer[8],
+	  buffer[1], buffer[5], buffer[9],
+	  buffer[2], buffer[6], buffer[10],
+	  buffer[3], buffer[7], buffer[11]);
+
+		updateDiag(&chassisData[0]);
+
+		if (true) {
+			std::cout << chassisData;
 		}
 	}
 }

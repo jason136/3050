@@ -1,6 +1,10 @@
 #include "main.h"
-#include "screen.h"
 #include "portdef.h"
+#include "chassis.h"
+#include "roller.h"
+#include "lift.h"
+#include "tray.h"
+#include "screen.h"
 
 using namespace pros;
 
@@ -92,6 +96,7 @@ lv_obj_t * toggledBtn;
 lv_obj_t * autonButtunLabel;
 lv_obj_t * autonLabel;
 lv_obj_t * diagLabel = NULL;
+lv_obj_t * chassisLabel;
 lv_obj_t * fieldImage;
 
 lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
@@ -175,23 +180,23 @@ void drawAuton() {
   tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
   memcpy(&autonObjs[1], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 45, 70, 100, 50, 103, "3", redStyle);
+  tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 103, "3", redStyle);
   memcpy(&autonObjs[2], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 335, 70, 100, 50, 104, "4", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 104, "4", blueStyle);
   memcpy(&autonObjs[3], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 45, 130, 100, 50, 105, "5", redStyle);
+  tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 105, "5", redStyle);
   memcpy(&autonObjs[4], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 335, 130, 100, 50, 106, "6", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 106, "6", blueStyle);
   memcpy(&autonObjs[5], tempButton, sizeof(lv_obj_t));
-  
-  menuButton = createBtn(lv_scr_act(), 20, 184, 140, 50, 0, "Menu", standardStyle);
 
-  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 50, 107, "Skills", standardStyle);
+  menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
+
+  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 107, "Skills", standardStyle);
   memcpy(&autonObjs[6], tempButton, sizeof(lv_obj_t));
-  
+
   LV_IMG_DECLARE(field_image);
   lv_obj_t * imageObj = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(imageObj, &field_image);
@@ -200,15 +205,29 @@ void drawAuton() {
 
 	autonLabel = lv_label_create(lv_scr_act(), NULL);
 	lv_label_set_text(autonLabel, "Auton routine \nselected: ");
-	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 90);
+	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 86);
 }
+
+char text[100];
 
 void drawDiag() {
   lv_scr_load(diagScreen);
-  
-  diagLabel = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_align(diagLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
 
   menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", standardStyle);
-	lv_obj_align(menuButton, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -10, -10);
+  lv_obj_align(menuButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
+
+  diagLabel = lv_label_create(lv_scr_act(), NULL);
+  lv_label_set_text(diagLabel, "");
+  lv_obj_align(diagLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 160, 15);
+
+  chassisLabel = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_align(chassisLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 68);
+}
+
+void updateDiag(char * chassisData) {
+  if (diagLabel != NULL) {
+    lv_label_set_text(chassisLabel, chassisData);
+    sprintf(text, "milliseconds since start: %i\nbelow only works during opcontrol", pros::millis());
+    lv_label_set_text(diagLabel, text);
+  }
 }

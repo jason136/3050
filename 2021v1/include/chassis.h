@@ -4,7 +4,7 @@
 // header file.
 
 #define WHEEL_DIAMETER 4      // diameter of drive wheels
-#define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal 
+#define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal
 
 #define DRIVE_MODE 3          // 1 for x-drive TANK
                               // 2 for x-drive ARDCADE
@@ -24,7 +24,7 @@
                               // for 06 (BLUE) -- 600
 
 // function declaration - drives robot forward/backward indefinite untill next action
-void driveRobot(int speed);   
+void driveRobot(int speed);
 
 // Sets the speeds of the left and right wheels of the chassis
 void chassisSetOpcontrol(int left, int right);
@@ -50,7 +50,7 @@ void driveForDistancePID(int distance, int speed);
 void pivotTurn(int speed, long angle);
 
 // return motor diagnostics data for screen
-void getDiag(double * buffer);
+void getChassisDiag(double * buffer);
 
 int average(int x, int y);
 
