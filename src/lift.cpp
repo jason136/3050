@@ -1,11 +1,11 @@
-#include "main.h"
-#include "portdef.h"
-#include "lift.h"
+#include "main.hpp"
+#include "portdef.hpp"
+#include "lift.hpp"
 
+// Setup the motor definition for the lift motor
 pros::Motor liftMotor(LIFT_MOTOR);
 
-void liftSetZero(int speed) {
-  // resets encoders of the lift Motor
+void liftResetEncoder() {
   liftMotor.tare_position();
 
   if(DEBUG_ON){
@@ -13,15 +13,15 @@ void liftSetZero(int speed) {
   }
 }
 
-void liftRaiseManual(int speed) {
-  // Raises lift manual based using speed provided
+void liftMove(int voltage) {
+  // Raises lift manual based using voltage provided
   // Don't allow movement past lowest point and past upper point of mechanical limits of lift
   // We can't use encoder for that as it will bypass it - we need likely mechanical switch for safety
   // For now there is NO SAFETY stop
-  liftMotor.move_velocity(speed);
+  liftMotor.move(voltage);
 
   if(DEBUG_ON){
-    std::cout << "life manual raise speed: " << speed ;
+    std::cout << "life manual raise speed: " << voltage ;
     std::cout << " Lift Encoder: " << liftMotor.get_position() << "\n";
   }
 }
@@ -31,7 +31,7 @@ void liftRaiseForEncoder(int speed, int encDegrees) {
   // by variable speed.  Lift will protect agaisnt lower and upper bound of lift
   // mechanical cability
   int moveDegrees = liftMotor.get_position() + encDegrees;   // take current position and add
-                                                              // requested movement to it
+                                                             // requested movement to it
   // allow movement we are within bounderies
   int upperBound = moveDegrees + 5;
   int lowerBound = moveDegrees - 5;
@@ -58,8 +58,7 @@ void liftRaiseForEncoder(int speed, int encDegrees) {
   }
 }
 
-float liftBrakeMode() {
-  // get the current lift lock mode of the break
+pros::motor_brake_mode_e_t getliftBrakeMode() {
   return liftMotor.get_brake_mode();
 }
 
@@ -70,11 +69,9 @@ void liftLock() {
     liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
   liftMotor.move_velocity(0);
-  pros::delay(2);
-}
-
-void liftEncoderValue() {
-  std::cout << "Lift Encoder: " << liftMotor.get_position();
+  // Slight delay is due to problems we had in the past with
+  // very jerky movements
+  pros::delay(5);
 }
 
 void liftRaise(int speed, int level) {

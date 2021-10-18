@@ -1,14 +1,14 @@
-#include "main.h"
 #include "api.h"
-#include "portdef.h"
-#include "auto.h"
-#include "chassis.h"
-#include "lift.h"
-#include "roller.h"
-#include "screen.h"
+#include "main.hpp"
+#include "portdef.hpp"
+#include "auton.hpp"
+#include "chassis.hpp"
+#include "lift.hpp"
+#include "roller.hpp"
+#include "screen.hpp"
 
 extern int autonomousPreSet;
-  
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -32,7 +32,7 @@ void initialize() {
 
 	pros::Motor right_roller_motor(RIGHT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor left_roller_motor(LEFT_ROLLER_MOTOR, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-  
+
   loadScreen();
 }
 

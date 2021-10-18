@@ -1,6 +1,6 @@
-#include "main.h"
-#include "chassis.h"
-#include "portdef.h"
+#include "main.hpp"
+#include "chassis.hpp"
+#include "portdef.hpp"
 
 // Setup the motor definitions for the motors on the chassis
 pros::Motor front_right_motor (FRONT_RIGHT_MOTOR_PORT);
@@ -9,45 +9,24 @@ pros::Motor back_right_motor (BACK_RIGHT_MOTOR_PORT);
 pros::Motor back_left_motor (BACK_LEFT_MOTOR_PORT);
 
 // Chassis Speciic Function definitions
-void driveRobot(int speed) {
+void chassisMove(int voltage) {
   // This function drives the robot forward/backwards at given speed
-  front_right_motor.move_velocity(speed);
-  front_left_motor.move_velocity(speed);
-  back_right_motor.move_velocity(speed);
-  back_left_motor.move_velocity(speed);
-}
-
-void chassisSetOpcontrol(int left, int right) {
-  // requires input for the left motor and right motor, typicaly from the
-  // the joysticks
-  front_right_motor.move(right);
-  front_left_motor.move(left);
-  back_right_motor.move(right);
-  back_left_motor.move(left);
-
-  if(DEBUG_ON) {
-    std::cout << "Right RPM: " << front_right_motor.get_actual_velocity();
-    std::cout << "Left RPM: " << front_left_motor.get_actual_velocity() << "\n";
-    std::cout << typeid(front_right_motor.get_actual_velocity()).name() << '\n';
-  }
+  front_right_motor.move(voltage);
+  front_left_motor.move(voltage);
+  back_right_motor.move(voltage);
+  back_left_motor.move(voltage);
 }
 
 void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
-  front_right_motor.move_velocity(FRight);
-  front_left_motor.move_velocity(FLeft);
-  back_right_motor.move_velocity(BRight);
-  back_left_motor.move_velocity(BLeft);
-
-  if(DEBUG_ON) {
-    std::cout << "Front Right RPM: " << front_right_motor.get_actual_velocity();
-    std::cout << "Front Left RPM: " << front_left_motor.get_actual_velocity();
-    std::cout << "Back Right RPM: " << back_right_motor.get_actual_velocity();
-    std::cout << "Back Left RPM: " << back_left_motor.get_actual_velocity() << "\n";
-  }
+  // Function to set voltage of each motor individually, used in opcontrol
+  // This function deals in voltage, and takes arguments from -127 to 127
+  front_right_motor.move(FRight);
+  front_left_motor.move(FLeft);
+  back_right_motor.move(BRight);
+  back_left_motor.move(BLeft);
 }
 
 void chassisStopDrive() {
-  // convienance fucntion to stop the drive train from moving
   front_right_motor.move(0);
   front_left_motor.move(0);
   back_right_motor.move(0);
@@ -73,9 +52,7 @@ void driveForDistancePID(int distance, int speed) {
 /**
  * drive the robot using the build in PID control on the drive base for a given
  * distance. Distance is supplied in inches, and speed is givin in velocity
- * meaning depending on your installed cartidege to be either +- 100 (RED), +-200 (GREEN)
- *
- * +-600 (BLUE) cartridge
+ * meaning depending on your installed cartidege to be either +- 100 (RED), +-200 (GREEN) +-600 (BLUE) cartridge
  *
  * We are using motors in degree settings of the PID controller
  *
@@ -95,7 +72,7 @@ void driveForDistancePID(int distance, int speed) {
     std::cout << " Upper: " << motorUpper << " Lower: " << motorLower << "\n";
   }
 
-  // We first need to reset all the encoders
+  // First, reset all the encoders
   resetChassisEncoders();
 
   front_right_motor.move_absolute(motorDegree, speed);    // Moves motorDegree units forward
@@ -136,6 +113,7 @@ void pivotTurn(int speed, long turnAngle) {
   float turnRatio = turnAngle / maxDegrees;
 
   double motorDegree = ((turnRatio * turnCircum) / wheelCircum) * maxDegrees;
+
   if(DEBUG_ON) {
     std::cout << "TurnCircum: " << turnCircum;
     std::cout << " Angle: " << turnAngle;
@@ -151,14 +129,8 @@ void pivotTurn(int speed, long turnAngle) {
   double motorUpper = fabs(motorDegree) + 5;
   double motorLower = fabs(motorDegree) - 5;
 
-  // We first need to reset all the encoders
+  // reset all encoders
   resetChassisEncoders();
-
-  if(DEBUG_ON) {
-    std::cout << " RESET -- Encoder Left: " << front_left_motor.get_position();
-    std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
-    std::cout << "motorUpper: " << motorUpper << " motorLower: " << motorLower << "\n";
-  }
 
   // we are making turns - pivot left turns opposite of right motor
   front_right_motor.move_absolute(-motorDegree, speed);   // Moves motorDegree units forward
@@ -173,8 +145,7 @@ void pivotTurn(int speed, long turnAngle) {
       (!((fabs(front_left_motor.get_position()) < fabs(motorUpper)) && (fabs(front_left_motor.get_position()) > fabs(motorLower)))))  {
       // Continue running this loop as long as the motor is not within +-5 units of its goal
       pros::delay(2);
-      // uncomment below if you wnat detaield encoder data for debugging
-      // your terminal will be flooted with data!
+      // uncomment below for debugging
       /* if(DEBUG_ON){
         std::cout << "Encoder Left: " << front_right_motor.get_position();
         std::cout << " Encoder Right: " << front_left_motor.get_position() << "\n";

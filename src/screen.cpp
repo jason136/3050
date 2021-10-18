@@ -1,10 +1,5 @@
-#include "main.h"
-#include "portdef.h"
-#include "chassis.h"
-#include "roller.h"
-#include "lift.h"
-#include "tray.h"
-#include "screen.h"
+#include "main.hpp"
+#include "screen.hpp"
 
 using namespace pros;
 

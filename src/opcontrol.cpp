@@ -1,10 +1,9 @@
-#include "main.h"
-#include "portdef.h"
-#include "chassis.h"
-#include "roller.h"
-#include "lift.h"
-#include "tray.h"
-#include "screen.h"
+#include "main.hpp"
+#include "portdef.hpp"
+#include "chassis.hpp"
+#include "roller.hpp"
+#include "lift.hpp"
+#include "screen.hpp"
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -84,7 +83,7 @@ void opcontrol() {
  			right = (right * scaling);
  			left = (left * scaling);
 
-	  	 	chassisSetOpcontrol(left, right);
+	  	setIndividualMotor(right, left, right, left);
     	}
 		else if (DRIVE_MODE == 4) {
 			// We are wanting to do standard ARCADE control
@@ -98,7 +97,7 @@ void opcontrol() {
 			right = (right * scaling);
 			left = (left * scaling);
 
-			chassisSetOpcontrol(left + right, left - right);
+			setIndividualMotor(left - right, left + right, left - right, left + right);
     	}
 		else if (DRIVE_MODE == 5) {    // decomissioned until further testing
 			int leftX;
@@ -139,33 +138,23 @@ void opcontrol() {
 
 		// end chassis control, below is other modules only
 		if (master.get_digital(DIGITAL_R1)) {
-			rollerForward(600);
+			rollerMove(127);
 		}
 		else if (master.get_digital(DIGITAL_R2)) {
-			rollerBackward(600);
+			rollerMove(-127);
 		}
 		else {
-			rollerStop(0);
+			rollerStop();
 		}
 
 		if (master.get_digital(DIGITAL_L1)) {
-			liftRaiseManual(100);
+			liftMove(127);
 		}
 		else if (master.get_digital(DIGITAL_L2)) {
-			liftRaiseManual(-90);
+			liftMove(-110);
 		}
 		else {
 			liftLock();
-		}
-
-		if (master.get_digital(DIGITAL_A)) {
-			trayForward(50);
-		}
-		else if (master.get_digital(DIGITAL_B)) {
-			trayBackward(50);
-		}
-		else {
-			trayLock();
 		}
 
 		pros::delay(20);

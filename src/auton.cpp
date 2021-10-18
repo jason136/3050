@@ -1,10 +1,9 @@
-#include "main.h"
-#include "portdef.h"
-#include "auto.h"
-#include "chassis.h"
-#include "lift.h"
-#include "roller.h"
-#include "tray.h"
+#include "main.hpp"
+#include "portdef.hpp"
+#include "auton.hpp"
+#include "chassis.hpp"
+#include "lift.hpp"
+#include "roller.hpp"
 
 /**
  * This is where all the various autonomous routines are located
@@ -13,21 +12,15 @@
  void skillRun() {
 
    // Old code below use only for reference. ie delete
-   liftSetZero(0);
-   liftRaise(100, 2);
-   liftRaise(100, 1);
-   liftRaise(100, 2);
-   liftRaise(100, 1);
-   liftRaiseManual(100);
+   liftMove(100);
    pros::delay(100);
-   liftRaiseManual(-100);
+   liftMove(-100);
    pros::delay(100);
-   liftRaiseManual(100);
+   liftMove(100);
    pros::delay(100);
-   liftRaiseManual(-100);
+   liftMove(-100);
    pros::delay(100);
    liftLock();
-   liftSetZero(0);
 
    setIndividualMotor(100, -100, -100, 100);
    pros::delay(2000);
