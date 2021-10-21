@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "main.h"
 #include "chassis.hpp"
 #include "portdef.hpp"
 
@@ -173,8 +173,4 @@ void getChassisDiag(double * buffer) {
   buffer[9] = back_left_motor.get_efficiency();
   buffer[10] = back_left_motor.get_efficiency();
   buffer[11] = back_left_motor.get_efficiency();
-}
-
-int average(int x, int y) {
-  return((x + y) / 2);
 }

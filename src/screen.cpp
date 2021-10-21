@@ -1,12 +1,5 @@
-#include "main.hpp"
+#include "main.h"
 #include "screen.hpp"
-
-using namespace pros;
-
-extern Controller master;
-extern Controller partner;
-extern Motor front_right_motor;
-extern Motor intake;
 
 int autonomousPreSet;
 

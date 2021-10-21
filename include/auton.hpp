@@ -1,7 +1,7 @@
 #ifndef AUTO_H_
 #define AUTO_H_
 
-#include "main.hpp"
+#include "main.h"
 
 // Functiosn facilitating the various Autonomous routien options
 void skillRun();              // Skill Autonomous - 60Sec

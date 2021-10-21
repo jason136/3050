@@ -1,5 +1,5 @@
 #include "api.h"
-#include "main.hpp"
+#include "main.h"
 #include "portdef.hpp"
 #include "auton.hpp"
 #include "chassis.hpp"

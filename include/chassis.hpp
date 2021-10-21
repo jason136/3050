@@ -5,20 +5,6 @@
 #define WHEEL_DIAMETER 4      // diameter of drive wheels
 #define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal
 
-#define DRIVE_MODE 3          // 1 for x-drive TANK
-                              // 2 for x-drive ARDCADE
-                              // 3 for standard TANK
-                              // 4 for standard ARCADE
-                              // 5 for Ryan Mode (arcade but with the arrow keys for movement)
-
-#define JOY_SCALE .5          // scale the joysticks to 50% valid values are 0 - 1
-                              // note: 0 will disable joysticks 0 * x = 0 always....
-
-#define DEAD_STICK 10         // Dead stick zone - joystick movement between
-                              // -DEAD_STICK and DEAD_STICK will result in a joystick
-                              // value of 0 - dealing with slow creepign of robot when joysticks
-                              // do not land perfectly in the center position
-
 // Motor max speeds for reference
 // 36 gearset (RED) -- 100
 // 18 gearset (GREEN) -- 200
@@ -47,8 +33,5 @@ void pivotTurn(int speed, long angle);
 
 // Return motor diagnostics data for screen
 void getChassisDiag(double * buffer);
-
-// Helper for calculating averages
-int average(int x, int y);
 
 #endif // _CHASSIS_H_
