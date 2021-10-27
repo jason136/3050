@@ -20,16 +20,18 @@
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-	pros::Task my_task(my_task_fn);
-	std::cout << "task over" << std::endl;
+	pros::Task opcontrolThread(opcontrolLoop);
+	pros::Task recordThread(recordLoop);
 
-	
 }
 
-void my_task_fn(void* param) {
+void opcontrolLoop(void * param) {
     while (true) {
+		pros::Mutex mutex;
+		mutex.take(25);
+	
+		pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 		instJoysticks[0] = master.get_analog(ANALOG_RIGHT_X);
 		instJoysticks[1] = master.get_analog(ANALOG_RIGHT_Y);
@@ -41,9 +43,46 @@ void my_task_fn(void* param) {
 		instButtons[2] = master.get_digital(DIGITAL_L1);
 		instButtons[3] = master.get_digital(DIGITAL_L2);
 
+		mutex.give();
+
 		processInput();
+		
+		std::cout << "inputs processed" << std::endl;
+
+		// Get data from module functions
+		getChassisDiag(buffer);
+		sprintf(chassisData,
+		"Fn R Mtr V: %f -- T: %f -- E: %f\n"
+		"Fn L Mtr V: %f -- T: %f -- E: %f\n"
+		"Bk R Mtr V: %f -- T: %f -- E: %f\n"
+		"Bk L Mtr V: %f -- T: %f -- E: %f\n",
+		buffer[0], buffer[4], buffer[8],
+		buffer[1], buffer[5], buffer[9],
+		buffer[2], buffer[6], buffer[10],
+		buffer[3], buffer[7], buffer[11]);
+
+		updateDiag(&chassisData[0]);
+
+		std::cout << "inputs recorded" << std::endl;
+
+		if (false) {
+			std::cout << chassisData;
+		}
+
+		pros::delay(20);
 	}
- }
+}
+
+void recordLoop(void * param) {
+	while (true) {
+		pros::Mutex mutex;
+		mutex.take(25);
+		recordInput();
+		mutex.give();
+
+		pros::delay(20);
+	}
+}
 
 void processInput() {
 	// Create easily mutable versions of struct members
@@ -167,30 +206,9 @@ void processInput() {
 	else {
 		liftLock();
 	}
-
-	pros::delay(20);
-
-	// Get data from module functions
-	getChassisDiag(buffer);
-	sprintf(chassisData,
-	"Fn R Mtr V: %f -- T: %f -- E: %f\n"
-	"Fn L Mtr V: %f -- T: %f -- E: %f\n"
-	"Bk R Mtr V: %f -- T: %f -- E: %f\n"
-	"Bk L Mtr V: %f -- T: %f -- E: %f\n",
-	buffer[0], buffer[4], buffer[8],
-	buffer[1], buffer[5], buffer[9],
-	buffer[2], buffer[6], buffer[10],
-	buffer[3], buffer[7], buffer[11]);
-
-	updateDiag(&chassisData[0]);
-
-	if (false) {
-		std::cout << chassisData;
-	}
 }
 
 void recordInput() {
-	
 	listAnalogRightX.push_back(instJoysticks[0]);
 	listAnalogRightY.push_back(instJoysticks[1]);
 	listAnalogLeftX.push_back(instJoysticks[2]);

@@ -43,7 +43,9 @@ char chassisData[400];
 
 // Methods for two concurrent threats
 
-void my_task_fn(void* param);
+void opcontrolLoop(void* param);
+
+void recordLoop(void * param);
 
 void processInput();
 
