@@ -9,11 +9,17 @@
 #define LIFT_LEVEL_LOW 100
 #define LIFT_LEVEL_HIGH 400
 
-// Set voltage of lift without programmed stop, takes int from -127 to 127
-void liftMove(int voltage);
+// Set voltage of front lift without programmed stop, takes int from -127 to 127
+void frontLiftMove(int voltage);
 
-// lock the lift where it is right now....
-void liftLock();
+// lock the front lift where it is right now....
+void frontLiftLock();
+
+// Set voltage of back lift without programmed stop, takes int from -127 to 127
+void backLiftMove(int voltage);
+
+// lock the back lift where it is right now....
+void backLiftLock();
 
 // Resets encoders of the lift Motor
 void liftResetEncoder();

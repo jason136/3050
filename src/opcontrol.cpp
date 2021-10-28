@@ -42,6 +42,8 @@ void opcontrolLoop(void * param) {
 		instButtons[1] = master.get_digital(DIGITAL_R2);
 		instButtons[2] = master.get_digital(DIGITAL_L1);
 		instButtons[3] = master.get_digital(DIGITAL_L2);
+		instButtons[4] = master.get_digital(DIGITAL_UP);
+		instButtons[5] = master.get_digital(DIGITAL_DOWN);
 
 		mutex.give();
 
@@ -198,13 +200,33 @@ void processInput() {
 	}
 
 	if (instButtons[2]) {
-		liftMove(127);
+		frontLiftMove(127);
 	}
 	else if (instButtons[3]) {
-		liftMove(-110);
+		frontLiftMove(-110);
 	}
 	else {
-		liftLock();
+		frontLiftLock();
+	}
+
+	if (instButtons[2]) {
+		frontLiftMove(127);
+	}
+	else if (instButtons[3]) {
+		frontLiftMove(-110);
+	}
+	else {
+		frontLiftLock();
+	}
+
+	if (instButtons[4]) {
+		backLiftMove(127);
+	}
+	else if (instButtons[5]) {
+		backLiftMove(-110);
+	}
+	else {
+		backLiftLock();
 	}
 }
 

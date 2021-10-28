@@ -25,7 +25,7 @@ using namespace std;
 
 // Datastructures for recordable autonomous
 double instJoysticks[4];
-bool instButtons[4];
+bool instButtons[6];
 
 std::list<double> listAnalogRightX;
 std::list<double> listAnalogRightY;
@@ -36,6 +36,8 @@ std::list<bool> listDigitalR1;
 std::list<bool> listDigitalR2;
 std::list<bool> listDigitalL1;
 std::list<bool> listDigitalL2;
+std::list<bool> listDigitalUp;
+std::list<bool> listDigitalDown;
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];

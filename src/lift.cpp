@@ -1,33 +1,55 @@
 #include "main.h"
 #include "portdef.hpp"
-#include "lift.hpp"
+#include "frontLift.hpp"
 
 // Setup the motor definition for the lift motor
-pros::Motor liftMotor(LIFT_MOTOR);
+pros::Motor frontLiftMotor(FRONT_LIFT_MOTOR);
+pros::Motor backLiftMotor(BACK_LIFT_MOTOR);
 
-void liftMove(int voltage) {
+void frontLiftMove(int voltage) {
   // Raises lift manual based using voltage provided
   // Don't allow movement past lowest point and past upper point of mechanical limits of lift
-  liftMotor.move(voltage);
+  frontLiftMotor.move(voltage);
 
   if(DEBUG_ON){
     std::cout << "life manual raise speed: " << voltage ;
-    std::cout << " Lift Encoder: " << liftMotor.get_position() << "\n";
+    std::cout << " Lift Encoder: " << frontLiftMotor.get_position() << "\n";
   }
 }
 
-void liftLock() {
-  if(liftMotor.get_brake_mode() != 2 ) {
-    liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+void frontLiftLock() {
+  if(frontLiftMotor.get_brake_mode() != 2 ) {
+    frontLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-  liftMotor.move_velocity(0);
+  frontLiftMotor.move_velocity(0);
+  // Slight delay is due to problems we had in the past with
+  // very jerky movements
+  pros::delay(5);
+}
+
+void backLiftMove(int voltage) {
+  // Raises lift manual based using voltage provided
+  // Don't allow movement past lowest point and past upper point of mechanical limits of lift
+  backLiftMotor.move(voltage);
+
+  if(DEBUG_ON){
+    std::cout << "life manual raise speed: " << voltage ;
+    std::cout << " Lift Encoder: " << backLiftMotor.get_position() << "\n";
+  }
+}
+
+void backLiftLock() {
+  if(backLiftMotor.get_brake_mode() != 2 ) {
+    backLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  }
+  backLiftMotor.move_velocity(0);
   // Slight delay is due to problems we had in the past with
   // very jerky movements
   pros::delay(5);
 }
 
 void liftResetEncoder() {
-  liftMotor.tare_position();
+  frontLiftMotor.tare_position();
 
   if(DEBUG_ON){
     std::cout << "lift encoder reset \n";
@@ -43,15 +65,15 @@ void liftRaiseForEncoder(int voltage, int encDegrees) {
   int lowerBound = encDegrees - 5;
 
   // reset lift encoders
-  liftMotor.tare_position();
-  liftMotor.move(voltage);
-  while (!((liftMotor.get_position() < upperBound) && (liftMotor.get_position() > lowerBound))) {
+  frontLiftMotor.tare_position();
+  frontLiftMotor.move(voltage);
+  while (!((frontLiftMotor.get_position() < upperBound) && (frontLiftMotor.get_position() > lowerBound))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
     pros::delay(2);
 
     if(DEBUG_ON) {
       std::cout << "EncDegrees " << encDegrees;
-      std::cout << " Current Deg: " << liftMotor.get_position() << "\n";
+      std::cout << " Current Deg: " << frontLiftMotor.get_position() << "\n";
       pros::delay(2);
     }
   }
@@ -72,8 +94,8 @@ void liftRaise(int speed, int level) {
   switch(level) {
     case 0:
       // move all the way back down
-      liftMotor.move_absolute(0, speed); 
-      while (!((liftMotor.get_position() < zeroPointUpper) && (liftMotor.get_position() > zeroPointLower))) {
+      frontLiftMotor.move_absolute(0, speed); 
+      while (!((frontLiftMotor.get_position() < zeroPointUpper) && (frontLiftMotor.get_position() > zeroPointLower))) {
           // Continue running this loop as long as the motor is not within +-5 units of its goal
           pros::delay(2);
       }
@@ -82,8 +104,8 @@ void liftRaise(int speed, int level) {
 
     case 1:
       // move to middle pole position
-      liftMotor.move_absolute(LIFT_LEVEL_LOW, speed); 
-      while (!((liftMotor.get_position() < lowTowerUpper) && (liftMotor.get_position() > lowTowerLower))) {
+      frontLiftMotor.move_absolute(LIFT_LEVEL_LOW, speed); 
+      while (!((frontLiftMotor.get_position() < lowTowerUpper) && (frontLiftMotor.get_position() > lowTowerLower))) {
           // Continue running this loop as long as the motor is not within +-5 units of its goal
           pros::delay(2);
       }
@@ -91,19 +113,19 @@ void liftRaise(int speed, int level) {
 
     case 2:
       // move to heigh pole position
-      liftMotor.move_absolute(LIFT_LEVEL_HIGH, speed); 
-      while (!((liftMotor.get_position() < highTowerUpper) && (liftMotor.get_position() > highTowerLower))) {
+      frontLiftMotor.move_absolute(LIFT_LEVEL_HIGH, speed); 
+      while (!((frontLiftMotor.get_position() < highTowerUpper) && (frontLiftMotor.get_position() > highTowerLower))) {
           // Continue running this loop as long as the motor is not within +-5 units of its goal
           pros::delay(2);
       }
       break;
   }
   if(DEBUG_ON){
-    std::cout << "Lift Encoder: " << liftMotor.get_position();
+    std::cout << "Lift Encoder: " << frontLiftMotor.get_position();
   }
-  liftMotor.move(0);
+  frontLiftMotor.move(0);
 }
 
 pros::motor_brake_mode_e_t getliftBrakeMode() {
-  return liftMotor.get_brake_mode();
+  return frontLiftMotor.get_brake_mode();
 }
