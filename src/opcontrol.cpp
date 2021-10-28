@@ -1,7 +1,7 @@
 #include "main.h"
 #include "portdef.hpp"
 #include "chassis.hpp"
-#include "roller.hpp"
+#include "conveyor.hpp"
 #include "lift.hpp"
 #include "screen.hpp"
 #include "opcontrol.hpp"
@@ -188,19 +188,19 @@ void processInput() {
 
 	// end chassis control, below is other modules only
 	if (instButtons[0]) {
-		rollerMove(127);
+		conveyorMove(127);
 	}
 	else if (instButtons[1]) {
-		rollerMove(-127);
+		conveyorMove(-127);
 	}
 	else {
-		rollerStop();
+		conveyorStop();
 	}
 
-	if (instButtons[3]) {
+	if (instButtons[2]) {
 		liftMove(127);
 	}
-	else if (instButtons[4]) {
+	else if (instButtons[3]) {
 		liftMove(-110);
 	}
 	else {

@@ -3,17 +3,17 @@
 #include "portdef.hpp"
 
 // Setup the motor definitions for the motors on the chassis
-pros::Motor front_right_motor (FRONT_RIGHT_MOTOR_PORT);
-pros::Motor front_left_motor (FRONT_LEFT_MOTOR_PORT);
-pros::Motor back_right_motor (BACK_RIGHT_MOTOR_PORT);
-pros::Motor back_left_motor (BACK_LEFT_MOTOR_PORT);
+pros::Motor front_right_motor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor front_left_motor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor back_right_motor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor back_left_motor(BACK_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
   // This function drives the robot forward/backwards at given speed
   front_right_motor.move(voltage);
-  front_left_motor.move(voltage);
-  back_right_motor.move(voltage);
+  front_left_motor.move(-voltage);
+  back_right_motor.move(-voltage);
   back_left_motor.move(voltage);
 }
 
@@ -21,8 +21,8 @@ void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
   // Function to set voltage of each motor individually, used in opcontrol
   // This function deals in voltage, and takes arguments from -127 to 127
   front_right_motor.move(FRight);
-  front_left_motor.move(FLeft);
-  back_right_motor.move(BRight);
+  front_left_motor.move(-FLeft);
+  back_right_motor.move(-BRight);
   back_left_motor.move(BLeft);
 }
 

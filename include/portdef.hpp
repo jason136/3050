@@ -3,20 +3,19 @@
 
 // Motor Port Definitions
 // Drive Base Motors
-#define FRONT_RIGHT_MOTOR_PORT 20
-#define FRONT_LEFT_MOTOR_PORT 10
-#define BACK_RIGHT_MOTOR_PORT 8
-#define BACK_LEFT_MOTOR_PORT 1
+#define FRONT_RIGHT_MOTOR_PORT 8
+#define FRONT_LEFT_MOTOR_PORT 20
+#define BACK_RIGHT_MOTOR_PORT 14
+#define BACK_LEFT_MOTOR_PORT 16
 
 // Tray Motor
 #define TRAY_MOTOR_PORT 5
 
 // Lift Motor
-#define LIFT_MOTOR 6
+#define LIFT_MOTOR 10
 
-// Roller Motors
-#define RIGHT_ROLLER_MOTOR 7
-#define LEFT_ROLLER_MOTOR 9
+// Conveyor Motors
+#define CONVEYOR_MOTOR 18
 
 // Radio and Controllers Port Definitions
 #define VEX_RADIO 21
