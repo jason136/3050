@@ -4,6 +4,7 @@
 #include "conveyor.hpp"
 #include "lift.hpp"
 #include "screen.hpp"
+#include "file.hpp"
 #include "opcontrol.hpp"
 
 /**
@@ -38,12 +39,33 @@ void opcontrolLoop(void * param) {
 		instJoysticks[2] = master.get_analog(ANALOG_LEFT_X);
 		instJoysticks[3] = master.get_analog(ANALOG_LEFT_Y);
 
-		instButtons[0] = master.get_digital(DIGITAL_R1);
-		instButtons[1] = master.get_digital(DIGITAL_R2);
-		instButtons[2] = master.get_digital(DIGITAL_L1);
-		instButtons[3] = master.get_digital(DIGITAL_L2);
-		instButtons[4] = master.get_digital(DIGITAL_UP);
-		instButtons[5] = master.get_digital(DIGITAL_DOWN);
+		if (master.get_digital(DIGITAL_R1)) {
+			instButtons[0] = 1;
+		}
+		else if (master.get_digital(DIGITAL_R2)) {
+			instButtons[0] = -1;
+		}
+		else {
+			instButtons[0] = -0;
+		}
+		if (master.get_digital(DIGITAL_L1)) {
+			instButtons[1] = 1;
+		}
+		else if (master.get_digital(DIGITAL_L2)) {
+			instButtons[1] = -1;
+		}
+		else {
+			instButtons[1] = -0;
+		}
+		if (master.get_digital(DIGITAL_UP)) {
+			instButtons[2] = 1;
+		}
+		else if (master.get_digital(DIGITAL_DOWN)) {
+			instButtons[2] = -1;
+		}
+		else {
+			instButtons[2] = -0;
+		}
 
 		mutex.give();
 
@@ -79,7 +101,7 @@ void recordLoop(void * param) {
 	while (true) {
 		pros::Mutex mutex;
 		mutex.take(25);
-		recordInput();
+		recordInput(instJoysticks, instButtons);
 		mutex.give();
 
 		pros::delay(20);
@@ -189,57 +211,35 @@ void processInput() {
 	// }
 
 	// end chassis control, below is other modules only
-	if (instButtons[0]) {
+	if (instButtons[0] == 1) {
 		conveyorMove(127);
 	}
-	else if (instButtons[1]) {
+	else if (instButtons[0] == -1) {
 		conveyorMove(-127);
 	}
 	else {
 		conveyorStop();
 	}
 
-	if (instButtons[2]) {
+	if (instButtons[1] == 1) {
 		frontLiftMove(127);
 	}
-	else if (instButtons[3]) {
+	else if (instButtons[1] == -1) {
 		frontLiftMove(-110);
 	}
 	else {
 		frontLiftLock();
 	}
 
-	if (instButtons[2]) {
-		frontLiftMove(127);
-	}
-	else if (instButtons[3]) {
-		frontLiftMove(-110);
-	}
-	else {
-		frontLiftLock();
-	}
-
-	if (instButtons[4]) {
+	if (instButtons[2] == 1) {
 		backLiftMove(127);
 	}
-	else if (instButtons[5]) {
+	else if (instButtons[2] == -1) {
 		backLiftMove(-110);
 	}
 	else {
 		backLiftLock();
 	}
-}
-
-void recordInput() {
-	listAnalogRightX.push_back(instJoysticks[0]);
-	listAnalogRightY.push_back(instJoysticks[1]);
-	listAnalogLeftX.push_back(instJoysticks[2]);
-	listAnalogLeftY.push_back(instJoysticks[3]);
-
-	listDigitalR1.push_back(instButtons[0]);
-	listDigitalR2.push_back(instButtons[1]);
-	listDigitalL1.push_back(instButtons[2]);
-	listDigitalL2.push_back(instButtons[3]);
 }
 
 int average(int x, int y) {

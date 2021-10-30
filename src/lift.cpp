@@ -1,6 +1,6 @@
 #include "main.h"
 #include "portdef.hpp"
-#include "frontLift.hpp"
+#include "lift.hpp"
 
 // Setup the motor definition for the lift motor
 pros::Motor frontLiftMotor(FRONT_LIFT_MOTOR);
@@ -77,7 +77,7 @@ void liftRaiseForEncoder(int voltage, int encDegrees) {
       pros::delay(2);
     }
   }
-  liftMove(0);
+  frontLiftMove(0);
   
 }
 

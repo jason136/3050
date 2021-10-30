@@ -5,49 +5,53 @@
 #include "lift.hpp"
 #include "conveyor.hpp"
 
+void runRecAuton() {
+  
+}
+
 /**
  * This is where all the various autonomous routines are located
  * and subsequently called by the autonomous() selector based on GUI input
  **/
- void skillRun() {
+void skillRun() {
 
-   // Old code below use only for reference. ie delete
-   liftMove(100);
-   pros::delay(100);
-   liftMove(-100);
-   pros::delay(100);
-   liftMove(100);
-   pros::delay(100);
-   liftMove(-100);
-   pros::delay(100);
-   liftLock();
+  // Old code below use only for reference. ie delete
+  //liftMove(100);
+  pros::delay(100);
+  //liftMove(-100);
+  pros::delay(100);
+  //liftMove(100);
+  pros::delay(100);
+  //liftMove(-100);
+  pros::delay(100);
+  //liftLock();
 
-   setIndividualMotor(100, -100, -100, 100);
-   pros::delay(2000);
-   chassisStopDrive();
+  setIndividualMotor(100, -100, -100, 100);
+  pros::delay(2000);
+  chassisStopDrive();
  }
 
- void autoRedLeft() {
+void autoRedLeft() {
 
-   // Code Here
+  // Code Here
 
- }
+}
 
- void autoBlueLeft() {
+void autoBlueLeft() {
 
-   // Code Here
+  // Code Here
 
- }
+}
 
  void autoRedRight() {
 
-   // Code Here
+  // Code Here
 
- }
+}
 
 
  void autoBlueRight() {
 
-    // Code Here penis
+  // Code Here penis
 
-  }
+}

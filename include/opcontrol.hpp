@@ -2,7 +2,7 @@
 #define _OPCONTROL_H_
 
 #include <iostream>
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -25,26 +25,16 @@ using namespace std;
 
 // Datastructures for recordable autonomous
 double instJoysticks[4];
-bool instButtons[6];
+int instButtons[3];
 
-std::list<double> listAnalogRightX;
-std::list<double> listAnalogRightY;
-std::list<double> listAnalogLeftX;
-std::list<double> listAnalogLeftY;
-
-std::list<bool> listDigitalR1;
-std::list<bool> listDigitalR2;
-std::list<bool> listDigitalL1;
-std::list<bool> listDigitalL2;
-std::list<bool> listDigitalUp;
-std::list<bool> listDigitalDown;
+double recJoysticks[4];
+int recButtons[3];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
 char chassisData[400];
 
 // Methods for two concurrent threats
-
 void opcontrolLoop(void* param);
 
 void recordLoop(void * param);
