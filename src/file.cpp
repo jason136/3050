@@ -24,26 +24,27 @@ void clearVectors() {
     std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(double * instJoysticks, int * instButtons) {
-	listAnalogRightX.push_back(instJoysticks[0]);
-	listAnalogRightY.push_back(instJoysticks[1]);
-	listAnalogLeftX.push_back(instJoysticks[2]);
-	listAnalogLeftY.push_back(instJoysticks[3]);
+void recordInput(double instJoysticks[], int instButtons[]) {
+    listAnalogRightX.push_back(instJoysticks[0]);
+    listAnalogRightY.push_back(instJoysticks[1]);
+    listAnalogLeftX.push_back(instJoysticks[2]);
+    listAnalogLeftY.push_back(instJoysticks[3]);
 
-	listDigitalR.push_back(instButtons[0]);
-	listDigitalL.push_back(instButtons[1]);
-	listDigitalUpDown.push_back(instButtons[2]);
+    listDigitalR.push_back(instButtons[0]);
+    listDigitalL.push_back(instButtons[1]);
+    listDigitalUpDown.push_back(instButtons[2]);
+
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(double recJoysticks, int recButtons, int index) {
-    recJoysticks = listAnalogRightX.at(index);
-    recJoysticks = listAnalogRightY.at(index);
-    recJoysticks = listAnalogLeftX.at(index);
-    recJoysticks = listAnalogLeftY.at(index);
-    recButtons = listDigitalR.at(index);
-    recButtons = listDigitalL.at(index);
-    recButtons = listDigitalUpDown.at(index);
+void updateIndex(double recJoysticks[], int recButtons[], int index) {
+    recJoysticks[0] = listAnalogRightX.at(index);
+    recJoysticks[1] = listAnalogRightY.at(index);
+    recJoysticks[2] = listAnalogLeftX.at(index);
+    recJoysticks[3] = listAnalogLeftY.at(index);
+    recButtons[0] = listDigitalR.at(index);
+    recButtons[1] = listDigitalL.at(index);
+    recButtons[2] = listDigitalUpDown.at(index);
 
     std::cout << "vectors returned" << std::endl;
 }
@@ -54,11 +55,11 @@ int getVectorSize() {
     std::cout << "vector size returned" << std::endl;
 }
 
-void writeToFile(const char* filename) {
-    ofstream outfile (filename);
+void writeToFile(const char *filename) {
+    ofstream outfile(filename);
     char filebuffer[500] = "";
-    for (int x = 0; x < listAnalogRightX.size(); x ++) {
-        sprintf(filebuffer, "%F %F %F % %i %i %i\n", 
+    for (int x = 0; x < listAnalogRightX.size(); x++) {
+        sprintf(filebuffer, "%F %F %F %F %i %i %i\n",
                 listAnalogRightX.at(x),
                 listAnalogRightY.at(x),
                 listAnalogLeftX.at(x),
@@ -73,9 +74,9 @@ void writeToFile(const char* filename) {
     std::cout << "file written" << std::endl;
 }
 
-void readFromFile(const char* filename) {
+void readFromFile(const char *filename) {
     clearVectors();
-    ifstream infile (filename);
+    ifstream infile(filename);
     double a, b, c, d;
     int e, f, g;
     while (infile >> a >> b >> c >> d >> e >> f >> g) {
@@ -90,5 +91,5 @@ void readFromFile(const char* filename) {
     }
     infile.close();
 
-    std::cout << "file read" << std::endl;
+    std::cout << "file read" << getVectorSize() << std::endl;
 }

@@ -101,6 +101,8 @@ void opcontrolLoop(void * param) {
 }
 
 void startRecordThread() {
+    clearVectors();
+
 	pros::Task recordThread(recordLoop);
 
 	std::cout << "record loop started" << std::endl;
@@ -119,6 +121,7 @@ void recordLoop(void * param) {
 	std::cout << "record loop finished -- " << getVectorSize() << std::endl;
 
 	writeToFile("/usd/test.txt");
+    finishRecording();
 }
 
 void processInput() {
@@ -225,10 +228,10 @@ void processInput() {
 
 	// end chassis control, below is other modules only
 	if (instButtons[0] == 1) {
-		conveyorMove(127);
+		conveyorMove(100);
 	}
 	else if (instButtons[0] == -1) {
-		conveyorMove(-127);
+		conveyorMove(-100);
 	}
 	else {
 		conveyorStop();

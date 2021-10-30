@@ -5,17 +5,22 @@
 #include "lift.hpp"
 #include "conveyor.hpp"
 #include "file.hpp"
+#include "screen.hpp"
 #include "opcontrol.hpp"
 
+extern int selection;
+
 void runRecAuton() {
-  int interations = getVectorSize();
-  double recJoysticks[4];
-  int recButtons[3];
-  for (int x = 0; x < interations; x++) {
-    updateIndex(&recJoysticks[0], &recButtons[0], x);
-    processInput();
-    pros::delay(20);
-  }
+    int interations = getVectorSize();
+    double recJoysticks[4];
+    int recButtons[3];
+    for (int x = 0; x < interations; x++)
+    {
+        updateIndex(&recJoysticks[0], &recButtons[0], x);
+        processInput();
+        std::cout << "execute line" << x << "of" << interations << std::endl;
+        pros::delay(20);
+    }
 }
 
 /**
@@ -24,43 +29,41 @@ void runRecAuton() {
  **/
 void skillRun() {
 
-  // Old code below use only for reference. ie delete
-  //liftMove(100);
-  pros::delay(100);
-  //liftMove(-100);
-  pros::delay(100);
-  //liftMove(100);
-  pros::delay(100);
-  //liftMove(-100);
-  pros::delay(100);
-  //liftLock();
+    // // Old code below use only for reference. ie delete
+    // //liftMove(100);
+    // pros::delay(100);
+    // //liftMove(-100);
+    // pros::delay(100);
+    // //liftMove(100);
+    // pros::delay(100);
+    // //liftMove(-100);
+    // pros::delay(100);
+    // //liftLock();
 
-  setIndividualMotor(100, -100, -100, 100);
-  pros::delay(2000);
-  chassisStopDrive();
- }
+    // setIndividualMotor(100, -100, -100, 100);
+    // pros::delay(2000);
+    // chassisStopDrive();
+
+    runRecAuton();
+}
 
 void autoRedLeft() {
 
-  // Code Here
+    runRecAuton();
 
 }
 
 void autoBlueLeft() {
 
-  // Code Here
-
+    // Code Here
 }
 
- void autoRedRight() {
+void autoRedRight() {
 
-  // Code Here
-
+    // Code Here
 }
 
+void autoBlueRight() {
 
- void autoBlueRight() {
-
-  // Code Here penis
-
+    // Code Here penis
 }

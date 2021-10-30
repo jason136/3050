@@ -9,14 +9,14 @@
 
 void clearVectors();
 
-void recordInput(double instJoysticks[4], int instButtons[3]);
+void recordInput(double * instJoysticks, int * instButtons);
 
-void updateIndex(double recJoysticks[4], int recButtons[3], int index);
+void updateIndex(double * recJoysticks, int * recButtons, int index);
 
 int getVectorSize();
 
 void writeToFile(const char* filename);
 
-void readFromFile();
+void readFromFile(const char* filename);
 
 #endif

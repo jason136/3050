@@ -109,44 +109,45 @@ lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
 static lv_res_t btn_click_action(lv_obj_t * btn) {
 		uint8_t id = lv_obj_get_free_num(btn);
     switch(id) {
-      case 0:
-        lv_obj_clean(lv_scr_act());
-        diagLabel = NULL;
-        drawMenu();
-        break;
-      case 1:
-        lv_obj_clean(lv_scr_act());
-        drawAuton();
-        break;
-      case 2:
-        lv_obj_clean(lv_scr_act());
-        drawDiag();
-        break;
-      case 3:
-        lv_obj_clean(lv_scr_act());
-        drawRecordable();
-        break;
-      case 4:
-        break;
-      case 11:
-        startRecordThread();
-        sprintf(text, "recordable started");
-        lv_label_set_text(recordableLabel, text);
-        break;
-      default:
-        if (id >= 100 && id < 150) {
-      if (autonomousPreSet != id - 100 && toggledBtn != nullptr) {
-        btnSetToggled(toggledBtn, false);
-      }
-      autonomousPreSet = id - 100;
-      toggledBtn = btn;
-      btnSetToggled(btn, true);
-      char buffer[100];
-      sprintf(buffer, "Auton routine \nselected: %i", autonomousPreSet);
-      lv_label_set_text(autonLabel, buffer);
-      }
+        case 0:
+            lv_obj_clean(lv_scr_act());
+            diagLabel = NULL;
+            drawMenu();
+            break;
+        case 1:
+            lv_obj_clean(lv_scr_act());
+            drawAuton();
+            break;
+        case 2:
+            lv_obj_clean(lv_scr_act());
+            drawDiag();
+            break;
+        case 3:
+            lv_obj_clean(lv_scr_act());
+            drawRecordable();
+            break;
+        case 4:
+            break;
+        case 11:
+            startRecordThread();
+            sprintf(text, "recordable started");
+            lv_label_set_text(recordableLabel, text);
+            break;
+        default:
+            if (id >= 100 && id < 150) {
+                if (autonomousPreSet != id - 100 && toggledBtn != nullptr) {
+                btnSetToggled(toggledBtn, false);
+            }
+            autonomousPreSet = id - 100;
+            toggledBtn = btn;
+            btnSetToggled(btn, true);
+            char buffer[100];
+            sprintf(buffer, "Auton routine \nselected: %i", autonomousPreSet);
+            lv_label_set_text(autonLabel, buffer);
+            }
+            break;
     }
-		return LV_RES_OK;
+	return LV_RES_OK;
 }
 
 void loadScreen() {
@@ -164,7 +165,7 @@ void drawMenu() {
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 66);
   memcpy(&menuObjs[1], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 0, 0, 200, 50, 3, "Record Autonomous", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 0, 0, 250, 50, 3, "Record Autonomous", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 122);
   memcpy(&menuObjs[2], tempButton, sizeof(lv_obj_t));
 
@@ -244,4 +245,9 @@ void drawRecordable() {
   recordableLabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_text(recordableLabel, "click buttun to record");
   lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 150);
+}
+
+void finishRecording() {
+    sprintf(text, "recording complete!");
+    lv_label_set_text(recordableLabel, text);
 }

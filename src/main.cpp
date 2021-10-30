@@ -6,8 +6,7 @@
 #include "lift.hpp"
 #include "conveyor.hpp"
 #include "screen.hpp"
-
-extern int autonomousPreSet;
+#include "file.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -16,25 +15,38 @@ extern int autonomousPreSet;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// Motor Setup
-	// GEARSET_36 -- RED
-	// GEARSET_18 -- GREEN (default)
-	// GEARSET_6 -- BLUE
+    // Motor Setup
+    // GEARSET_36 -- RED
+    // GEARSET_18 -- GREEN (default)
+    // GEARSET_6 -- BLUE
 
-	pros::Motor front_right_motor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor front_left_motor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor back_right_motor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor back_left_motor(BACK_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor front_right_motor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor front_left_motor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor back_right_motor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor back_left_motor(BACK_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-	pros::Motor tray_motor(TRAY_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor tray_motor(TRAY_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-	pros::Motor frontRightLiftMotor(FRONT_RIGHT_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-  pros::Motor frontLeftLifeMotor(FRONT_LEFT_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-  pros::Motor backLiftMotor(BACK_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor frontRightLiftMotor(FRONT_RIGHT_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor frontLeftLifeMotor(FRONT_LEFT_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor backLiftMotor(BACK_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-	pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+    pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-  loadScreen();
+    readFromFile("/usd/test.txt");
+
+    double recJoysticks[4];
+    int recButtons[3];
+    updateIndex(&recJoysticks[0], &recButtons[0], 1);
+    for (int x = 0; x < 4; x++) {
+        std::cout << recJoysticks[x] << "\n";
+    }
+    for (int x = 0; x < 3; x++) {
+        std::cout << recButtons[x] << "\n";
+    }
+    std::cout << std::endl;
+
+    loadScreen();
 }
 
 /**
@@ -67,46 +79,30 @@ void competition_initialize() {}
  * from where it left off.
  */
 
+extern int selection;
+
 void autonomous() {
-	// We are calling a autonomous function based on the selection
-  // we made on the LCD
+    // We are calling a autonomous function based on the selection
+    // we made on the LCD
 
-	/*
-	switch(selection) {
-		case 0 :
-			pros::lcd::print(4, "Script#: %d\n", selection);
-      pros::lcd::print(5, titles[selection]);
-      skillRun();
-      break;
-
-		case 1 :
-			pros::lcd::print(4, "Script#: %d\n", selection);
-      pros::lcd::print(5, titles[selection]);
-      autoRedLeft();
-      break;
-
-    case 2 :
-      pros::lcd::print(4, "Script#: %d\n", selection);
-      pros::lcd::print(5, titles[selection]);
-    	autoBlueLeft();
-      break;
-
-    case 3 :
-    	pros::lcd::print(4, "Script#: %d\n", selection);
-      pros::lcd::print(5, titles[selection]);
-      autoRedRight();
-      break;
-
-    case 4 :
-      pros::lcd::print(4, "Script#: %d\n", selection);
-      pros::lcd::print(5, titles[selection]);
-      autoBlueRight();
-      break;
-
-    default :
-      // this should never happen as selection is alwasy inialized as 0
-      // does the case of '0' is in essence the defualt.
-      break;
-  }
-*/
+    switch (selection)
+    {
+    case 0:
+        skillRun();
+        break;
+    case 1:
+        autoRedLeft();
+        break;
+    case 2:
+        autoBlueLeft();
+        break;
+    case 3:
+        autoRedRight();
+        break;
+    case 4:
+        autoBlueRight();
+        break;
+    default:
+        break;
+    }
 }

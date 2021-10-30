@@ -27,5 +27,6 @@ void drawDiag();
 void updateDiag(char * buffer);
 
 void drawRecordable();
+void finishRecording();
 
 #endif
