@@ -3,34 +3,34 @@
 #include "portdef.hpp"
 
 // Setup the motor definitions for the motors on the chassis
-pros::Motor front_right_motor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor front_left_motor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor back_right_motor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor back_left_motor(BACK_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontRightMotor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontLeftMotor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backRightMotor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backLeftMotor(BACK_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
   // This function drives the robot forward/backwards at given speed
-  front_right_motor.move(voltage);
-  front_left_motor.move(-voltage);
-  back_right_motor.move(-voltage);
-  back_left_motor.move(voltage);
+  frontRightMotor.move(voltage);
+  frontLeftMotor.move(-voltage);
+  backRightMotor.move(-voltage);
+  backLeftMotor.move(voltage);
 }
 
 void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
   // Function to set voltage of each motor individually, used in opcontrol
   // This function deals in voltage, and takes arguments from -127 to 127
-  front_right_motor.move(FRight);
-  front_left_motor.move(-FLeft);
-  back_right_motor.move(-BRight);
-  back_left_motor.move(BLeft);
+  frontRightMotor.move(FRight);
+  frontLeftMotor.move(-FLeft);
+  backRightMotor.move(-BRight);
+  backLeftMotor.move(BLeft);
 }
 
 void chassisStopDrive() {
-  front_right_motor.move(0);
-  front_left_motor.move(0);
-  back_right_motor.move(0);
-  back_left_motor.move(0);
+  frontRightMotor.move(0);
+  frontLeftMotor.move(0);
+  backRightMotor.move(0);
+  backLeftMotor.move(0);
 
   if(DEBUG_ON) {
     std::cout << "chassis stop \n";
@@ -38,10 +38,10 @@ void chassisStopDrive() {
 }
 
 void resetChassisEncoders() {
-  front_right_motor.tare_position();
-  front_left_motor.tare_position();
-  back_right_motor.tare_position();
-  back_left_motor.tare_position();
+  frontRightMotor.tare_position();
+  frontLeftMotor.tare_position();
+  backRightMotor.tare_position();
+  backLeftMotor.tare_position();
 
   if(DEBUG_ON) {
     std::cout << "chassis clear encoders \n";
@@ -75,12 +75,12 @@ void driveForDistancePID(int distance, int speed) {
   // First, reset all the encoders
   resetChassisEncoders();
 
-  front_right_motor.move_absolute(motorDegree, speed);    // Moves motorDegree units forward
-  front_left_motor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  back_right_motor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  back_left_motor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
+  frontRightMotor.move_absolute(motorDegree, speed);    // Moves motorDegree units forward
+  frontLeftMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
+  backRightMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
+  backLeftMotor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
 
-  while (!((front_left_motor.get_position() < motorUpper) && (front_left_motor.get_position() > motorLower))) {
+  while (!((frontLeftMotor.get_position() < motorUpper) && (frontLeftMotor.get_position() > motorLower))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
     pros::delay(2);
   }
@@ -88,8 +88,8 @@ void driveForDistancePID(int distance, int speed) {
   chassisStopDrive();
 
   if(DEBUG_ON) {
-    std::cout << "Encoder Left: " << front_left_motor.get_position();
-    std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
+    std::cout << "Encoder Left: " << frontLeftMotor.get_position();
+    std::cout << " Encoder Right: " << frontRightMotor.get_position() << "\n";
   }
 }
 
@@ -133,27 +133,27 @@ void pivotTurn(int speed, long turnAngle) {
   resetChassisEncoders();
 
   // we are making turns - pivot left turns opposite of right motor
-  front_right_motor.move_absolute(-motorDegree, speed);   // Moves motorDegree units forward
-  front_left_motor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  back_right_motor.move_absolute(-motorDegree, speed);    // Moves motorDegree units forward
-  back_left_motor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
+  frontRightMotor.move_absolute(-motorDegree, speed);   // Moves motorDegree units forward
+  frontLeftMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
+  backRightMotor.move_absolute(-motorDegree, speed);    // Moves motorDegree units forward
+  backLeftMotor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
 
   // we are moving untill both sides of the robot have reached their target - we are using abs
   // values of both the bounds and the desired distance so we become "insensitive" to to
   // the direction of turns.
-  while ((!((fabs(front_right_motor.get_position()) < fabs(motorUpper)) && (fabs(front_right_motor.get_position()) > fabs(motorLower)))) &&
-      (!((fabs(front_left_motor.get_position()) < fabs(motorUpper)) && (fabs(front_left_motor.get_position()) > fabs(motorLower)))))  {
+  while ((!((fabs(frontRightMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightMotor.get_position()) > fabs(motorLower)))) &&
+      (!((fabs(frontLeftMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftMotor.get_position()) > fabs(motorLower)))))  {
       // Continue running this loop as long as the motor is not within +-5 units of its goal
       pros::delay(2);
       // uncomment below for debugging
       /* if(DEBUG_ON){
-        std::cout << "Encoder Left: " << front_right_motor.get_position();
-        std::cout << " Encoder Right: " << front_left_motor.get_position() << "\n";
+        std::cout << "Encoder Left: " << frontRightMotor.get_position();
+        std::cout << " Encoder Right: " << frontLeftMotor.get_position() << "\n";
       } */
   }
   if(DEBUG_ON) {
-      std::cout << "Encoder Left: " << front_left_motor.get_position();
-      std::cout << " Encoder Right: " << front_right_motor.get_position() << "\n";
+      std::cout << "Encoder Left: " << frontLeftMotor.get_position();
+      std::cout << " Encoder Right: " << frontRightMotor.get_position() << "\n";
   }
 
   // we have reached our desired distance, so stop the motors.
@@ -161,16 +161,16 @@ void pivotTurn(int speed, long turnAngle) {
 }
 
 void getChassisDiag(double * buffer) {
-  buffer[0] = front_right_motor.get_actual_velocity();
-  buffer[1] = front_left_motor.get_actual_velocity();
-  buffer[2] = back_right_motor.get_actual_velocity();
-  buffer[3] = back_left_motor.get_actual_velocity();
-  buffer[4] = back_left_motor.get_temperature();
-  buffer[5] = back_left_motor.get_temperature();
-  buffer[6] = back_left_motor.get_temperature();
-  buffer[7] = back_left_motor.get_temperature();
-  buffer[8] = back_left_motor.get_efficiency();
-  buffer[9] = back_left_motor.get_efficiency();
-  buffer[10] = back_left_motor.get_efficiency();
-  buffer[11] = back_left_motor.get_efficiency();
+  buffer[0] = frontRightMotor.get_actual_velocity();
+  buffer[1] = frontLeftMotor.get_actual_velocity();
+  buffer[2] = backRightMotor.get_actual_velocity();
+  buffer[3] = backLeftMotor.get_actual_velocity();
+  buffer[4] = backLeftMotor.get_temperature();
+  buffer[5] = backLeftMotor.get_temperature();
+  buffer[6] = backLeftMotor.get_temperature();
+  buffer[7] = backLeftMotor.get_temperature();
+  buffer[8] = backLeftMotor.get_efficiency();
+  buffer[9] = backLeftMotor.get_efficiency();
+  buffer[10] = backLeftMotor.get_efficiency();
+  buffer[11] = backLeftMotor.get_efficiency();
 }
