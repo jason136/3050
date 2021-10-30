@@ -4,6 +4,8 @@
 #include "chassis.hpp"
 #include "lift.hpp"
 #include "conveyor.hpp"
+#include "file.hpp"
+#include "opcontrol.hpp"
 
 void runRecAuton() {
   int interations = getVectorSize();

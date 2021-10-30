@@ -31,7 +31,6 @@ char chassisData[400];
 void opcontrol() {
 
 	pros::Task opcontrolThread(opcontrolLoop);
-	pros::Task recordThread(recordLoop);
 
 }
 
@@ -79,8 +78,6 @@ void opcontrolLoop(void * param) {
 
 		processInput();
 		
-		std::cout << "inputs processed" << std::endl;
-
 		// Get data from module functions
 		getChassisDiag(buffer);
 		sprintf(chassisData,
@@ -103,8 +100,15 @@ void opcontrolLoop(void * param) {
 	}
 }
 
+void startRecordThread() {
+	pros::Task recordThread(recordLoop);
+
+	std::cout << "record loop started" << std::endl;
+}
+
 void recordLoop(void * param) {
-	while (true) {
+	int startTime = pros::millis();
+	while (pros::millis() < startTime + 15000) {
 		pros::Mutex mutex;
 		mutex.take(25);
 		recordInput(&instJoysticks[0], &instButtons[0]);
@@ -112,6 +116,9 @@ void recordLoop(void * param) {
 
 		pros::delay(20);
 	}
+	std::cout << "record loop finished -- " << getVectorSize() << std::endl;
+
+	writeToFile("/usd/test.txt");
 }
 
 void processInput() {
@@ -234,7 +241,8 @@ void processInput() {
 		frontLiftMove(-110);
 	}
 	else {
-		frontLiftLock();
+		frontLiftMove(0);
+		//frontLiftLock();
 	}
 
 	if (instButtons[2] == 1) {

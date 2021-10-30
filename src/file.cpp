@@ -1,6 +1,5 @@
 #include "main.h"
 #include "file.hpp"
-//#include "opcontrol.hpp"
 
 using namespace std;
 
@@ -38,13 +37,13 @@ void recordInput(double * instJoysticks, int * instButtons) {
 }
 
 void updateIndex(double recJoysticks, int recButtons, int index) {
-    recJoysticks = listAnalogRightX.at(x);
-    recJoysticks = listAnalogRightY.at(x);
-    recJoysticks = listAnalogLeftX.at(x);
-    recJoysticks = listAnalogLeftY.at(x);
-    recButtons = listDigitalR.at(x);
-    recButtons = listDigitalL.at(x);
-    recButtons = listDigitalUpDown.at(x);
+    recJoysticks = listAnalogRightX.at(index);
+    recJoysticks = listAnalogRightY.at(index);
+    recJoysticks = listAnalogLeftX.at(index);
+    recJoysticks = listAnalogLeftY.at(index);
+    recButtons = listDigitalR.at(index);
+    recButtons = listDigitalL.at(index);
+    recButtons = listDigitalUpDown.at(index);
 
     std::cout << "vectors returned" << std::endl;
 }

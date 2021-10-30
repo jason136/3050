@@ -26,11 +26,11 @@ using namespace std;
 // Methods for two concurrent threats
 void opcontrolLoop(void* param);
 
+void startRecordThread();
+
 void recordLoop(void * param);
 
 void processInput();
-
-void recordInput();
 
 // Helper for calculating averages
 int average(int x, int y);

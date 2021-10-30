@@ -26,4 +26,6 @@ void drawAuton();
 void drawDiag();
 void updateDiag(char * buffer);
 
+void drawRecordable();
+
 #endif

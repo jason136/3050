@@ -1,5 +1,6 @@
 #include "main.h"
 #include "screen.hpp"
+#include "opcontrol.hpp"
 
 int autonomousPreSet;
 
@@ -73,18 +74,24 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
 extern const lv_img_dsc_t field_image;
 int selection;
 
+char text[100];
+
 lv_obj_t * autonScreen = lv_obj_create(NULL, NULL);
 lv_obj_t * menuScreen = lv_obj_create(NULL, NULL);
 lv_obj_t * diagScreen = lv_obj_create(NULL, NULL);
+lv_obj_t * recordScreen = lv_obj_create(NULL, NULL);
 
 lv_obj_t * tempButton;
 lv_obj_t * menuButton;
 lv_obj_t * toggledBtn;
+lv_obj_t * recordableBtn;
 
 lv_obj_t * autonButtunLabel;
 lv_obj_t * autonLabel;
 lv_obj_t * diagLabel = NULL;
 lv_obj_t * chassisLabel;
+lv_obj_t * recordableLabel;
+
 lv_obj_t * fieldImage;
 
 lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
@@ -116,8 +123,15 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
         drawDiag();
         break;
       case 3:
+        lv_obj_clean(lv_scr_act());
+        drawRecordable();
         break;
       case 4:
+        break;
+      case 11:
+        startRecordThread();
+        sprintf(text, "recordable started");
+        lv_label_set_text(recordableLabel, text);
         break;
       default:
         if (id >= 100 && id < 150) {
@@ -150,7 +164,7 @@ void drawMenu() {
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 66);
   memcpy(&menuObjs[1], tempButton, sizeof(lv_obj_t));
 
-  tempButton = createBtn(lv_scr_act(), 0, 0, 100, 50, 3, "3", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 0, 0, 200, 50, 3, "Record Autonomous", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 122);
   memcpy(&menuObjs[2], tempButton, sizeof(lv_obj_t));
 
@@ -196,8 +210,6 @@ void drawAuton() {
 	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 86);
 }
 
-char text[100];
-
 void drawDiag() {
   lv_scr_load(diagScreen);
 
@@ -218,4 +230,18 @@ void updateDiag(char * chassisData) {
     sprintf(text, "milliseconds since start: %i\nbelow only works during opcontrol", pros::millis());
     lv_label_set_text(diagLabel, text);
   }
+}
+
+void drawRecordable() {
+  lv_scr_load(recordScreen);
+
+  menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", standardStyle);
+  lv_obj_align(menuButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
+  
+  recordableBtn = createBtn(lv_scr_act(), 0, 0, 160, 50, 11, "Record", standardStyle);
+  lv_obj_align(recordableBtn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 70);
+
+  recordableLabel = lv_label_create(lv_scr_act(), NULL);
+  lv_label_set_text(recordableLabel, "click buttun to record");
+  lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 150);
 }
