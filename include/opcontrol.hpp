@@ -23,17 +23,6 @@ using namespace std;
 #define SCALING 1.0           // Constant that all chassis speeds are multiplied by, 
                               // used to scale all chassis movement. 
 
-// Datastructures for recordable autonomous
-double instJoysticks[4];
-int instButtons[3];
-
-double recJoysticks[4];
-int recButtons[3];
-
-// Datastructures used for console and screen diagnostics
-double buffer[12];
-char chassisData[400];
-
 // Methods for two concurrent threats
 void opcontrolLoop(void* param);
 

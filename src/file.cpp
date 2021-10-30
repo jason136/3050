@@ -21,9 +21,11 @@ void clearVectors() {
     listDigitalR.clear();
     listDigitalL.clear();
     listDigitalUpDown.clear();
+
+    std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(double instJoysticks[4], int instButtons[3]) {
+void recordInput(double * instJoysticks, int * instButtons) {
 	listAnalogRightX.push_back(instJoysticks[0]);
 	listAnalogRightY.push_back(instJoysticks[1]);
 	listAnalogLeftX.push_back(instJoysticks[2]);
@@ -32,10 +34,25 @@ void recordInput(double instJoysticks[4], int instButtons[3]) {
 	listDigitalR.push_back(instButtons[0]);
 	listDigitalL.push_back(instButtons[1]);
 	listDigitalUpDown.push_back(instButtons[2]);
+    std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(double recJoysticks[4], int recButtons[3], int index) {
-    
+void updateIndex(double recJoysticks, int recButtons, int index) {
+    recJoysticks = listAnalogRightX.at(x);
+    recJoysticks = listAnalogRightY.at(x);
+    recJoysticks = listAnalogLeftX.at(x);
+    recJoysticks = listAnalogLeftY.at(x);
+    recButtons = listDigitalR.at(x);
+    recButtons = listDigitalL.at(x);
+    recButtons = listDigitalUpDown.at(x);
+
+    std::cout << "vectors returned" << std::endl;
+}
+
+int getVectorSize() {
+    return listAnalogRightX.size();
+
+    std::cout << "vector size returned" << std::endl;
 }
 
 void writeToFile(const char* filename) {
@@ -53,6 +70,8 @@ void writeToFile(const char* filename) {
         outfile << filebuffer;
     }
     outfile.close();
+
+    std::cout << "file written" << std::endl;
 }
 
 void readFromFile(const char* filename) {
@@ -71,4 +90,6 @@ void readFromFile(const char* filename) {
         listDigitalUpDown.push_back(g);
     }
     infile.close();
+
+    std::cout << "file read" << std::endl;
 }

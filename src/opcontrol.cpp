@@ -7,6 +7,14 @@
 #include "file.hpp"
 #include "opcontrol.hpp"
 
+// Datastructures for recordable autonomous
+double instJoysticks[4];
+int instButtons[3];
+
+// Datastructures used for console and screen diagnostics
+double buffer[12];
+char chassisData[400];
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -87,8 +95,6 @@ void opcontrolLoop(void * param) {
 
 		updateDiag(&chassisData[0]);
 
-		std::cout << "inputs recorded" << std::endl;
-
 		if (false) {
 			std::cout << chassisData;
 		}
@@ -101,7 +107,7 @@ void recordLoop(void * param) {
 	while (true) {
 		pros::Mutex mutex;
 		mutex.take(25);
-		recordInput(instJoysticks, instButtons);
+		recordInput(&instJoysticks[0], &instButtons[0]);
 		mutex.give();
 
 		pros::delay(20);

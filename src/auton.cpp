@@ -6,7 +6,14 @@
 #include "conveyor.hpp"
 
 void runRecAuton() {
-  
+  int interations = getVectorSize();
+  double recJoysticks[4];
+  int recButtons[3];
+  for (int x = 0; x < interations; x++) {
+    updateIndex(&recJoysticks[0], &recButtons[0], x);
+    processInput();
+    pros::delay(20);
+  }
 }
 
 /**
