@@ -76,7 +76,7 @@ void opcontrolLoop(void * param) {
 
 		mutex.give();
 
-		processInput();
+		processInput(&instJoysticks[0], &instButtons[0]);
 		
 		// Get data from module functions
 		getChassisDiag(buffer);
@@ -124,12 +124,12 @@ void recordLoop(void * param) {
     finishRecording();
 }
 
-void processInput() {
+void processInput(double * arrJoysticks, int * arrButtons) {
 	// Create easily mutable versions of struct members
-	double rightX = instJoysticks[0];
-	double rightY = instJoysticks[1];
-	double leftX = instJoysticks[2];
-	double leftY = instJoysticks[3];
+	double rightX = arrJoysticks[0];
+	double rightY = arrJoysticks[1];
+	double leftX = arrJoysticks[2];
+	double leftY = arrJoysticks[3];
 
 	if (DRIVE_MODE == 1) {
 			// We want to do X-Drive TANK control
@@ -227,20 +227,20 @@ void processInput() {
 	// }
 
 	// end chassis control, below is other modules only
-	if (instButtons[0] == 1) {
+	if (arrButtons[0] == 1) {
 		conveyorMove(100);
 	}
-	else if (instButtons[0] == -1) {
+	else if (arrButtons[0] == -1) {
 		conveyorMove(-100);
 	}
 	else {
 		conveyorStop();
 	}
 
-	if (instButtons[1] == 1) {
+	if (arrButtons[1] == 1) {
 		frontLiftMove(127);
 	}
-	else if (instButtons[1] == -1) {
+	else if (arrButtons[1] == -1) {
 		frontLiftMove(-110);
 	}
 	else {
@@ -248,10 +248,10 @@ void processInput() {
 		//frontLiftLock();
 	}
 
-	if (instButtons[2] == 1) {
+	if (arrButtons[2] == 1) {
 		backLiftMove(127);
 	}
-	else if (instButtons[2] == -1) {
+	else if (arrButtons[2] == -1) {
 		backLiftMove(-110);
 	}
 	else {

@@ -8,25 +8,23 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 
-extern int selection;
-
-void runRecAuton() {
+/**
+ * This is where all the various autonomous routines are located
+ * and subsequently called by the autonomous() selector based on GUI input
+ **/
+void recAuton() {
     int interations = getVectorSize();
     double recJoysticks[4];
     int recButtons[3];
     for (int x = 0; x < interations; x++)
     {
         updateIndex(&recJoysticks[0], &recButtons[0], x);
-        processInput();
+        processInput(&recJoysticks[0], &recButtons[0]);
         std::cout << "execute line" << x << "of" << interations << std::endl;
         pros::delay(20);
     }
 }
 
-/**
- * This is where all the various autonomous routines are located
- * and subsequently called by the autonomous() selector based on GUI input
- **/
 void skillRun() {
 
     // // Old code below use only for reference. ie delete
@@ -44,12 +42,11 @@ void skillRun() {
     // pros::delay(2000);
     // chassisStopDrive();
 
-    runRecAuton();
 }
 
 void autoRedLeft() {
 
-    runRecAuton();
+    // Code Here
 
 }
 

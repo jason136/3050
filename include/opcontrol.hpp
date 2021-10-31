@@ -30,7 +30,7 @@ void startRecordThread();
 
 void recordLoop(void * param);
 
-void processInput();
+void processInput(double * arrJoysticks, int * arrButtons);
 
 // Helper for calculating averages
 int average(int x, int y);

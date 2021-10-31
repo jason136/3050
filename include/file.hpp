@@ -15,8 +15,12 @@ void updateIndex(double * recJoysticks, int * recButtons, int index);
 
 int getVectorSize();
 
-void writeToFile(const char* filename);
+void writeToFile(const char * filename);
 
-void readFromFile(const char* filename);
+void readFromFile(const char * filename);
+
+bool exists(const char * name);
+
+void generateFiles();
 
 #endif

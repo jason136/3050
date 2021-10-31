@@ -33,20 +33,9 @@ void initialize() {
 
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-    readFromFile("/usd/test.txt");
-
-    double recJoysticks[4];
-    int recButtons[3];
-    updateIndex(&recJoysticks[0], &recButtons[0], 1);
-    for (int x = 0; x < 4; x++) {
-        std::cout << recJoysticks[x] << "\n";
-    }
-    for (int x = 0; x < 3; x++) {
-        std::cout << recButtons[x] << "\n";
-    }
-    std::cout << std::endl;
-
     loadScreen();
+
+    generateFiles();
 }
 
 /**
