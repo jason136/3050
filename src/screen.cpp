@@ -1,8 +1,7 @@
 #include "main.h"
 #include "screen.hpp"
 #include "opcontrol.hpp"
-
-int autonomousPreSet;
+#include "file.hpp"
 
 /**
  * Code for controlling screen graphics and such
@@ -73,6 +72,7 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
 
 extern const lv_img_dsc_t field_image;
 int selection;
+bool recAuton;
 
 char text[100];
 
@@ -83,6 +83,7 @@ lv_obj_t * recordScreen = lv_obj_create(NULL, NULL);
 
 lv_obj_t * tempButton;
 lv_obj_t * menuButton;
+lv_obj_t * recAutonButton;
 lv_obj_t * toggledBtn;
 lv_obj_t * recordableBtn;
 
@@ -95,13 +96,13 @@ lv_obj_t * recordableLabel;
 lv_obj_t * fieldImage;
 
 lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(100, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(50, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_style_t * blueStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(0, 0, 100), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(0, 0, 50), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_style_t * standardStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(80, 80, 40), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(60, 60, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 7);
 lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
@@ -110,42 +111,64 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
 		uint8_t id = lv_obj_get_free_num(btn);
     switch(id) {
         case 0:
-            lv_obj_clean(lv_scr_act());
-            diagLabel = NULL;
-            drawMenu();
-            break;
+          lv_obj_clean(lv_scr_act());
+          diagLabel = NULL;
+          drawMenu();
+          break;
         case 1:
-            lv_obj_clean(lv_scr_act());
-            drawAuton();
-            break;
+          lv_obj_clean(lv_scr_act());
+          drawAuton();
+          break;
         case 2:
-            lv_obj_clean(lv_scr_act());
-            drawDiag();
-            break;
+          lv_obj_clean(lv_scr_act());
+          drawDiag();
+          break;
         case 3:
-            lv_obj_clean(lv_scr_act());
-            drawRecordable();
-            break;
+          lv_obj_clean(lv_scr_act());
+          drawRecordable();
+          break;
         case 4:
-            break;
+          break;
+        case 10:
+          if (recAuton) {
+            recAuton = false;
+            btnSetToggled(recAutonButton, false);
+          }
+          else {
+            recAuton = true;
+            btnSetToggled(recAutonButton, true);
+          }
+          break;
         case 11:
-            startRecordThread();
-            sprintf(text, "recordable started");
-            lv_label_set_text(recordableLabel, text);
-            break;
+          startRecordThread();
+          sprintf(text, "recordable started");
+          lv_label_set_text(recordableLabel, text);
+          break;
+
         default:
-            if (id >= 100 && id < 150) {
-                if (autonomousPreSet != id - 100 && toggledBtn != nullptr) {
-                btnSetToggled(toggledBtn, false);
+          if (id >= 100 && id < 110) {
+            if (selection != id - 100 && toggledBtn != nullptr) {
+              btnSetToggled(toggledBtn, false);
             }
-            autonomousPreSet = id - 100;
+
+            if (recAuton) {
+              char filename[20];
+              sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
+              bool success = readFromFile(filename);
+              if (!success) {
+                return 0;
+              }
+              id = 110;
+            }
+
+            selection = id - 100;
             toggledBtn = btn;
             btnSetToggled(btn, true);
-            char buffer[100];
-            sprintf(buffer, "Auton routine \nselected: %i", autonomousPreSet);
-            lv_label_set_text(autonLabel, buffer);
-            }
-            break;
+            // char buffer[100];
+            // sprintf(buffer, "Auton routine \nselected: %i", selection);
+            // lv_label_set_text(autonLabel, buffer);
+          }
+          break;
     }
 	return LV_RES_OK;
 }
@@ -154,51 +177,46 @@ void loadScreen() {
   drawAuton();
 }
 
+//memcpy(&menuObjs[0], tempButton, sizeof(lv_obj_t));
+
 void drawMenu() {
   lv_scr_load(menuScreen);
 
   tempButton = createBtn(lv_scr_act(), 0, 0, 180, 50, 1, "Auton Select", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
-  memcpy(&menuObjs[0], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 0, 0, 160, 50, 2, "Diagnostics", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 66);
-  memcpy(&menuObjs[1], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 0, 0, 250, 50, 3, "Record Autonomous", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 122);
-  memcpy(&menuObjs[2], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 0, 0, 100, 50, 4, "4", standardStyle);
   lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 178);
-  memcpy(&menuObjs[3], tempButton, sizeof(lv_obj_t));
 }
 
 void drawAuton() {
   lv_scr_load(autonScreen);
 
   tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 101, "1", redStyle);
-  memcpy(&autonObjs[0], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
-  memcpy(&autonObjs[1], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 103, "3", redStyle);
-  memcpy(&autonObjs[2], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 104, "4", blueStyle);
-  memcpy(&autonObjs[3], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 105, "5", redStyle);
-  memcpy(&autonObjs[4], tempButton, sizeof(lv_obj_t));
 
   tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 106, "6", blueStyle);
-  memcpy(&autonObjs[5], tempButton, sizeof(lv_obj_t));
 
   menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 
   tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 107, "Skills", standardStyle);
-  memcpy(&autonObjs[6], tempButton, sizeof(lv_obj_t));
+
+  recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", standardStyle);
+  recAuton = true;
+  btnSetToggled(recAutonButton, true);
 
   LV_IMG_DECLARE(field_image);
   lv_obj_t * imageObj = lv_img_create(lv_scr_act(), NULL);
@@ -206,9 +224,9 @@ void drawAuton() {
   lv_obj_set_size(imageObj, 170, 170);
   lv_obj_align(imageObj, NULL, LV_ALIGN_IN_TOP_MID, 0, 8);
 
-	autonLabel = lv_label_create(lv_scr_act(), NULL);
-	lv_label_set_text(autonLabel, "Auton routine \nselected: ");
-	lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 86);
+	// autonLabel = lv_label_create(lv_scr_act(), NULL);
+	// lv_label_set_text(autonLabel, "Auton routine \nselected: ");
+	// lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 86);
 }
 
 void drawDiag() {
@@ -245,6 +263,23 @@ void drawRecordable() {
   recordableLabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_text(recordableLabel, "click buttun to record");
   lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 150);
+
+  tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 101, "1", redStyle);
+
+  tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
+
+  tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 103, "3", redStyle);
+
+  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 104, "4", blueStyle);
+
+  tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 105, "5", redStyle);
+
+  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 106, "6", blueStyle);
+
+  menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
+
+  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 107, "Skills", standardStyle);
+
 }
 
 void finishRecording() {

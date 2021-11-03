@@ -17,7 +17,7 @@ int getVectorSize();
 
 void writeToFile(const char * filename);
 
-void readFromFile(const char * filename);
+bool readFromFile(const char * filename);
 
 bool exists(const char * name);
 

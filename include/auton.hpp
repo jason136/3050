@@ -4,10 +4,16 @@
 #include "main.h"
 
 // Functiosn facilitating the various Autonomous routien options
+void recAuton();
+
 void skillRun();              // Skill Autonomous - 60Sec
+
 void autoRedLeft();           // Competition autonomous - 15Sec
+
 void autoBlueRight();
+
 void autoRedRight();
+
 void autoBlueLeft();
 
 #endif

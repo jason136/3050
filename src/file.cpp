@@ -57,6 +57,7 @@ int getVectorSize() {
 
 void writeToFile(const char * filename) {
     ofstream outfile(filename);
+    outfile << "data\n";
     char filebuffer[500] = "";
     for (int x = 0; x < listAnalogRightX.size(); x++) {
         sprintf(filebuffer, "%F %F %F %F %i %i %i\n",
@@ -74,9 +75,13 @@ void writeToFile(const char * filename) {
     std::cout << "file written" << std::endl;
 }
 
-void readFromFile(const char * filename) {
+bool readFromFile(const char * filename) {
     clearVectors();
     ifstream infile(filename);
+    char buffer[5];
+    infile >> buffer;
+    std::cout << buffer << std::endl;
+    if (buffer == "none") return false;
     double a, b, c, d;
     int e, f, g;
     while (infile >> a >> b >> c >> d >> e >> f >> g) {
@@ -91,7 +96,8 @@ void readFromFile(const char * filename) {
     }
     infile.close();
 
-    std::cout << "file read" << getVectorSize() << std::endl;
+    std::cout << "file read: " << filename << getVectorSize() << std::endl;
+    return true;
 }
 
 bool exists(const char * name) {
@@ -105,7 +111,7 @@ void generateFiles() {
         sprintf(filename, "/usd/RecAuton%i.txt", x);
         if (!exists(filename)) {
             ofstream file(filename);
-            file << "buffer";
+            file << "none";
             file.close();
             std::cout << "file created: " << std::endl;
         }
