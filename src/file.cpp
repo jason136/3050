@@ -1,8 +1,6 @@
 #include "main.h"
 #include "file.hpp"
 
-using namespace std;
-
 std::vector<int> listAnalogRightX;
 std::vector<int> listAnalogRightY;
 std::vector<int> listAnalogLeftX;
@@ -42,9 +40,9 @@ void updateIndex(int * recInputs, int index) {
     recInputs[1] = listAnalogRightY.at(index);
     recInputs[2] = listAnalogLeftX.at(index);
     recInputs[3] = listAnalogLeftY.at(index);
-    recInputs[0] = listDigitalR.at(index);
-    recInputs[1] = listDigitalL.at(index);
-    recInputs[2] = listDigitalUpDown.at(index);
+    recInputs[4] = listDigitalR.at(index);
+    recInputs[5] = listDigitalL.at(index);
+    recInputs[6] = listDigitalUpDown.at(index);
 
     std::cout << "vectors returned" << std::endl;
 }
@@ -56,7 +54,7 @@ int getVectorSize() {
 }
 
 void writeToFile(const char * filename) {
-    ofstream outfile(filename);
+    std::ofstream outfile(filename);
     outfile << "data\n";
     char filebuffer[500] = "";
     for (int x = 0; x < listAnalogRightX.size(); x++) {
@@ -77,7 +75,7 @@ void writeToFile(const char * filename) {
 
 bool readFromFile(const char * filename) {
     clearVectors();
-    ifstream infile(filename);
+    std::ifstream infile(filename);
     char buffer[10];
     infile >> buffer;
     std::cout << buffer << std::endl;
@@ -102,7 +100,7 @@ bool readFromFile(const char * filename) {
 }
 
 bool exists(const char * name) {
-    ifstream f(name);
+    std::ifstream f(name);
     return f.good();
 }
 
@@ -111,7 +109,7 @@ void generateFiles() {
     for (int x = 0; x < 7; x++) {
         sprintf(filename, "/usd/RecAuton%i.txt", x);
         if (!exists(filename)) {
-            ofstream file(filename);
+            std::ofstream file(filename);
             file << "none";
             file.close();
             std::cout << "file created: " << std::endl;

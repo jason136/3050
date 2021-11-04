@@ -26,9 +26,6 @@ void frontLiftLock() {
     frontRightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     frontLeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-  // Slight delay is due to problems we had in the past with
-  // very jerky movements
-  pros::delay(5);
 }
 
 void backLiftMove(int voltage) {
@@ -47,9 +44,6 @@ void backLiftLock() {
   if(backLiftMotor.get_brake_mode() != 2 ) {
     backLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-  // Slight delay is due to problems we had in the past with
-  // very jerky movements
-  pros::delay(5);
 }
 
 void liftResetEncoder() {

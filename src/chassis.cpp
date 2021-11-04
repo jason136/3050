@@ -43,10 +43,6 @@ void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
       backLeftMotor.move(0);
       backLeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
-
-  // Slight delay is due to problems we had in the past with
-  // very jerky movements
-  pros::delay(5);
 }
 
 void chassisStopDrive() {

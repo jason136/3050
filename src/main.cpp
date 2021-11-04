@@ -69,15 +69,15 @@ void competition_initialize() {}
  */
 
 extern int selection;
+extern bool recAuton;
 
 void autonomous() {
     // We are calling a autonomous function based on the selection
     // we made on the LCD
 
+    if (recAuton) recordableAuton();
+
     switch (selection) {
-        case 10:
-            recAuton();
-            break;
         case 0:
             skillRun();
             break;

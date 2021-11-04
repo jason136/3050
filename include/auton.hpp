@@ -4,7 +4,7 @@
 #include "main.h"
 
 // Functiosn facilitating the various Autonomous routien options
-void recAuton();
+void recordableAuton();
 
 void skillRun();              // Skill Autonomous - 60Sec
 

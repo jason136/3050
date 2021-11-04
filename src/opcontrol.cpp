@@ -119,25 +119,25 @@ void recordLoop(void * param) {
         if (master.get_digital(DIGITAL_A)) {
             break;
         }
+		pros::delay(20);
     }
 
-    //master.clear_line(1);
     sprintf(countdown, "recording");
     master.set_text(1, 1, countdown);
     startTime = pros::millis();
 	while (pros::millis() < startTime + 15000) {
 		pros::Mutex mutex;
-		mutex.take(25);
+		mutex.take(5);
 		recordInput(&instInputs[0]);
 		mutex.give();
-
+		
 		pros::delay(20);
 	}
 
     master.clear_line(1);
     char filename[20];
     sprintf(filename, "/usd/RecAuton%i.txt", selection);
-	std::cout << "record loop finished -- " << getVectorSize() << filename << std::endl;
+	std::cout << "record loop finished -- " << getVectorSize() << filename << " elapsed time: " << pros::millis() - startTime << std::endl;
 
 	writeToFile(filename);
     finishRecording();
@@ -150,34 +150,25 @@ void processInput(int * arrInputs) {
 	int leftX = arrInputs[2];
 	int leftY = arrInputs[3];
 
+	if (abs(rightX) < DEAD_STICK) rightX = 0; 
+	if (abs(rightY) < DEAD_STICK) rightY = 0; 
+	if (abs(leftX) < DEAD_STICK) leftX = 0; 
+	if (abs(leftY) < DEAD_STICK) leftY = 0; 
+	rightX = (rightX * SCALING);
+	rightY = (rightY * SCALING);
+	leftX = (leftX * SCALING);
+	leftY = (leftY * SCALING);
+
 	if (DRIVE_MODE == 1) {
-			// We want to do X-Drive TANK control
+		// We want to do X-Drive TANK control
 
-			if (abs(rightX) < DEAD_STICK) rightX = 0;
-			if (abs(rightY) < DEAD_STICK) rightY = 0;
-			if (abs(leftX) < DEAD_STICK) leftX = 0; 
-			if (abs(leftY) < DEAD_STICK) leftY = 0;
-			rightX = (rightX * SCALING);
-			rightY = (rightY * SCALING);
-			leftX = (leftX * SCALING);
-			leftY = (leftY * SCALING);
-
-			setIndividualMotor((rightY - average(rightX, leftX)),
-				 				(leftY + average(rightX, leftX)),
-								(rightY + average(rightX, leftX)),
-								(leftY - average(rightX, leftX)));
+		setIndividualMotor((rightY - average(rightX, leftX)),
+							(leftY + average(rightX, leftX)),
+							(rightY + average(rightX, leftX)),
+							(leftY - average(rightX, leftX)));
 	}
 	else if (DRIVE_MODE == 2) {
 		// We want to do X-Drive ARCADE control
-
-		if (abs(rightX) < DEAD_STICK) rightX = 0; 
-		if (abs(rightY) < DEAD_STICK) rightY = 0; 
-		if (abs(leftX) < DEAD_STICK) leftX = 0; 
-		if (abs(leftY) < DEAD_STICK) leftY = 0; 
-		rightX = (rightX * SCALING);
-		rightY = (rightY * SCALING);
-		leftX = (leftX * SCALING);
-		leftY = (leftY * SCALING);
 
 		setIndividualMotor((rightY - leftX - rightX),
 							(rightY + leftX + rightX),
@@ -187,26 +178,12 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
 
-		// implemenet dead stick control
-		if (abs(leftY) < DEAD_STICK) leftY = 0; 
-		if (abs(rightY) < DEAD_STICK) rightY = 0; 
-		// implement scaling
-		rightY = (rightY * SCALING);
-		leftY = (leftY * SCALING);
-
 		setIndividualMotor(rightY, leftY, rightY, leftY);
 
         chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
 	else if (DRIVE_MODE == 4) {
 		// We are wanting to do standard ARCADE control
-
-		// implemenet dead stick control
-		if (abs(leftY) < DEAD_STICK) leftY = 0; 
-		if (abs(leftX) < DEAD_STICK) leftX = 0; 
-		// implement scaling
-		leftX = (leftX * SCALING);
-		leftY = (leftY * SCALING);
 
 		setIndividualMotor(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
