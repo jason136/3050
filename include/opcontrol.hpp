@@ -22,12 +22,7 @@ using namespace std;
 
 #define SCALING 1.0           // Constant that all chassis speeds are multiplied by, 
                               // used to scale all chassis movement. 
-
-// Methods for two concurrent threats
-void opcontrolLoop(void * param);
-
-void startRecordThread();
-
+                              
 void recordLoop(void * param);
 
 void processInput(int * arrInputs);

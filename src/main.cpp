@@ -1,12 +1,9 @@
 #include "api.h"
 #include "main.h"
 #include "portdef.hpp"
-#include "auton.hpp"
 #include "chassis.hpp"
 #include "lift.hpp"
 #include "conveyor.hpp"
-#include "screen.hpp"
-#include "file.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -32,10 +29,6 @@ void initialize() {
     pros::Motor backLiftMotor(BACK_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-
-    loadScreen();
-
-    generateFiles();
 }
 
 /**
@@ -67,33 +60,6 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-
-extern int selection;
-extern bool recAuton;
-
 void autonomous() {
-    // We are calling a autonomous function based on the selection
-    // we made on the LCD
 
-    if (recAuton) recordableAuton();
-
-    switch (selection) {
-        case 0:
-            skillRun();
-            break;
-        case 1:
-            autoRedLeft();
-            break;
-        case 2:
-            autoBlueLeft();
-            break;
-        case 3:
-            autoRedRight();
-            break;
-        case 4:
-            autoBlueRight();
-            break;
-        default:
-            break;
-    }
 }

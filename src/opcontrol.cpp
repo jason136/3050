@@ -3,18 +3,9 @@
 #include "chassis.hpp"
 #include "conveyor.hpp"
 #include "lift.hpp"
-#include "screen.hpp"
-#include "file.hpp"
 #include "opcontrol.hpp"
 
-// Datastructures for recordable autonomous
 int instInputs[7];
-
-// Datastructures used for console and screen diagnostics
-double buffer[12];
-char chassisData[400];
-
-extern int selection;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
@@ -34,15 +25,7 @@ pros::Controller partner(pros::E_CONTROLLER_PARTNER);
  */
 void opcontrol() {
 
-	pros::Task opcontrolThread(opcontrolLoop);
-
-}
-
-void opcontrolLoop(void * param) {
-    while (true) {
-		pros::Mutex mutex;
-		mutex.take(25);
-
+	while (true) {
 		instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
 		instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
 		instInputs[2] = master.get_analog(ANALOG_LEFT_X);
@@ -76,71 +59,11 @@ void opcontrolLoop(void * param) {
 			instInputs[6] = -0;
 		}
 
-		mutex.give();
-
 		processInput(&instInputs[0]);
-		
-		// Get data from module functions
-		getChassisDiag(buffer);
-		sprintf(chassisData,
-		"Fn R Mtr V: %f -- T: %f -- E: %f\n"
-		"Fn L Mtr V: %f -- T: %f -- E: %f\n"
-		"Bk R Mtr V: %f -- T: %f -- E: %f\n"
-		"Bk L Mtr V: %f -- T: %f -- E: %f\n",
-		buffer[0], buffer[4], buffer[8],
-		buffer[1], buffer[5], buffer[9],
-		buffer[2], buffer[6], buffer[10],
-		buffer[3], buffer[7], buffer[11]);
-
-		updateDiag(&chassisData[0]);
-
-		if (false) {
-			std::cout << chassisData;
-		}
 
 		pros::delay(20);
 	}
-}
 
-void startRecordThread() {
-    clearVectors();
-
-	pros::Task recordThread(recordLoop);
-
-	std::cout << "record loop started" << std::endl;
-}
-
-void recordLoop(void * param) {
-	int startTime = pros::millis();
-    char countdown[20];
-    sprintf(countdown, "press A");
-    master.set_text(1, 1, countdown);
-    while (pros::millis() < startTime + 15000) {
-        if (master.get_digital(DIGITAL_A)) {
-            break;
-        }
-		pros::delay(20);
-    }
-
-    sprintf(countdown, "recording");
-    master.set_text(1, 1, countdown);
-    startTime = pros::millis();
-	while (pros::millis() < startTime + 15000) {
-		pros::Mutex mutex;
-		mutex.take(5);
-		recordInput(&instInputs[0]);
-		mutex.give();
-		
-		pros::delay(20);
-	}
-
-    master.clear_line(1);
-    char filename[20];
-    sprintf(filename, "/usd/RecAuton%i.txt", selection);
-	std::cout << "record loop finished -- " << getVectorSize() << filename << " elapsed time: " << pros::millis() - startTime << std::endl;
-
-	writeToFile(filename);
-    finishRecording();
 }
 
 void processInput(int * arrInputs) {
