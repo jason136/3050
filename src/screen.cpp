@@ -139,35 +139,47 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
             btnSetToggled(recAutonButton, true);
           }
           break;
-        case 11:
-          startRecordThread();
-          sprintf(text, "recordable started");
-          lv_label_set_text(recordableLabel, text);
-          break;
-
         default:
-          if (id >= 100 && id < 110) {
-            if (selection != id - 100 && toggledBtn != nullptr) {
-              btnSetToggled(toggledBtn, false);
-            }
+            if (id >= 100 && id < 112) {
+                if (selection != id - 100 && toggledBtn != nullptr) {
+                    btnSetToggled(toggledBtn, false);
+                }
 
-            if (recAuton) {
-              char filename[20];
-              sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
-              bool success = readFromFile(filename);
-              if (!success) {
-                return 0;
-              }
-              id = 110;
-            }
+                if (recAuton) {
+                    char filename[20];
+                    sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
+                    bool success = readFromFile(filename);
+                    std::cout << "success?  " << success << std::endl;
+                    if (!success) {
+                        return LV_RES_OK;
+                    }
+                    id = 110;
+                }
 
-            selection = id - 100;
-            toggledBtn = btn;
-            btnSetToggled(btn, true);
-            // char buffer[100];
-            // sprintf(buffer, "Auton routine \nselected: %i", selection);
-            // lv_label_set_text(autonLabel, buffer);
-          }
+                selection = id - 100;
+                toggledBtn = btn;
+                btnSetToggled(btn, true);
+                // char buffer[100];
+                // sprintf(buffer, "Auton routine \nselected: %i", selection);
+                // lv_label_set_text(autonLabel, buffer);
+            }
+            else if (id >= 200 && id < 300) {
+                if (selection != id - 200 && toggledBtn != nullptr) {
+                    btnSetToggled(toggledBtn, false);
+                }
+                if (id == 211 && selection) {
+                    char filename[20];
+                    sprintf(filename, "/usd/RecAuton%i.txt", id - 200);
+                    startRecordThread();
+                    sprintf(text, "recordable started");
+                    lv_label_set_text(recordableLabel, text);
+                }
+                else {
+                    selection = id - 200;
+                    toggledBtn = btn;
+                    btnSetToggled(btn, true);
+                }
+            }
           break;
     }
 	return LV_RES_OK;
@@ -198,21 +210,21 @@ void drawMenu() {
 void drawAuton() {
   lv_scr_load(autonScreen);
 
-  tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 101, "1", redStyle);
+  tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 101, "2", blueStyle);
 
-  tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 103, "3", redStyle);
+  tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 102, "3", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 104, "4", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 103, "4", blueStyle);
 
-  tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 105, "5", redStyle);
+  tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 104, "5", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 106, "6", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 105, "6", blueStyle);
 
   menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 
-  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 107, "Skills", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", standardStyle);
 
   recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", standardStyle);
   recAuton = true;
@@ -254,31 +266,28 @@ void updateDiag(char * chassisData) {
 void drawRecordable() {
   lv_scr_load(recordScreen);
 
-  menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", standardStyle);
-  lv_obj_align(menuButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
-  
-  recordableBtn = createBtn(lv_scr_act(), 0, 0, 160, 50, 11, "Record", standardStyle);
+  recordableBtn = createBtn(lv_scr_act(), 0, 0, 160, 50, 211, "Record", standardStyle);
   lv_obj_align(recordableBtn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 70);
 
   recordableLabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_text(recordableLabel, "click buttun to record");
   lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 150);
 
-  tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 101, "1", redStyle);
+  tempButton = createBtn(lv_scr_act(), 245, 10, 100, 50, 200, "1", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 102, "2", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 201, "2", blueStyle);
 
-  tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 103, "3", redStyle);
+  tempButton = createBtn(lv_scr_act(), 245, 68, 100, 50, 202, "3", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 104, "4", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 203, "4", blueStyle);
 
-  tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 105, "5", redStyle);
+  tempButton = createBtn(lv_scr_act(), 245, 126, 100, 50, 204, "5", redStyle);
 
-  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 106, "6", blueStyle);
+  tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 205, "6", blueStyle);
 
   menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 
-  tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 107, "Skills", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 300, 184, 140, 48, 206, "Skills", standardStyle);
 
 }
 

@@ -12,9 +12,9 @@
 #define TRAY_MOTOR_PORT 5
 
 // Lift Motor
-#define FRONT_RIGHT_LIFT_MOTOR 10
-#define FRONT_LEFT_LIFT_MOTOR 10
-#define BACK_LIFT_MOTOR 11
+#define FRONT_RIGHT_LIFT_MOTOR 4
+#define FRONT_LEFT_LIFT_MOTOR 5
+#define BACK_LIFT_MOTOR 10
 
 // Conveyor Motors
 #define CONVEYOR_MOTOR 18

@@ -20,15 +20,6 @@ void initialize() {
     // GEARSET_18 -- GREEN (default)
     // GEARSET_6 -- BLUE
 
-    remove( "/usd/RecAuton1.txt" ); 
-    remove( "/usd/RecAuton2.txt" ); 
-    remove( "/usd/RecAuton3.txt" ); 
-    remove( "/usd/RecAuton4.txt" ); 
-    remove( "/usd/RecAuton5.txt" ); 
-    remove( "/usd/RecAuton6.txt" ); 
-    remove( "/usd/RecAuton7.txt" );
-
-
     pros::Motor front_right_motor(FRONT_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
     pros::Motor front_left_motor(FRONT_LEFT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
     pros::Motor back_right_motor(BACK_RIGHT_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);

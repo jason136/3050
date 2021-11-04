@@ -15,6 +15,11 @@ int instButtons[3];
 double buffer[12];
 char chassisData[400];
 
+extern int selection;
+
+pros::Controller master(pros::E_CONTROLLER_MASTER);
+pros::Controller partner(pros::E_CONTROLLER_PARTNER);
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -38,18 +43,16 @@ void opcontrolLoop(void * param) {
     while (true) {
 		pros::Mutex mutex;
 		mutex.take(25);
-	
-		pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 		instJoysticks[0] = master.get_analog(ANALOG_RIGHT_X);
 		instJoysticks[1] = master.get_analog(ANALOG_RIGHT_Y);
 		instJoysticks[2] = master.get_analog(ANALOG_LEFT_X);
 		instJoysticks[3] = master.get_analog(ANALOG_LEFT_Y);
 
-		if (master.get_digital(DIGITAL_R1)) {
+		if (partner.get_digital(DIGITAL_R1)) {
 			instButtons[0] = 1;
 		}
-		else if (master.get_digital(DIGITAL_R2)) {
+		else if (partner.get_digital(DIGITAL_R2)) {
 			instButtons[0] = -1;
 		}
 		else {
@@ -64,10 +67,10 @@ void opcontrolLoop(void * param) {
 		else {
 			instButtons[1] = -0;
 		}
-		if (master.get_digital(DIGITAL_UP)) {
+		if (partner.get_digital(DIGITAL_UP)) {
 			instButtons[2] = 1;
 		}
-		else if (master.get_digital(DIGITAL_DOWN)) {
+		else if (partner.get_digital(DIGITAL_DOWN)) {
 			instButtons[2] = -1;
 		}
 		else {
@@ -110,6 +113,19 @@ void startRecordThread() {
 
 void recordLoop(void * param) {
 	int startTime = pros::millis();
+    char countdown[20];
+    sprintf(countdown, "press A");
+    master.set_text(1, 1, countdown);
+    while (pros::millis() < startTime + 15000) {
+        if (master.get_digital(DIGITAL_A)) {
+            break;
+        }
+    }
+
+    //master.clear_line(1);
+    sprintf(countdown, "recording");
+    master.set_text(1, 1, countdown);
+    startTime = pros::millis();
 	while (pros::millis() < startTime + 15000) {
 		pros::Mutex mutex;
 		mutex.take(25);
@@ -118,9 +134,13 @@ void recordLoop(void * param) {
 
 		pros::delay(20);
 	}
-	std::cout << "record loop finished -- " << getVectorSize() << std::endl;
 
-	writeToFile("/usd/test.txt");
+    master.clear_line(1);
+    char filename[20];
+    sprintf(filename, "/usd/RecAuton%i.txt", selection);
+	std::cout << "record loop finished -- " << getVectorSize() << filename << std::endl;
+
+	writeToFile(filename);
     finishRecording();
 }
 
@@ -244,8 +264,7 @@ void processInput(double * arrJoysticks, int * arrButtons) {
 		frontLiftMove(-110);
 	}
 	else {
-		frontLiftMove(0);
-		//frontLiftLock();
+		frontLiftLock();
 	}
 
 	if (arrButtons[2] == 1) {
@@ -255,7 +274,8 @@ void processInput(double * arrJoysticks, int * arrButtons) {
 		backLiftMove(-110);
 	}
 	else {
-		backLiftLock();
+        backLiftMove(0);
+		//backLiftLock();
 	}
 }
 

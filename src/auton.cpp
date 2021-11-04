@@ -12,6 +12,8 @@
  * This is where all the various autonomous routines are located
  * and subsequently called by the autonomous() selector based on GUI input
  **/
+
+extern int selection;
 void recAuton() {
     int interations = getVectorSize();
     double recJoysticks[4];
@@ -20,7 +22,7 @@ void recAuton() {
     {
         updateIndex(&recJoysticks[0], &recButtons[0], x);
         processInput(&recJoysticks[0], &recButtons[0]);
-        std::cout << "execute line" << x << "of" << interations << std::endl;
+        std::cout << selection << "selection execute line" << x << "of" << interations << std::endl;
         pros::delay(20);
     }
 }

@@ -78,10 +78,12 @@ void writeToFile(const char * filename) {
 bool readFromFile(const char * filename) {
     clearVectors();
     ifstream infile(filename);
-    char buffer[5];
+    char buffer[10];
     infile >> buffer;
     std::cout << buffer << std::endl;
-    if (buffer == "none") return false;
+    if (strcmp(buffer, "none") == 0) {
+        return false;
+    }
     double a, b, c, d;
     int e, f, g;
     while (infile >> a >> b >> c >> d >> e >> f >> g) {
