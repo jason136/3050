@@ -22,7 +22,7 @@ void frontLiftMove(int voltage) {
 void frontLiftLock() {
   frontRightLiftMotor.move(0);
   frontLeftLiftMotor.move(0);
-  if(frontRightLiftMotor.get_brake_mode() != 2 ) {
+  if (frontRightLiftMotor.get_brake_mode() != 2 ) {
     frontRightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     frontLeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }

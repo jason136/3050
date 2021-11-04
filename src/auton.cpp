@@ -16,12 +16,10 @@
 extern int selection;
 void recAuton() {
     int interations = getVectorSize();
-    double recJoysticks[4];
-    int recButtons[3];
-    for (int x = 0; x < interations; x++)
-    {
-        updateIndex(&recJoysticks[0], &recButtons[0], x);
-        processInput(&recJoysticks[0], &recButtons[0]);
+    int recOutputs[7];
+    for (int x = 0; x < interations; x++) {
+        updateIndex(&recOutputs[0], x);
+        processInput(&recOutputs[0]);
         std::cout << selection << "selection execute line" << x << "of" << interations << std::endl;
         pros::delay(20);
     }

@@ -10,9 +10,9 @@
 
 void clearVectors();
 
-void recordInput(double * instJoysticks, int * instButtons);
+void recordInput(int * instInputs);
 
-void updateIndex(double * recJoysticks, int * recButtons, int index);
+void updateIndex(int * recInputs, int index);
 
 int getVectorSize();
 

@@ -26,15 +26,34 @@ void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
   backLeftMotor.move(BLeft);
 }
 
-void chassisStopDrive() {
-  frontRightMotor.move(0);
-  frontLeftMotor.move(0);
-  backRightMotor.move(0);
-  backLeftMotor.move(0);
-
-  if(DEBUG_ON) {
-    std::cout << "chassis stop \n";
+void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
+  if (FRight == 0 && frontRightMotor.get_brake_mode() != 2) {
+      frontRightMotor.move(0);
+      frontRightMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   }
+  else if (FLeft == 0 && frontLeftMotor.get_brake_mode() != 2) {
+      frontLeftMotor.move(0);
+      frontLeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  }
+  else if (BRight == 0 && backRightMotor.get_brake_mode() != 2) {
+      backRightMotor.move(0);
+      backRightMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  }
+  else if (BLeft == 0 && backLeftMotor.get_brake_mode() != 2) {
+      backLeftMotor.move(0);
+      backLeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  }
+
+  // Slight delay is due to problems we had in the past with
+  // very jerky movements
+  pros::delay(5);
+}
+
+void chassisStopDrive() {
+    frontRightMotor.move(0);
+    frontLeftMotor.move(0);
+    backRightMotor.move(0);
+    backLeftMotor.move(0);
 }
 
 void resetChassisEncoders() {

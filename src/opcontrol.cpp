@@ -8,8 +8,7 @@
 #include "opcontrol.hpp"
 
 // Datastructures for recordable autonomous
-double instJoysticks[4];
-int instButtons[3];
+int instInputs[7];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
@@ -44,42 +43,42 @@ void opcontrolLoop(void * param) {
 		pros::Mutex mutex;
 		mutex.take(25);
 
-		instJoysticks[0] = master.get_analog(ANALOG_RIGHT_X);
-		instJoysticks[1] = master.get_analog(ANALOG_RIGHT_Y);
-		instJoysticks[2] = master.get_analog(ANALOG_LEFT_X);
-		instJoysticks[3] = master.get_analog(ANALOG_LEFT_Y);
+		instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
+		instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
+		instInputs[2] = master.get_analog(ANALOG_LEFT_X);
+		instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
 
 		if (partner.get_digital(DIGITAL_R1)) {
-			instButtons[0] = 1;
+			instInputs[4] = 1;
 		}
 		else if (partner.get_digital(DIGITAL_R2)) {
-			instButtons[0] = -1;
+			instInputs[4] = -1;
 		}
 		else {
-			instButtons[0] = -0;
+			instInputs[4] = -0;
 		}
 		if (master.get_digital(DIGITAL_L1)) {
-			instButtons[1] = 1;
+			instInputs[5] = 1;
 		}
 		else if (master.get_digital(DIGITAL_L2)) {
-			instButtons[1] = -1;
+			instInputs[5] = -1;
 		}
 		else {
-			instButtons[1] = -0;
+			instInputs[5] = -0;
 		}
 		if (partner.get_digital(DIGITAL_UP)) {
-			instButtons[2] = 1;
+			instInputs[6] = 1;
 		}
 		else if (partner.get_digital(DIGITAL_DOWN)) {
-			instButtons[2] = -1;
+			instInputs[6] = -1;
 		}
 		else {
-			instButtons[2] = -0;
+			instInputs[6] = -0;
 		}
 
 		mutex.give();
 
-		processInput(&instJoysticks[0], &instButtons[0]);
+		processInput(&instInputs[0]);
 		
 		// Get data from module functions
 		getChassisDiag(buffer);
@@ -129,7 +128,7 @@ void recordLoop(void * param) {
 	while (pros::millis() < startTime + 15000) {
 		pros::Mutex mutex;
 		mutex.take(25);
-		recordInput(&instJoysticks[0], &instButtons[0]);
+		recordInput(&instInputs[0]);
 		mutex.give();
 
 		pros::delay(20);
@@ -144,12 +143,12 @@ void recordLoop(void * param) {
     finishRecording();
 }
 
-void processInput(double * arrJoysticks, int * arrButtons) {
+void processInput(int * arrInputs) {
 	// Create easily mutable versions of struct members
-	double rightX = arrJoysticks[0];
-	double rightY = arrJoysticks[1];
-	double leftX = arrJoysticks[2];
-	double leftY = arrJoysticks[3];
+	int rightX = arrInputs[0];
+	int rightY = arrInputs[1];
+	int leftX = arrInputs[2];
+	int leftY = arrInputs[3];
 
 	if (DRIVE_MODE == 1) {
 			// We want to do X-Drive TANK control
@@ -196,6 +195,8 @@ void processInput(double * arrJoysticks, int * arrButtons) {
 		leftY = (leftY * SCALING);
 
 		setIndividualMotor(rightY, leftY, rightY, leftY);
+
+        chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
 	else if (DRIVE_MODE == 4) {
 		// We are wanting to do standard ARCADE control
@@ -247,35 +248,35 @@ void processInput(double * arrJoysticks, int * arrButtons) {
 	// }
 
 	// end chassis control, below is other modules only
-	if (arrButtons[0] == 1) {
+	if (arrInputs[4] == 1) {
 		conveyorMove(100);
 	}
-	else if (arrButtons[0] == -1) {
+	else if (arrInputs[4] == -1) {
 		conveyorMove(-100);
 	}
 	else {
 		conveyorStop();
 	}
 
-	if (arrButtons[1] == 1) {
+	if (arrInputs[5] == 1) {
 		frontLiftMove(127);
 	}
-	else if (arrButtons[1] == -1) {
+	else if (arrInputs[5] == -1) {
 		frontLiftMove(-110);
 	}
 	else {
 		frontLiftLock();
 	}
 
-	if (arrButtons[2] == 1) {
+	if (arrInputs[6] == 1) {
 		backLiftMove(127);
 	}
-	else if (arrButtons[2] == -1) {
+	else if (arrInputs[6] == -1) {
 		backLiftMove(-110);
 	}
 	else {
-        backLiftMove(0);
-		//backLiftLock();
+        //backLiftMove(0);
+		backLiftLock();
 	}
 }
 

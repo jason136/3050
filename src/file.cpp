@@ -3,10 +3,10 @@
 
 using namespace std;
 
-std::vector<double> listAnalogRightX;
-std::vector<double> listAnalogRightY;
-std::vector<double> listAnalogLeftX;
-std::vector<double> listAnalogLeftY;
+std::vector<int> listAnalogRightX;
+std::vector<int> listAnalogRightY;
+std::vector<int> listAnalogLeftX;
+std::vector<int> listAnalogLeftY;
 
 std::vector<int> listDigitalR;
 std::vector<int> listDigitalL;
@@ -24,27 +24,27 @@ void clearVectors() {
     std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(double instJoysticks[], int instButtons[]) {
-    listAnalogRightX.push_back(instJoysticks[0]);
-    listAnalogRightY.push_back(instJoysticks[1]);
-    listAnalogLeftX.push_back(instJoysticks[2]);
-    listAnalogLeftY.push_back(instJoysticks[3]);
+void recordInput(int * instInputs) {
+    listAnalogRightX.push_back(instInputs[0]);
+    listAnalogRightY.push_back(instInputs[1]);
+    listAnalogLeftX.push_back(instInputs[2]);
+    listAnalogLeftY.push_back(instInputs[3]);
 
-    listDigitalR.push_back(instButtons[0]);
-    listDigitalL.push_back(instButtons[1]);
-    listDigitalUpDown.push_back(instButtons[2]);
+    listDigitalR.push_back(instInputs[4]);
+    listDigitalL.push_back(instInputs[5]);
+    listDigitalUpDown.push_back(instInputs[6]);
 
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(double recJoysticks[], int recButtons[], int index) {
-    recJoysticks[0] = listAnalogRightX.at(index);
-    recJoysticks[1] = listAnalogRightY.at(index);
-    recJoysticks[2] = listAnalogLeftX.at(index);
-    recJoysticks[3] = listAnalogLeftY.at(index);
-    recButtons[0] = listDigitalR.at(index);
-    recButtons[1] = listDigitalL.at(index);
-    recButtons[2] = listDigitalUpDown.at(index);
+void updateIndex(int * recInputs, int index) {
+    recInputs[0] = listAnalogRightX.at(index);
+    recInputs[1] = listAnalogRightY.at(index);
+    recInputs[2] = listAnalogLeftX.at(index);
+    recInputs[3] = listAnalogLeftY.at(index);
+    recInputs[0] = listDigitalR.at(index);
+    recInputs[1] = listDigitalL.at(index);
+    recInputs[2] = listDigitalUpDown.at(index);
 
     std::cout << "vectors returned" << std::endl;
 }
@@ -60,7 +60,7 @@ void writeToFile(const char * filename) {
     outfile << "data\n";
     char filebuffer[500] = "";
     for (int x = 0; x < listAnalogRightX.size(); x++) {
-        sprintf(filebuffer, "%F %F %F %F %i %i %i\n",
+        sprintf(filebuffer, "%i %i %i %i %i %i %i\n",
                 listAnalogRightX.at(x),
                 listAnalogRightY.at(x),
                 listAnalogLeftX.at(x),
@@ -84,8 +84,7 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    double a, b, c, d;
-    int e, f, g;
+    int a, b, c, d, e, f, g;
     while (infile >> a >> b >> c >> d >> e >> f >> g) {
         listAnalogRightX.push_back(a);
         listAnalogRightY.push_back(b);

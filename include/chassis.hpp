@@ -17,7 +17,10 @@ void chassisMove(int voltage);
 // This method controls the chassis during opcontrol
 void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft);
 
-// Function to stop all Motors
+// Function to lock drive motors if the corresponding number is 0
+void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft);
+
+// Helper method to stop all chassis motors
 void chassisStopDrive();
 
 // Reset chassis encoders

@@ -24,13 +24,13 @@ using namespace std;
                               // used to scale all chassis movement. 
 
 // Methods for two concurrent threats
-void opcontrolLoop(void* param);
+void opcontrolLoop(void * param);
 
 void startRecordThread();
 
 void recordLoop(void * param);
 
-void processInput(double * arrJoysticks, int * arrButtons);
+void processInput(int * arrInputs);
 
 // Helper for calculating averages
 int average(int x, int y);
