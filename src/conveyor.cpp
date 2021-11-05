@@ -12,3 +12,8 @@ void conveyorMove(int voltage) {
 void conveyorStop() {
   conveyorMotor.move(0);
 }
+
+// void rollerSpinForEncoder(int speed, int encDegrees) {
+//   leftRollerMotor.move_absolute(encDegrees, speed);
+//   rightRollerMotor.move_absolute(encDegrees, speed);
+// }
