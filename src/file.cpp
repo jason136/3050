@@ -44,13 +44,24 @@ void updateIndex(int * recInputs, int index) {
     recInputs[5] = listDigitalL.at(index);
     recInputs[6] = listDigitalUpDown.at(index);
 
-    std::cout << "vectors returned" << std::endl;
+    //std::cout << "vectors returned" << std::endl;
 }
 
 int getVectorSize() {
-    return listAnalogRightX.size();
-
     std::cout << "vector size returned" << std::endl;
+    return listAnalogRightX.size();
+}
+
+void printVectors() {
+    int interations = getVectorSize();
+    int recOutputs[7];
+    for (int x; x < interations; x++) {
+        updateIndex(&recOutputs[0], x);
+        for (int y; y < 7; y++) {
+            std::cout << " " << recOutputs[y] << " ";
+        }
+        std::cout << "\n" << std::endl;
+    }
 }
 
 void writeToFile(const char * filename) {

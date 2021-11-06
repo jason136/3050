@@ -15,6 +15,7 @@ double buffer[12];
 char chassisData[400];
 
 extern int selection;
+extern bool recSkills;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
@@ -125,7 +126,14 @@ void recordLoop(void * param) {
     sprintf(countdown, "recording");
     master.set_text(1, 1, countdown);
     startTime = pros::millis();
-	while (pros::millis() < startTime + 15000) {
+	int duration;
+	if (recSkills) {
+		duration = 60000;
+	}
+	else {
+		duration = 15000;
+	}
+	while (pros::millis() < startTime + duration) {
 		pros::Mutex mutex;
 		mutex.take(5);
 		recordInput(&instInputs[0]);

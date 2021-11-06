@@ -33,9 +33,8 @@ void initialize() {
 
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-    loadScreen();
-
     generateFiles();
+    drawAuton();
 }
 
 /**
@@ -54,8 +53,15 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
 
+    lv_obj_clean(lv_scr_act());
+    drawAuton();
+
+}
+
+extern int selection;
+extern bool recAuton;
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -67,10 +73,6 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-
-extern int selection;
-extern bool recAuton;
-
 void autonomous() {
     // We are calling a autonomous function based on the selection
     // we made on the LCD

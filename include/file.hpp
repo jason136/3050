@@ -16,6 +16,8 @@ void updateIndex(int * recInputs, int index);
 
 int getVectorSize();
 
+void printVectors();
+
 void writeToFile(const char * filename);
 
 bool readFromFile(const char * filename);

@@ -15,9 +15,9 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
 
 void btnSetToggled(lv_obj_t * btn, bool toggled);
 
-static lv_res_t btn_click_action(lv_obj_t * btn);
+void resetDatastructures();
 
-void loadScreen();
+static lv_res_t btn_click_action(lv_obj_t * btn);
 
 void drawMenu();
 

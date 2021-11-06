@@ -73,6 +73,7 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
 extern const lv_img_dsc_t field_image;
 int selection;
 bool recAuton;
+bool recSkills;
 
 char text[100];
 
@@ -106,6 +107,14 @@ LV_COLOR_MAKE(60, 60, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COL
 
 lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 7);
 lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
+
+void resetDatastructures() {
+  clearVectors(); 
+  diagLabel = NULL;
+  toggledBtn = nullptr;
+  selection = -1;
+  recSkills = false;
+}
 
 static lv_res_t btn_click_action(lv_obj_t * btn) {
   uint8_t id = lv_obj_get_free_num(btn);
@@ -153,6 +162,7 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
           if (!success) {
             return LV_RES_OK;
           }
+          printVectors();
         }
 
         selection = id - 100;
@@ -166,6 +176,7 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
         if (selection != id - 200 && toggledBtn != nullptr) {
           btnSetToggled(toggledBtn, false);
         }
+        if (id == 206) recSkills = true;
         if (id == 211 && selection >= 0) {
           startRecordThread();
           sprintf(text, "see controller");
@@ -180,10 +191,6 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
       break;
   }
 	return LV_RES_OK;
-}
-
-void loadScreen() {
-  drawAuton();
 }
 
 //memcpy(&menuObjs[0], tempButton, sizeof(lv_obj_t));
@@ -205,6 +212,7 @@ void drawMenu() {
 }
 
 void drawAuton() {
+  resetDatastructures();
   lv_scr_load(autonScreen);
 
   tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redStyle);
@@ -261,6 +269,7 @@ void updateDiag(char * chassisData) {
 }
 
 void drawRecordable() {
+  resetDatastructures();
   lv_scr_load(recordScreen);
 
   selection = -1;
@@ -285,11 +294,11 @@ void drawRecordable() {
 
   menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 
-  tempButton = createBtn(lv_scr_act(), 300, 184, 140, 48, 206, "Skills", standardStyle);
+  tempButton = createBtn(lv_scr_act(), 300, 184, 140, 48, 206, "recSkills", standardStyle);
 }
 
 void finishRecording() {
     sprintf(text, "recording complete!");
     lv_label_set_text(recordableLabel, text);
-    selection = -1;
+    resetDatastructures();
 }

@@ -18,11 +18,16 @@ void recordableAuton() {
     int interations = getVectorSize();
     int recOutputs[7];
     int starttime = pros::millis();
-    for (int x = 0; x < interations; x++) {
+    char filename[20];
+    sprintf(filename, "/usd/RecAuton%i.txt", selection);
+    readFromFile(filename);
+    if (interations > 0) {
+        for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
         processInput(&recOutputs[0]);
         std::cout << selection << "selection execute line" << x << "of" << interations << std::endl;
         pros::delay(20);
+        }
     }
 
     std::cout << "auton run time ellapsed: " << pros::millis() - starttime << interations << std::endl;
