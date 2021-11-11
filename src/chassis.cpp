@@ -24,6 +24,11 @@ void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft) {
   frontLeftMotor.move(-FLeft);
   backRightMotor.move(-BRight);
   backLeftMotor.move(BLeft);
+
+  if(true) {
+    std::cout << "set chassis motor values: " << FRight << " " << FLeft; 
+    std::cout << " " << BRight << " " << BLeft << std::endl; 
+  }
 }
 
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
@@ -59,7 +64,7 @@ void resetChassisEncoders() {
   backLeftMotor.tare_position();
 
   if(DEBUG_ON) {
-    std::cout << "chassis clear encoders \n";
+    std::cout << "chassis encoders cleared" << std::endl; 
   }
 }
 
@@ -83,8 +88,8 @@ void driveForDistancePID(int distance, int speed) {
   float motorLower = motorDegree - 5;
 
   if(DEBUG_ON) {
-    std::cout << "Dist: " << motorDegree ;
-    std::cout << " Upper: " << motorUpper << " Lower: " << motorLower << "\n";
+    std::cout << "Dist: " << motorDegree;
+    std::cout << " Upper: " << motorUpper << " Lower: " << motorLower << std::endl; 
   }
 
   // First, reset all the encoders
@@ -104,7 +109,7 @@ void driveForDistancePID(int distance, int speed) {
 
   if(DEBUG_ON) {
     std::cout << "Encoder Left: " << frontLeftMotor.get_position();
-    std::cout << " Encoder Right: " << frontRightMotor.get_position() << "\n";
+    std::cout << " Encoder Right: " << frontRightMotor.get_position() << std::endl; 
   }
 }
 
@@ -136,7 +141,7 @@ void pivotTurn(int speed, long turnAngle) {
     std::cout << " MotorDegrees: " << motorDegree;
     std::cout << " Speed: " << speed;
     std::cout << " Turn Angle: " << turnRatio;
-    std::cout << " Div by Wheel: " << ((turnRatio * turnCircum) / wheelCircum) << "\n";;
+    std::cout << " Div by Wheel: " << ((turnRatio * turnCircum) / wheelCircum) << std::endl; 
   }
 
   // Calculate the lower and uppor bounds for the while loop ensuring robot drives
@@ -168,7 +173,7 @@ void pivotTurn(int speed, long turnAngle) {
   }
   if(DEBUG_ON) {
       std::cout << "Encoder Left: " << frontLeftMotor.get_position();
-      std::cout << " Encoder Right: " << frontRightMotor.get_position() << "\n";
+      std::cout << " Encoder Right: " << frontRightMotor.get_position() << std::endl; 
   }
 
   // we have reached our desired distance, so stop the motors.

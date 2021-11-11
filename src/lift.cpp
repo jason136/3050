@@ -15,7 +15,7 @@ void frontLiftMove(int voltage) {
 
   if(DEBUG_ON){
     std::cout << "life manual raise speed: " << voltage ;
-    std::cout << " Lift Encoder: " << frontRightLiftMotor.get_position() << "\n";
+    std::cout << " Lift Encoder: " << frontRightLiftMotor.get_position() << std::endl; 
   }
 }
 
@@ -35,7 +35,7 @@ void backLiftMove(int voltage) {
 
   if(DEBUG_ON){
     std::cout << "life manual raise speed: " << voltage ;
-    std::cout << " Lift Encoder: " << backLiftMotor.get_position() << "\n";
+    std::cout << " Lift Encoder: " << backLiftMotor.get_position() << std::endl; 
   }
 }
 
@@ -51,7 +51,7 @@ void liftResetEncoder() {
   frontLeftLiftMotor.tare_position();
 
   if(DEBUG_ON){
-    std::cout << "lift encoder reset \n";
+    std::cout << "lift encoder reset" << std::endl; 
   }
 }
 
@@ -74,12 +74,10 @@ void liftRaiseForEncoder(int voltage, int encDegrees) {
 
     if(DEBUG_ON) {
       std::cout << "EncDegrees " << encDegrees;
-      std::cout << " Current Deg: " << frontRightLiftMotor.get_position() << "\n";
-      pros::delay(2);
+      std::cout << " Current Deg: " << frontRightLiftMotor.get_position() << std::endl; 
     }
   }
   frontLiftMove(0);
-  
 }
 
 void liftRaise(int speed, int level) {
@@ -125,7 +123,7 @@ void liftRaise(int speed, int level) {
       break;
   }
   if(DEBUG_ON){
-    std::cout << "Lift Encoder: " << frontRightLiftMotor.get_position();
+    std::cout << "Lift Encoder: " << frontRightLiftMotor.get_position() << std::endl; ;
   }
   frontRightLiftMotor.move(0);
   frontLeftLiftMotor.move(0);

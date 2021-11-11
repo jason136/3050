@@ -14,6 +14,9 @@ int instInputs[7];
 double buffer[12];
 char chassisData[400];
 
+// This mutex carries protects all motors
+pros::Mutex mutex;
+
 extern int selection;
 extern bool recSkills;
 
@@ -34,16 +37,8 @@ pros::Controller partner(pros::E_CONTROLLER_PARTNER);
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
-	pros::Task opcontrolThread(opcontrolLoop);
-
-}
-
-void opcontrolLoop(void * param) {
-    while (true) {
-		pros::Mutex mutex;
+	while (true) {
 		mutex.take(25);
-
 		instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
 		instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
 		instInputs[2] = master.get_analog(ANALOG_LEFT_X);
@@ -76,7 +71,6 @@ void opcontrolLoop(void * param) {
 		else {
 			instInputs[6] = -0;
 		}
-
 		mutex.give();
 
 		processInput(&instInputs[0]);
@@ -95,10 +89,9 @@ void opcontrolLoop(void * param) {
 
 		updateDiag(&chassisData[0]);
 
-		if (false) {
+		if (DEBUG_ON) {
 			std::cout << chassisData;
 		}
-
 		pros::delay(20);
 	}
 }
@@ -134,7 +127,6 @@ void recordLoop(void * param) {
 		duration = 15000;
 	}
 	while (pros::millis() < startTime + duration) {
-		pros::Mutex mutex;
 		mutex.take(5);
 		recordInput(&instInputs[0]);
 		mutex.give();

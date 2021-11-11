@@ -34,7 +34,7 @@ void initialize() {
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
     generateFiles();
-    //drawAuton();
+    drawAuton();
 }
 
 /**
@@ -54,9 +54,6 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
-
-    lv_obj_clean(lv_scr_act());
-    drawAuton();
 
 }
 
