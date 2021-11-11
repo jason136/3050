@@ -176,6 +176,7 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
         if (selection != id - 200 && toggledBtn != nullptr) {
           btnSetToggled(toggledBtn, false);
         }
+        recSkills = false;
         if (id == 206) recSkills = true;
         if (id == 211 && selection >= 0) {
           startRecordThread();

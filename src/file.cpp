@@ -54,14 +54,16 @@ int getVectorSize() {
 
 void printVectors() {
     int interations = getVectorSize();
+    std::cout << "begin vector output with size : " << interations << "\n" << std::endl;
     int recOutputs[7];
-    for (int x; x < interations; x++) {
+    for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
-        for (int y; y < 7; y++) {
-            std::cout << " " << recOutputs[y] << " ";
+        for (int y = 0; y < 7; y++) {
+            std::cout << " " << recOutputs[1] << " ";
         }
         std::cout << "\n" << std::endl;
     }
+    std::cout << "end vector output with size : " << interations << "\n" << std::endl;
 }
 
 void writeToFile(const char * filename) {

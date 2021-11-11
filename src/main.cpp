@@ -34,7 +34,7 @@ void initialize() {
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
     generateFiles();
-    drawAuton();
+    //drawAuton();
 }
 
 /**
@@ -45,7 +45,7 @@ void initialize() {
 void disabled() {}
 
 /**
- * Runs after initialize(), and before autonomous when connected to the Field
+ * Runs after initialize(), a   nd before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
  * competition-specific initialization routines, such as an autonomous selector
  * on the LCD.
