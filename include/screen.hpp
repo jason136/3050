@@ -6,18 +6,18 @@
 #include "api.h"
 
 lv_obj_t * createBtn(lv_obj_t * parent, lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height,
-   int id, const char * title);
+    int id, const char * title, lv_style_t * style);
 
 void setBtnStyle(lv_style_t * btnStyle, lv_obj_t * btn);
 
 lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
-    lv_color_t tglRel, lv_color_t tglPr, lv_color_t tglBorder, lv_color_t textColor);
+    lv_color_t tglRel, lv_color_t tglPr, lv_color_t Border);
 
 void btnSetToggled(lv_obj_t * btn, bool toggled);
 
 void resetDatastructures();
 
-static lv_res_t btn_click_action(lv_obj_t * btn);
+static lv_res_t btnOnclickAction(lv_obj_t * btn);
 
 void drawMenu();
 
@@ -28,5 +28,13 @@ void updateDiag(char * buffer);
 
 void drawRecordable();
 void finishRecording();
+
+class Square {
+    public:
+        int x;
+        int y;
+    Square(int inputX, int inputY);
+    void drawAt(int inputX, int inputY);
+};
 
 #endif

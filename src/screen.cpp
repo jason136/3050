@@ -21,13 +21,13 @@
     lv_label_set_text(label, title);
     lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_MID, 0, 5);
     setBtnStyle(style, btn);
-	  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_action);
+	  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btnOnclickAction);
 
     return btn;
 }
 
 lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
-    lv_color_t tglRel, lv_color_t tglPr, lv_color_t tglBorder, lv_color_t textColor) {
+    lv_color_t tglRel, lv_color_t tglPr, lv_color_t Border) {
     lv_style_t * btnStyle = (lv_style_t *)malloc(sizeof(lv_style_t) * 4);
 
     for(int i = 0; i < 4; i++) lv_style_copy(&btnStyle[i], copy);
@@ -35,26 +35,26 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
     btnStyle[0].body.main_color = rel;
     btnStyle[0].body.grad_color = rel;
     btnStyle[0].body.border.width = 5;
-    btnStyle[2].body.border.color = tglBorder;
-    btnStyle[0].text.color = textColor;
+    btnStyle[2].body.border.color = Border;
+    btnStyle[0].text.color = LV_COLOR_MAKE(0, 0, 0);
 
     btnStyle[1].body.main_color = pr;
     btnStyle[1].body.grad_color = pr;
     btnStyle[1].body.border.width = 5;
-    btnStyle[2].body.border.color = tglBorder;
-    btnStyle[1].text.color = textColor;
+    btnStyle[2].body.border.color = Border;
+    btnStyle[1].text.color = LV_COLOR_MAKE(255, 255, 255);
 
     btnStyle[2].body.main_color = tglRel;
     btnStyle[2].body.grad_color = tglRel;
     btnStyle[2].body.border.width = 5;
-    btnStyle[2].body.border.color = tglBorder;
-    btnStyle[2].text.color = textColor;
+    btnStyle[2].body.border.color = Border;
+    btnStyle[2].text.color = LV_COLOR_MAKE(255, 255, 255);
 
     btnStyle[3].body.main_color = tglPr;
     btnStyle[3].body.grad_color = tglPr;
     btnStyle[3].body.border.width = 5;
-    btnStyle[3].body.border.color = tglBorder;
-    btnStyle[3].text.color = textColor;
+    btnStyle[3].body.border.color = Border;
+    btnStyle[3].text.color = LV_COLOR_MAKE(0, 0, 0);;
 
     return btnStyle;
 }
@@ -89,7 +89,6 @@ lv_obj_t * toggledBtn;
 lv_obj_t * recordableBtn;
 
 lv_obj_t * autonButtunLabel;
-lv_obj_t * autonLabel;
 lv_obj_t * diagLabel = NULL;
 lv_obj_t * chassisLabel;
 lv_obj_t * recordableLabel;
@@ -97,13 +96,13 @@ lv_obj_t * recordableLabel;
 lv_obj_t * fieldImage;
 
 lv_style_t * redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(50, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(50, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_style_t * blueStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(0, 0, 50), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(0, 0, 50), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_style_t * standardStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
-LV_COLOR_MAKE(60, 60, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
+LV_COLOR_MAKE(60, 60, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0));
 
 lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 7);
 lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
@@ -116,7 +115,7 @@ void resetDatastructures() {
   recSkills = false;
 }
 
-static lv_res_t btn_click_action(lv_obj_t * btn) {
+static lv_res_t btnOnclickAction(lv_obj_t * btn) {
   uint8_t id = lv_obj_get_free_num(btn);
   switch(id) {
     case 0:
@@ -153,7 +152,6 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
         if (selection != id - 100 && toggledBtn != nullptr) {
           btnSetToggled(toggledBtn, false);
         }
-
         if (recAuton) {
           char filename[20];
           sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
@@ -168,9 +166,6 @@ static lv_res_t btn_click_action(lv_obj_t * btn) {
         selection = id - 100;
         toggledBtn = btn;
         btnSetToggled(btn, true);
-        // char buffer[100];
-        // sprintf(buffer, "Auton routine \nselected: %i", selection);
-        // lv_label_set_text(autonLabel, buffer);
       }
       else if (id >= 200 && id < 300) {
         if (selection != id - 200 && toggledBtn != nullptr) {
@@ -233,6 +228,7 @@ void drawAuton() {
   tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", standardStyle);
 
   recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", standardStyle);
+
   recAuton = true;
   btnSetToggled(recAutonButton, true);
 
@@ -241,10 +237,6 @@ void drawAuton() {
   lv_img_set_src(imageObj, &field_image);
   lv_obj_set_size(imageObj, 170, 170);
   lv_obj_align(imageObj, NULL, LV_ALIGN_IN_TOP_MID, 0, 8);
-
-	// autonLabel = lv_label_create(lv_scr_act(), NULL);
-	// lv_label_set_text(autonLabel, "Auton routine \nselected: ");
-	// lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 86);
 }
 
 void drawDiag() {
@@ -302,4 +294,10 @@ void finishRecording() {
     sprintf(text, "recording complete!");
     lv_label_set_text(recordableLabel, text);
     resetDatastructures();
+}
+
+void Square::drawAt(int inputX, int inputY) {
+  x = inputX;
+  y = inputY;
+  pros::screen::draw_rect(x, y, x + 50, y + 50);
 }
