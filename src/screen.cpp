@@ -35,26 +35,30 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
     btnStyle[0].body.main_color = rel;
     btnStyle[0].body.grad_color = rel;
     btnStyle[0].body.border.width = 5;
-    btnStyle[2].body.border.color = Border;
+    btnStyle[0].body.border.color = Border;
+    btnStyle[0].body.radius = 4;
     btnStyle[0].text.color = LV_COLOR_MAKE(0, 0, 0);
 
     btnStyle[1].body.main_color = pr;
     btnStyle[1].body.grad_color = pr;
     btnStyle[1].body.border.width = 5;
-    btnStyle[2].body.border.color = tglBorder;
-    btnStyle[1].text.color = LV_COLOR_MAKE(255, 255, 255);
+    btnStyle[1].body.border.color = Border;
+    btnStyle[1].body.radius = 4;
+    btnStyle[1].text.color = LV_COLOR_MAKE(0, 0, 0);
 
     btnStyle[2].body.main_color = tglRel;
     btnStyle[2].body.grad_color = tglRel;
     btnStyle[2].body.border.width = 5;
     btnStyle[2].body.border.color = tglBorder;
+    btnStyle[2].body.radius = 4;
     btnStyle[2].text.color = LV_COLOR_MAKE(255, 255, 255);
 
     btnStyle[3].body.main_color = tglPr;
     btnStyle[3].body.grad_color = tglPr;
     btnStyle[3].body.border.width = 5;
     btnStyle[3].body.border.color = Border;
-    btnStyle[3].text.color = LV_COLOR_MAKE(0, 0, 0);;
+    btnStyle[3].body.radius = 4;
+    btnStyle[3].text.color = LV_COLOR_MAKE(0, 0, 0);
 
     return btnStyle;
 }
@@ -81,7 +85,7 @@ lv_style_t * redStyle;
 lv_style_t * blueStyle;
 lv_style_t * standardStyle;
 
-lv_style_t squareStyle;
+lv_style_t shapeStyle;
 lv_style_t backgroundStyle;
 
 lv_obj_t * menuScreen;
@@ -89,6 +93,10 @@ lv_obj_t * autonScreen;
 lv_obj_t * diagScreen;
 lv_obj_t * recordScreen;
 lv_obj_t * towScreen;
+
+lv_obj_t * eyeLeft;
+lv_obj_t * eyeRight;
+lv_obj_t * mouth;
 
 lv_obj_t * tempButton;
 lv_obj_t * menuButton;
@@ -202,8 +210,8 @@ void drawScreen() {
     standardStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
     LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(255, 255, 0));
 
-    lv_style_copy(&squareStyle, &lv_style_plain);
-    squareStyle.body.main_color = LV_COLOR_MAKE(255, 255, 255);
+    lv_style_copy(&shapeStyle, &lv_style_plain);
+    shapeStyle.body.main_color = LV_COLOR_MAKE(255, 255, 255);
     
     lv_style_copy(&backgroundStyle, &lv_style_plain);
     backgroundStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
@@ -329,21 +337,68 @@ void finishRecording() {
     resetDatastructures();
 }
 
+int percentComplete;
+
 void drawTow() {
     lv_scr_load(towScreen);
 
-    Square * squareArr = (Square *)malloc(sizeof(Square) * 12);
-    for(int x = 0; x < 12; x++) squareArr[x] = * new Square(20 * x, 20 * x);
+    eyeLeft = lv_obj_create(lv_scr_act(), NULL);
+    eyeRight = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_style(eyeLeft, &shapeStyle);
+    lv_obj_set_size(eyeLeft, 20, 20);
+    lv_obj_set_pos(eyeLeft, x, y);
+    lv_obj_set_style(eyeRight, &shapeStyle);
+    lv_obj_set_size(eyeRight, 20, 20);
+    lv_obj_set_pos(eyeRight, x, y);
 
 }
 
-//https://www.desmos.com/calculator/d1ofwre0fr
+void updateTow(int * leftInputs, int * rightInputs) {
+    /*
+    inputs must be in the following form:
+    leftInputs: 
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    rightInputs: 
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    [line1x1, line1y1, line1x2, line1y2]
+    */
+    lv_draw_mask_line_param_t l1;
+    lv_draw_mask_line_points_init(&l1, leftInputs[0][0], leftInputs[0][2], leftInputs[0][1], leftInputs[0][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeLeft, &l1);
+    lv_draw_mask_line_param_t l2;
+    lv_draw_mask_line_points_init(&l2, leftInputs[1][0], leftInputs[1][2], leftInputs[1][1], leftInputs[1][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeLeft, &l2);
+    lv_draw_mask_line_param_t l3;
+    lv_draw_mask_line_points_init(&l3, leftInputs[2][0], leftInputs[2][2], leftInputs[2][1], leftInputs[2][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeLeft, &l3);
+    lv_draw_mask_line_param_t l4;
+    lv_draw_mask_line_points_init(&l4, leftInputs[3][0], leftInputs[3][2], leftInputs[3][1], leftInputs[3][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeLeft, &l4);
+    lv_draw_mask_line_param_t r1;
+    lv_draw_mask_line_points_init(&r1, rightInputs[0][0], rightInputs[0][2], rightInputs[0][1], rightInputs[0][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeRight, &r1);
+    lv_draw_mask_line_param_t r2;
+    lv_draw_mask_line_points_init(&r2, rightInputs[1][0], rightInputs[1][2], rightInputs[1][1], rightInputs[1][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeRight, &r2);
+    lv_draw_mask_line_param_t r3;
+    lv_draw_mask_line_points_init(&r3, rightInputs[2][0], rightInputs[2][2], rightInputs[2][1], rightInputs[2][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeRight, &r3);
+    lv_draw_mask_line_param_t r4;
+    lv_draw_mask_line_points_init(&r4, rightInputs[3][0], rightInputs[3][2], rightInputs[3][1], rightInputs[3][3], LV_DRAW_MASK_LINE_SIDE_TOP);
+    lv_objmask_add_mask(eyeRight, &r4);
+
+    lv_refr_now(NULL);
+}
+
+void towCastChanges(int * leftInputs, int * rightInputs) {
     
-Square::Square(int inputX, int inputY) {
-    x = inputX;
-    y = inputY;
-    obj = lv_obj_create(lv_scr_act(), NULL);
-    lv_obj_set_size(obj, 20, 20);
-    lv_obj_set_style(obj, &squareStyle);
-    lv_obj_set_pos(obj, x, y);
+
+    
 }
+
+//https://docs.lvgl.io/latest/en/html/widgets/objmask.html

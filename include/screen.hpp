@@ -30,15 +30,7 @@ void drawRecordable();
 void finishRecording();
 
 void drawTow();
-
-class Square {
-    public:
-        int x;
-        int y;
-        lv_obj_t * obj;
-        
-    Square(int inputX, int inputY);
-    void drawAt(int inputX, int inputY);
-};
+void updateTow(int * leftInputs, int * rightInputs);
+void towCastChanges(int * leftInputs, int * rightInputs);
 
 #endif
