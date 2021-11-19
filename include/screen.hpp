@@ -30,7 +30,7 @@ void drawRecordable();
 void finishRecording();
 
 void drawTow();
-void updateTow(int * leftInputs, int * rightInputs);
+void updateTow(int leftInputs[][2], int rightInputs[][2]);
 void towCastChanges(int * leftInputs, int * rightInputs);
 
 #endif

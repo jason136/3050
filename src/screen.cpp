@@ -212,6 +212,8 @@ void drawScreen() {
 
     lv_style_copy(&shapeStyle, &lv_style_plain);
     shapeStyle.body.main_color = LV_COLOR_MAKE(255, 255, 255);
+    shapeStyle.body.border.width = 5;
+    shapeStyle.body.border.color = LV_COLOR_MAKE(255, 255, 255);
     
     lv_style_copy(&backgroundStyle, &lv_style_plain);
     backgroundStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
@@ -229,7 +231,7 @@ void drawScreen() {
     lv_obj_set_style(recordScreen, &backgroundStyle);
     lv_obj_set_style(towScreen, &backgroundStyle);
 
-    drawAuton();
+    drawTow();
 }
 
 void drawMenu() {
@@ -346,9 +348,14 @@ int eyeleftY;
 void drawTow() {
     lv_scr_load(towScreen);
 
+    int leftEye[4][2] = {10, 10, 10, 50, 50, 50, 50, 10};
+
+    int rightEye[4][2] = {100, 100, 100, 150, 150, 150, 150, 100};
+
+    updateTow(leftEye, rightEye);
 }
 
-void updateTow(int * leftInputs[], int * rightInputs[]) {
+void updateTow(int leftInputs[][2], int rightInputs[][2]) {
     /*
     inputs must be in the following form:
     leftInputs: 
@@ -362,7 +369,32 @@ void updateTow(int * leftInputs[], int * rightInputs[]) {
     [point3X, point3Y]
     [point4X, point4Y]
     */
+
+    lv_area_t area;
+    area.x1 = 0;
+    area.y1 = 0;
+    area.x2 = 300;
+    area.y2 = 300;
+
+    lv_point_t point1;
+    point1.x = leftInputs[0][0];
+    point1.y = leftInputs[0][1];
+    lv_point_t point2;
+    point2.x = leftInputs[1][0];
+    point2.y = leftInputs[1][1];
+    lv_point_t point3;
+    point3.x = leftInputs[2][0];
+    point3.y = leftInputs[2][1];
+    lv_point_t point4;
+    point4.x = leftInputs[3][0];
+    point4.y = leftInputs[3][1];
     
+    lv_draw_line(&point1, &point2, &area, &shapeStyle, 1);
+    lv_draw_line(&point2, &point3, &area, &shapeStyle, 1);
+    lv_draw_line(&point3, &point4, &area, &shapeStyle, 1);
+    lv_draw_line(&point4, &point1, &area, &shapeStyle, 1);
+
+
     // after some research, masks are not available on this build of lvgl
     
 }
