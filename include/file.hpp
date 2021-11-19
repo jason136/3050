@@ -24,6 +24,6 @@ bool readFromFile(const char * filename);
 
 bool exists(const char * name);
 
-void generateFiles();
+void generateDatastructures();
 
 #endif

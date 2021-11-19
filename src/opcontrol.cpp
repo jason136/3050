@@ -8,13 +8,13 @@
 #include "opcontrol.hpp"
 
 // Datastructures for recordable autonomous
-int instInputs[7];
+int instInputs[20];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
 char chassisData[400];
 
-// This mutex carries protects all motors
+// This mutex carries protects all motor control values
 pros::Mutex mutex;
 
 extern int selection;
@@ -22,6 +22,31 @@ extern bool recSkills;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
+
+// Shape of processed datastream
+// std::vector<int> listAnalog1RightX;
+// std::vector<int> listAnalog1RightY;
+// std::vector<int> listAnalog1LeftX;
+// std::vector<int> listAnalog1LeftY;
+
+// std::vector<int> listDigital1R;
+// std::vector<int> listDigital1L;
+// std::vector<int> listDigital1UpDown;
+// std::vector<int> listDigital1LeftRight;
+// std::vector<int> listDigital1XB;
+// std::vector<int> listDigital1YA;
+
+// std::vector<int> listAnalog2RightX;
+// std::vector<int> listAnalog2RightY;
+// std::vector<int> listAnalog2LeftX;
+// std::vector<int> listAnalog2LeftY;
+
+// std::vector<int> listDigital2R;
+// std::vector<int> listDigital2L;
+// std::vector<int> listDigital2UpDown;
+// std::vector<int> listDigital2LeftRight;
+// std::vector<int> listDigital2XB;
+// std::vector<int> listDigital2YA;
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -38,39 +63,10 @@ pros::Controller partner(pros::E_CONTROLLER_PARTNER);
  */
 void opcontrol() {
 	while (true) {
-		mutex.take(25);
-		instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
-		instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
-		instInputs[2] = master.get_analog(ANALOG_LEFT_X);
-		instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
 
-		if (partner.get_digital(DIGITAL_R1)) {
-			instInputs[4] = 1;
-		}
-		else if (partner.get_digital(DIGITAL_R2)) {
-			instInputs[4] = -1;
-		}
-		else {
-			instInputs[4] = -0;
-		}
-		if (master.get_digital(DIGITAL_L1)) {
-			instInputs[5] = 1;
-		}
-		else if (master.get_digital(DIGITAL_L2)) {
-			instInputs[5] = -1;
-		}
-		else {
-			instInputs[5] = -0;
-		}
-		if (partner.get_digital(DIGITAL_UP)) {
-			instInputs[6] = 1;
-		}
-		else if (partner.get_digital(DIGITAL_DOWN)) {
-			instInputs[6] = -1;
-		}
-		else {
-			instInputs[6] = -0;
-		}
+		mutex.take(25);
+        std::fill_n(instInputs, 20, 0);
+        readController(instInputs);
 		mutex.give();
 
 		processInput(&instInputs[0]);
@@ -94,53 +90,6 @@ void opcontrol() {
 		}
 		pros::delay(20);
 	}
-}
-
-void startRecordThread() {
-    clearVectors();
-
-	pros::Task recordThread(recordLoop);
-
-	std::cout << "record loop started" << std::endl;
-}
-
-void recordLoop(void * param) {
-	int startTime = pros::millis();
-    char countdown[20];
-    sprintf(countdown, "press A");
-    master.set_text(1, 1, countdown);
-    while (pros::millis() < startTime + 15000) {
-        if (master.get_digital(DIGITAL_A)) {
-            break;
-        }
-		pros::delay(20);
-    }
-
-    sprintf(countdown, "recording");
-    master.set_text(1, 1, countdown);
-    startTime = pros::millis();
-	int duration;
-	if (recSkills) {
-		duration = 60000;
-	}
-	else {
-		duration = 15000;
-	}
-	while (pros::millis() < startTime + duration) {
-		mutex.take(5);
-		recordInput(&instInputs[0]);
-		mutex.give();
-		
-		pros::delay(20);
-	}
-
-    master.clear_line(1);
-    char filename[20];
-    sprintf(filename, "/usd/RecAuton%i.txt", selection);
-	std::cout << "record loop finished -- " << getVectorSize() << filename << " elapsed time: " << pros::millis() - startTime << std::endl;
-
-	writeToFile(filename);
-    finishRecording();
 }
 
 void processInput(int * arrInputs) {
@@ -255,6 +204,95 @@ void processInput(int * arrInputs) {
         //backLiftMove(0);
 		backLiftLock();
 	}
+}
+
+void startRecordThread() {
+    clearVectors();
+
+	pros::Task recordThread(recordLoop);
+
+	std::cout << "record loop started" << std::endl;
+}
+
+void recordLoop(void * param) {
+	int startTime = pros::millis();
+    char countdown[20];
+    sprintf(countdown, "press A");
+    master.set_text(1, 1, countdown);
+    while (pros::millis() < startTime + 15000) {
+        if (master.get_digital(DIGITAL_A)) {
+            break;
+        }
+		pros::delay(20);
+    }
+
+    sprintf(countdown, "recording");
+    master.set_text(1, 1, countdown);
+    startTime = pros::millis();
+	int duration;
+	if (recSkills) {
+		duration = 60000;
+	}
+	else {
+		duration = 15000;
+	}
+	while (pros::millis() < startTime + duration) {
+		mutex.take(5);
+		recordInput(&instInputs[0]);
+		mutex.give();
+		
+		pros::delay(20);
+	}
+
+    master.clear_line(1);
+    char filename[20];
+    sprintf(filename, "/usd/RecAuton%i.txt", selection);
+	std::cout << "record loop finished -- " << getVectorSize() << filename << " elapsed time: " << pros::millis() - startTime << std::endl;
+
+	writeToFile(filename);
+    finishRecording();
+}
+
+void readController(int * instInputs) {
+    instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
+    instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
+    instInputs[2] = master.get_analog(ANALOG_LEFT_X);
+    instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
+
+    instInputs[10] = partner.get_analog(ANALOG_RIGHT_X);
+    instInputs[11] = partner.get_analog(ANALOG_RIGHT_Y);
+    instInputs[12] = partner.get_analog(ANALOG_LEFT_X);
+    instInputs[13] = partner.get_analog(ANALOG_LEFT_Y);
+
+    if (master.get_digital(DIGITAL_R1)) instInputs[4]++;
+    if (master.get_digital(DIGITAL_R2)) instInputs[4]--;
+    if (master.get_digital(DIGITAL_L1)) instInputs[5]++;
+    if (master.get_digital(DIGITAL_L2)) instInputs[5]--;
+
+    if (master.get_digital(DIGITAL_UP)) instInputs[6]++;
+    if (master.get_digital(DIGITAL_DOWN)) instInputs[6]--;
+    if (master.get_digital(DIGITAL_LEFT)) instInputs[7]++;
+    if (master.get_digital(DIGITAL_RIGHT)) instInputs[7]--;
+
+    if (master.get_digital(DIGITAL_X)) instInputs[8]++;
+    if (master.get_digital(DIGITAL_B)) instInputs[8]--;
+    if (master.get_digital(DIGITAL_Y)) instInputs[9]++;
+    if (master.get_digital(DIGITAL_A)) instInputs[9]--;
+
+    if (master.get_digital(DIGITAL_R1)) instInputs[14]++;
+    if (master.get_digital(DIGITAL_R2)) instInputs[14]--;
+    if (master.get_digital(DIGITAL_L1)) instInputs[15]++;
+    if (master.get_digital(DIGITAL_L2)) instInputs[15]--;
+
+    if (master.get_digital(DIGITAL_UP)) instInputs[16]++;
+    if (master.get_digital(DIGITAL_DOWN)) instInputs[16]--;
+    if (master.get_digital(DIGITAL_LEFT)) instInputs[17]++;
+    if (master.get_digital(DIGITAL_RIGHT)) instInputs[17]--;
+
+    if (master.get_digital(DIGITAL_X)) instInputs[18]++;
+    if (master.get_digital(DIGITAL_B)) instInputs[18]--;
+    if (master.get_digital(DIGITAL_Y)) instInputs[19]++;
+    if (master.get_digital(DIGITAL_A)) instInputs[19]--;
 }
 
 int average(int x, int y) {

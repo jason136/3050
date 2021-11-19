@@ -33,7 +33,7 @@ void initialize() {
 
     pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-    generateFiles();
+    generateDatastructures();
     drawScreen();
 }
 

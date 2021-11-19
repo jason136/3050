@@ -338,61 +338,33 @@ void finishRecording() {
 }
 
 int percentComplete;
+int eyerightX;
+int eyerightY;
+int eyeleftX;
+int eyeleftY;
 
 void drawTow() {
     lv_scr_load(towScreen);
 
-    eyeLeft = lv_obj_create(lv_scr_act(), NULL);
-    eyeRight = lv_obj_create(lv_scr_act(), NULL);
-    lv_obj_set_style(eyeLeft, &shapeStyle);
-    lv_obj_set_size(eyeLeft, 20, 20);
-    lv_obj_set_pos(eyeLeft, x, y);
-    lv_obj_set_style(eyeRight, &shapeStyle);
-    lv_obj_set_size(eyeRight, 20, 20);
-    lv_obj_set_pos(eyeRight, x, y);
-
 }
 
-void updateTow(int * leftInputs, int * rightInputs) {
+void updateTow(int * leftInputs[], int * rightInputs[]) {
     /*
     inputs must be in the following form:
     leftInputs: 
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
+    [point1X, point1Y]
+    [point2X, point2Y]
+    [point3X, point3Y]
+    [point4X, point4Y]
     rightInputs: 
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
-    [line1x1, line1y1, line1x2, line1y2]
+    [point1X, point1Y]
+    [point2X, point2Y]
+    [point3X, point3Y]
+    [point4X, point4Y]
     */
-    lv_draw_mask_line_param_t l1;
-    lv_draw_mask_line_points_init(&l1, leftInputs[0][0], leftInputs[0][2], leftInputs[0][1], leftInputs[0][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeLeft, &l1);
-    lv_draw_mask_line_param_t l2;
-    lv_draw_mask_line_points_init(&l2, leftInputs[1][0], leftInputs[1][2], leftInputs[1][1], leftInputs[1][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeLeft, &l2);
-    lv_draw_mask_line_param_t l3;
-    lv_draw_mask_line_points_init(&l3, leftInputs[2][0], leftInputs[2][2], leftInputs[2][1], leftInputs[2][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeLeft, &l3);
-    lv_draw_mask_line_param_t l4;
-    lv_draw_mask_line_points_init(&l4, leftInputs[3][0], leftInputs[3][2], leftInputs[3][1], leftInputs[3][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeLeft, &l4);
-    lv_draw_mask_line_param_t r1;
-    lv_draw_mask_line_points_init(&r1, rightInputs[0][0], rightInputs[0][2], rightInputs[0][1], rightInputs[0][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeRight, &r1);
-    lv_draw_mask_line_param_t r2;
-    lv_draw_mask_line_points_init(&r2, rightInputs[1][0], rightInputs[1][2], rightInputs[1][1], rightInputs[1][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeRight, &r2);
-    lv_draw_mask_line_param_t r3;
-    lv_draw_mask_line_points_init(&r3, rightInputs[2][0], rightInputs[2][2], rightInputs[2][1], rightInputs[2][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeRight, &r3);
-    lv_draw_mask_line_param_t r4;
-    lv_draw_mask_line_points_init(&r4, rightInputs[3][0], rightInputs[3][2], rightInputs[3][1], rightInputs[3][3], LV_DRAW_MASK_LINE_SIDE_TOP);
-    lv_objmask_add_mask(eyeRight, &r4);
-
-    lv_refr_now(NULL);
+    
+    // after some research, masks are not available on this build of lvgl
+    
 }
 
 void towCastChanges(int * leftInputs, int * rightInputs) {
