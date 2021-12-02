@@ -8,7 +8,7 @@
 #include "opcontrol.hpp"
 
 // Datastructures for recordable autonomous
-int instInputs[20];
+int8_t instInputs[20];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
@@ -17,36 +17,59 @@ char chassisData[400];
 // This mutex carries protects all motor control values
 pros::Mutex mutex;
 
-extern int selection;
+extern int8_t selection;
 extern bool recSkills;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
 
-// Shape of processed datastream
-// std::vector<int> listAnalog1RightX;
-// std::vector<int> listAnalog1RightY;
-// std::vector<int> listAnalog1LeftX;
-// std::vector<int> listAnalog1LeftY;
+// Live state of controller is recorded in int array
+void readController(int8_t * instInputs) {
+    instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
+    instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
+    instInputs[2] = master.get_analog(ANALOG_LEFT_X);
+    instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
 
-// std::vector<int> listDigital1R;
-// std::vector<int> listDigital1L;
-// std::vector<int> listDigital1UpDown;
-// std::vector<int> listDigital1LeftRight;
-// std::vector<int> listDigital1XB;
-// std::vector<int> listDigital1YA;
+    instInputs[14] = partner.get_analog(ANALOG_RIGHT_X);
+    instInputs[15] = partner.get_analog(ANALOG_RIGHT_Y);
+    instInputs[16] = partner.get_analog(ANALOG_LEFT_X);
+    instInputs[17] = partner.get_analog(ANALOG_LEFT_Y);
 
-// std::vector<int> listAnalog2RightX;
-// std::vector<int> listAnalog2RightY;
-// std::vector<int> listAnalog2LeftX;
-// std::vector<int> listAnalog2LeftY;
+    if (master.get_digital(DIGITAL_R1)) instInputs[4]++;
+    if (master.get_digital(DIGITAL_R2)) instInputs[4]--;
+    if (master.get_digital(DIGITAL_L1)) instInputs[5]++;
+    if (master.get_digital(DIGITAL_L2)) instInputs[5]--;
 
-// std::vector<int> listDigital2R;
-// std::vector<int> listDigital2L;
-// std::vector<int> listDigital2UpDown;
-// std::vector<int> listDigital2LeftRight;
-// std::vector<int> listDigital2XB;
-// std::vector<int> listDigital2YA;
+    instInputs[6] = master.get_digital(DIGITAL_UP); 
+    instInputs[7] = master.get_digital(DIGITAL_DOWN);
+    instInputs[8] = master.get_digital(DIGITAL_LEFT);
+    instInputs[9] = master.get_digital(DIGITAL_RIGHT);
+
+    instInputs[10] = master.get_digital(DIGITAL_X);
+    instInputs[11] = master.get_digital(DIGITAL_B)
+    instInputs[12] = master.get_digital(DIGITAL_Y)
+    instInputs[13] = master.get_digital(DIGITAL_A)
+
+    if () instInputs[10]++;
+    if () instInputs[11]--;
+    if () instInputs[12]++;
+    if () instInputs[13]--;
+
+    if (master.get_digital(DIGITAL_R1)) instInputs[14]++;
+    if (master.get_digital(DIGITAL_R2)) instInputs[14]--;
+    if (master.get_digital(DIGITAL_L1)) instInputs[15]++;
+    if (master.get_digital(DIGITAL_L2)) instInputs[15]--;
+
+    if (master.get_digital(DIGITAL_UP)) instInputs[16]++;
+    if (master.get_digital(DIGITAL_DOWN)) instInputs[16]--;
+    if (master.get_digital(DIGITAL_LEFT)) instInputs[17]++;
+    if (master.get_digital(DIGITAL_RIGHT)) instInputs[17]--;
+
+    if (master.get_digital(DIGITAL_X)) instInputs[18]++;
+    if (master.get_digital(DIGITAL_B)) instInputs[18]--;
+    if (master.get_digital(DIGITAL_Y)) instInputs[19]++;
+    if (master.get_digital(DIGITAL_A)) instInputs[19]--;
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -92,12 +115,12 @@ void opcontrol() {
 	}
 }
 
-void processInput(int * arrInputs) {
+void processInput(int8_t * arrInputs) {
 	// Create easily mutable versions of struct members
-	int rightX = arrInputs[0];
-	int rightY = arrInputs[1];
-	int leftX = arrInputs[2];
-	int leftY = arrInputs[3];
+	int8_t rightX = arrInputs[0];
+	int8_t rightY = arrInputs[1];
+	int8_t leftX = arrInputs[2];
+	int8_t leftY = arrInputs[3];
 
 	if (abs(rightX) < DEAD_STICK) rightX = 0; 
 	if (abs(rightY) < DEAD_STICK) rightY = 0; 
@@ -137,8 +160,8 @@ void processInput(int * arrInputs) {
 		setIndividualMotor(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 	// else if (DRIVE_MODE == 5) {    // decomissioned until further testing and/or demand for it to actually be made
-	// 	int leftX;
-	//   	int leftY;
+	// 	int8_t leftX;
+	//   	int8_t leftY;
 
 	// 	if (master.get_digital(DIGITAL_UP)) {
 	// 		leftY = 200;
@@ -160,7 +183,7 @@ void processInput(int * arrInputs) {
 	// 		leftX = 0;
 	// 	}
 
-	//   	int rightX = master.get_analog(ANALOG_RIGHT_X);
+	//   	int8_t rightX = master.get_analog(ANALOG_RIGHT_X);
 
 	// 	if(abs(rightX) < DEAD_STICK) { rightX = 0; }
 	// 	if(abs(leftX) < DEAD_STICK) { leftX = 0; }
@@ -204,6 +227,8 @@ void processInput(int * arrInputs) {
         //backLiftMove(0);
 		backLiftLock();
 	}
+
+    
 }
 
 void startRecordThread() {
@@ -251,48 +276,6 @@ void recordLoop(void * param) {
 
 	writeToFile(filename);
     finishRecording();
-}
-
-void readController(int * instInputs) {
-    instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
-    instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
-    instInputs[2] = master.get_analog(ANALOG_LEFT_X);
-    instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
-
-    instInputs[10] = partner.get_analog(ANALOG_RIGHT_X);
-    instInputs[11] = partner.get_analog(ANALOG_RIGHT_Y);
-    instInputs[12] = partner.get_analog(ANALOG_LEFT_X);
-    instInputs[13] = partner.get_analog(ANALOG_LEFT_Y);
-
-    if (master.get_digital(DIGITAL_R1)) instInputs[4]++;
-    if (master.get_digital(DIGITAL_R2)) instInputs[4]--;
-    if (master.get_digital(DIGITAL_L1)) instInputs[5]++;
-    if (master.get_digital(DIGITAL_L2)) instInputs[5]--;
-
-    if (master.get_digital(DIGITAL_UP)) instInputs[6]++;
-    if (master.get_digital(DIGITAL_DOWN)) instInputs[6]--;
-    if (master.get_digital(DIGITAL_LEFT)) instInputs[7]++;
-    if (master.get_digital(DIGITAL_RIGHT)) instInputs[7]--;
-
-    if (master.get_digital(DIGITAL_X)) instInputs[8]++;
-    if (master.get_digital(DIGITAL_B)) instInputs[8]--;
-    if (master.get_digital(DIGITAL_Y)) instInputs[9]++;
-    if (master.get_digital(DIGITAL_A)) instInputs[9]--;
-
-    if (master.get_digital(DIGITAL_R1)) instInputs[14]++;
-    if (master.get_digital(DIGITAL_R2)) instInputs[14]--;
-    if (master.get_digital(DIGITAL_L1)) instInputs[15]++;
-    if (master.get_digital(DIGITAL_L2)) instInputs[15]--;
-
-    if (master.get_digital(DIGITAL_UP)) instInputs[16]++;
-    if (master.get_digital(DIGITAL_DOWN)) instInputs[16]--;
-    if (master.get_digital(DIGITAL_LEFT)) instInputs[17]++;
-    if (master.get_digital(DIGITAL_RIGHT)) instInputs[17]--;
-
-    if (master.get_digital(DIGITAL_X)) instInputs[18]++;
-    if (master.get_digital(DIGITAL_B)) instInputs[18]--;
-    if (master.get_digital(DIGITAL_Y)) instInputs[19]++;
-    if (master.get_digital(DIGITAL_A)) instInputs[19]--;
 }
 
 int average(int x, int y) {

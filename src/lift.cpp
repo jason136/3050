@@ -7,6 +7,9 @@ pros::Motor frontRightLiftMotor(FRONT_RIGHT_LIFT_MOTOR);
 pros::Motor frontLeftLiftMotor(FRONT_LEFT_LIFT_MOTOR);
 pros::Motor backLiftMotor(BACK_LIFT_MOTOR);
 
+// Digital out for pneumatics 
+pros::ADIDigitalOut pneumatic (PNEUMATIC_PORT);
+
 void frontLiftMove(int voltage) {
   // Raises lift manual based using voltage provided
   // Don't allow movement past lowest point and past upper point of mechanical limits of lift
@@ -80,6 +83,7 @@ void liftRaiseForEncoder(int voltage, int encDegrees) {
   frontLiftMove(0);
 }
 
+// decomissioned method, not useable in current game... for now
 void liftRaise(int speed, int level) {
   int lowTowerUpper = LIFT_LEVEL_LOW + 5;
   int lowTowerLower = LIFT_LEVEL_LOW - 5;
@@ -131,4 +135,13 @@ void liftRaise(int speed, int level) {
 
 pros::motor_brake_mode_e_t getliftBrakeMode() {
   return frontRightLiftMotor.get_brake_mode();
+}
+
+void setPneumaticState(int state) {
+    if (state == 1) {
+        pneumatic.set_value(1);
+    }
+    else {
+        pneumatic.set_value(0);
+    }
 }

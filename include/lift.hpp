@@ -37,4 +37,7 @@ void liftRaise(int voltage, int level);
 // Get the current lift lock mode of the break
 pros::motor_brake_mode_e_t getliftLockMode();
 
+// Set pneumatics to extend or retract
+setPneumaticState(int state);
+
 #endif

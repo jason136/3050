@@ -3,40 +3,40 @@
 
 std::vector<std::vector<int>> vectors;
 
-std::vector<int> listAnalog1RightX;
-std::vector<int> listAnalog1RightY;
-std::vector<int> listAnalog1LeftX;
-std::vector<int> listAnalog1LeftY;
+std::vector<int8_t> listAnalog1RightX;
+std::vector<int8_t> listAnalog1RightY;
+std::vector<int8_t> listAnalog1LeftX;
+std::vector<int8_t> listAnalog1LeftY;
 
-std::vector<int> listDigital1R;
-std::vector<int> listDigital1L;
-std::vector<int> listDigital1UpDown;
-std::vector<int> listDigital1LeftRight;
-std::vector<int> listDigital1XB;
-std::vector<int> listDigital1YA;
+std::vector<int8_t> listDigital1R;
+std::vector<int8_t> listDigital1L;
+std::vector<int8_t> listDigital1UpDown;
+std::vector<int8_t> listDigital1LeftRight;
+std::vector<int8_t> listDigital1XB;
+std::vector<int8_t> listDigital1YA;
 
-std::vector<int> listAnalog2RightX;
-std::vector<int> listAnalog2RightY;
-std::vector<int> listAnalog2LeftX;
-std::vector<int> listAnalog2LeftY;
+std::vector<int8_t> listAnalog2RightX;
+std::vector<int8_t> listAnalog2RightY;
+std::vector<int8_t> listAnalog2LeftX;
+std::vector<int8_t> listAnalog2LeftY;
 
-std::vector<int> listDigital2R;
-std::vector<int> listDigital2L;
-std::vector<int> listDigital2UpDown;
-std::vector<int> listDigital2LeftRight;
-std::vector<int> listDigital2XB;
-std::vector<int> listDigital2YA;
+std::vector<int8_t> listDigital2R;
+std::vector<int8_t> listDigital2L;
+std::vector<int8_t> listDigital2UpDown;
+std::vector<int8_t> listDigital2LeftRight;
+std::vector<int8_t> listDigital2XB;
+std::vector<int8_t> listDigital2YA;
 
 void clearVectors() {
     
-    for (std::vector<int> vector : vectors) {
+    for (std::vector<int8_t> vector : vectors) {
         vector.clear(); 
     }
 
     std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(int * instInputs) {
+void recordInput(int8_t * instInputs) {
 
     for (int x = 0; x < 20; x++) {
         vectors[x].push_back(instInputs[x]);
@@ -45,7 +45,7 @@ void recordInput(int * instInputs) {
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(int * recInputs, int index) {
+void updateIndex(int8_t * recInputs, int8_t index) {
     
     for (int x = 0; x < 20; x++) {
         recInputs[x] = vectors[x].at(index); 
@@ -115,7 +115,7 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t;
+    int8_t a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t;
     while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t) {
         vectors[0].push_back(a);
         vectors[1].push_back(b);
@@ -152,7 +152,7 @@ bool exists(const char * name) {
 void generateDatastructures() {
 
     for (int x = 0; x < 20; x++) {
-        std::vector<int> vector;
+        std::vector<int8_t> vector;
         vectors.push_back(vector); 
     }
 

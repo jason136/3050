@@ -1,7 +1,7 @@
 #ifndef PORT_DEF_H_
 #define PORT_DEF_H_
 
-// Motor Port Definitions
+// Motor Port Assignments
 // Drive Base Motors
 #define FRONT_RIGHT_MOTOR_PORT 8
 #define FRONT_LEFT_MOTOR_PORT 20
@@ -23,6 +23,9 @@
 #define VEX_RADIO 21
 
 // Vision Sensors
+
+// Tri Port Assignments
+#define PNEUMATIC_PORT "A" 
 
 // LEGACY Port Assignments
 

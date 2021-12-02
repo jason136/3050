@@ -17,7 +17,7 @@ extern bool recSkills;
  **/
 void recordableAuton() {
     int interations = getVectorSize();
-    int recOutputs[7];
+    int8_t recOutputs[7];
     int starttime = pros::millis();
     // char filename[20];
     // sprintf(filename, "/usd/RecAuton%i.txt", selection);
