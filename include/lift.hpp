@@ -38,6 +38,6 @@ void liftRaise(int voltage, int level);
 pros::motor_brake_mode_e_t getliftLockMode();
 
 // Set pneumatics to extend or retract
-setPneumaticState(int state);
+void togglePneumaticState();
 
 #endif

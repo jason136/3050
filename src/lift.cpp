@@ -137,11 +137,8 @@ pros::motor_brake_mode_e_t getliftBrakeMode() {
   return frontRightLiftMotor.get_brake_mode();
 }
 
-void setPneumaticState(int state) {
-    if (state == 1) {
-        pneumatic.set_value(1);
-    }
-    else {
-        pneumatic.set_value(0);
-    }
+bool pneumaticState = false;
+void togglePneumaticState() {
+    pneumaticState = !pneumaticState;
+    pneumatic.set_value(pneumaticState);
 }

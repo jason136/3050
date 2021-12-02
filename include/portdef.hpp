@@ -24,8 +24,8 @@
 
 // Vision Sensors
 
-// Tri Port Assignments
-#define PNEUMATIC_PORT "A" 
+// Tri Port Assignments, Ports A-H are mapped to 1-8
+#define PNEUMATIC_PORT 1
 
 // LEGACY Port Assignments
 

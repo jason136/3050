@@ -8,7 +8,7 @@
 #include "opcontrol.hpp"
 
 // Datastructures for recordable autonomous
-int8_t instInputs[20];
+int8_t instInputs[28];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
@@ -46,29 +46,24 @@ void readController(int8_t * instInputs) {
     instInputs[9] = master.get_digital(DIGITAL_RIGHT);
 
     instInputs[10] = master.get_digital(DIGITAL_X);
-    instInputs[11] = master.get_digital(DIGITAL_B)
-    instInputs[12] = master.get_digital(DIGITAL_Y)
-    instInputs[13] = master.get_digital(DIGITAL_A)
+    instInputs[11] = master.get_digital(DIGITAL_B);
+    instInputs[12] = master.get_digital(DIGITAL_Y);
+    instInputs[13] = master.get_digital(DIGITAL_A);
+    
+    if (partner.get_digital(DIGITAL_R1)) instInputs[18]++;
+    if (partner.get_digital(DIGITAL_R2)) instInputs[18]--;
+    if (partner.get_digital(DIGITAL_L1)) instInputs[19]++;
+    if (partner.get_digital(DIGITAL_L2)) instInputs[19]--;
 
-    if () instInputs[10]++;
-    if () instInputs[11]--;
-    if () instInputs[12]++;
-    if () instInputs[13]--;
+    instInputs[20] = partner.get_digital(DIGITAL_UP); 
+    instInputs[21] = partner.get_digital(DIGITAL_DOWN);
+    instInputs[22] = partner.get_digital(DIGITAL_LEFT);
+    instInputs[23] = partner.get_digital(DIGITAL_RIGHT);
 
-    if (master.get_digital(DIGITAL_R1)) instInputs[14]++;
-    if (master.get_digital(DIGITAL_R2)) instInputs[14]--;
-    if (master.get_digital(DIGITAL_L1)) instInputs[15]++;
-    if (master.get_digital(DIGITAL_L2)) instInputs[15]--;
-
-    if (master.get_digital(DIGITAL_UP)) instInputs[16]++;
-    if (master.get_digital(DIGITAL_DOWN)) instInputs[16]--;
-    if (master.get_digital(DIGITAL_LEFT)) instInputs[17]++;
-    if (master.get_digital(DIGITAL_RIGHT)) instInputs[17]--;
-
-    if (master.get_digital(DIGITAL_X)) instInputs[18]++;
-    if (master.get_digital(DIGITAL_B)) instInputs[18]--;
-    if (master.get_digital(DIGITAL_Y)) instInputs[19]++;
-    if (master.get_digital(DIGITAL_A)) instInputs[19]--;
+    instInputs[24] = partner.get_digital(DIGITAL_X);
+    instInputs[25] = partner.get_digital(DIGITAL_B);
+    instInputs[26] = partner.get_digital(DIGITAL_Y);
+    instInputs[27] = partner.get_digital(DIGITAL_A);
 }
 
 /**
@@ -228,7 +223,9 @@ void processInput(int8_t * arrInputs) {
 		backLiftLock();
 	}
 
-    
+    if (instInputs[11]) {
+        togglePneumaticState();
+    }
 }
 
 void startRecordThread() {

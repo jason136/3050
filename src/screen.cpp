@@ -213,6 +213,7 @@ void drawScreen() {
     lv_style_copy(&shapeStyle, &lv_style_plain);
     shapeStyle.line.color = LV_COLOR_MAKE(255, 255, 255);
     shapeStyle.line.width = 5;
+    shapeStyle.text.color = LV_COLOR_MAKE(255, 255, 255);
     
     lv_style_copy(&backgroundStyle, &lv_style_plain);
     backgroundStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
@@ -312,20 +313,21 @@ void drawRecordable() {
     lv_obj_align(recordableBtn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 70);
 
     recordableLabel = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_style(recordableLabel, &shapeStyle);
     lv_label_set_text(recordableLabel, "click buttun to record");
     lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 140);
 
-    tempButton = createBtn(lv_scr_act(), 245, 10, 100, 50, 200, "1", redStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 10, 100, 50, 200, "1", redStyle);
 
-    tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 201, "2", blueStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 10, 100, 50, 201, "2", blueStyle);
 
-    tempButton = createBtn(lv_scr_act(), 245, 68, 100, 50, 202, "3", redStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 68, 100, 50, 202, "3", redStyle);
 
-    tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 203, "4", blueStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 68, 100, 50, 203, "4", blueStyle);
 
-    tempButton = createBtn(lv_scr_act(), 245, 126, 100, 50, 204, "5", redStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 126, 100, 50, 204, "5", redStyle);
 
-    tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 205, "6", blueStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 126, 100, 50, 205, "6", blueStyle);
 
     menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 

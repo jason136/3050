@@ -1,7 +1,7 @@
 #include "main.h"
 #include "file.hpp"
 
-std::vector<std::vector<int>> vectors;
+std::vector<std::vector<int8_t>> vectors;
 
 std::vector<int8_t> listAnalog1RightX;
 std::vector<int8_t> listAnalog1RightY;
@@ -38,7 +38,7 @@ void clearVectors() {
 
 void recordInput(int8_t * instInputs) {
 
-    for (int x = 0; x < 20; x++) {
+    for (int x = 0; x < 28; x++) {
         vectors[x].push_back(instInputs[x]);
     }
 
@@ -47,7 +47,7 @@ void recordInput(int8_t * instInputs) {
 
 void updateIndex(int8_t * recInputs, int8_t index) {
     
-    for (int x = 0; x < 20; x++) {
+    for (int x = 0; x < 28; x++) {
         recInputs[x] = vectors[x].at(index); 
     }
 
@@ -62,7 +62,7 @@ int getVectorSize() {
 void printVectors() {
     int interations = getVectorSize();
     std::cout << "begin vector output with size : " << interations << std::endl;
-    int recOutputs[20];
+    int8_t recOutputs[28];
     for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
         for (int y = 0; y < 7; y++) {
@@ -76,9 +76,9 @@ void printVectors() {
 void writeToFile(const char * filename) {
     std::ofstream outfile(filename);
     outfile << "data\n";
-    char filebuffer[500] = "";
+    char filebuffer[1000] = "";
     for (int x = 0; x < getVectorSize(); x++) {
-        sprintf(filebuffer, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
+        sprintf(filebuffer, "%hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx\n",
                 vectors[0].at(x),
                 vectors[1].at(x),
                 vectors[2].at(x),
@@ -98,7 +98,15 @@ void writeToFile(const char * filename) {
                 vectors[16].at(x),
                 vectors[17].at(x),
                 vectors[18].at(x),
-                vectors[19].at(x));
+                vectors[19].at(x),
+                vectors[20].at(x),
+                vectors[21].at(x),
+                vectors[22].at(x),
+                vectors[23].at(x),
+                vectors[24].at(x),
+                vectors[25].at(x),
+                vectors[26].at(x),
+                vectors[27].at(x));
         outfile << filebuffer;
     }
     outfile.close();
@@ -115,8 +123,8 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    int8_t a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t;
-    while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t) {
+    int8_t a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab;
+    while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t >> u >> v >> w >> x >> y >> z >> aa >> ab) {
         vectors[0].push_back(a);
         vectors[1].push_back(b);
         vectors[2].push_back(c);
@@ -137,6 +145,14 @@ bool readFromFile(const char * filename) {
         vectors[17].push_back(r);
         vectors[18].push_back(s);
         vectors[19].push_back(t);
+        vectors[20].push_back(u);
+        vectors[21].push_back(v);
+        vectors[22].push_back(w);
+        vectors[23].push_back(x);
+        vectors[24].push_back(y);
+        vectors[25].push_back(z);
+        vectors[26].push_back(aa);
+        vectors[27].push_back(ab);
     }
     infile.close();
 
@@ -151,7 +167,7 @@ bool exists(const char * name) {
 
 void generateDatastructures() {
 
-    for (int x = 0; x < 20; x++) {
+    for (int x = 0; x < 28; x++) {
         std::vector<int8_t> vector;
         vectors.push_back(vector); 
     }
