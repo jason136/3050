@@ -211,9 +211,8 @@ void drawScreen() {
     LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(255, 255, 0));
 
     lv_style_copy(&shapeStyle, &lv_style_plain);
-    shapeStyle.body.main_color = LV_COLOR_MAKE(255, 255, 255);
-    shapeStyle.body.border.width = 5;
-    shapeStyle.body.border.color = LV_COLOR_MAKE(255, 255, 255);
+    shapeStyle.line.color = LV_COLOR_MAKE(255, 255, 255);
+    shapeStyle.line.width = 5;
     
     lv_style_copy(&backgroundStyle, &lv_style_plain);
     backgroundStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
@@ -231,7 +230,7 @@ void drawScreen() {
     lv_obj_set_style(recordScreen, &backgroundStyle);
     lv_obj_set_style(towScreen, &backgroundStyle);
 
-    drawTow();
+    drawMenu();
 }
 
 void drawMenu() {
@@ -345,17 +344,19 @@ int eyerightY;
 int eyeleftX;
 int eyeleftY;
 
+lv_obj_t * leftEye;
+lv_obj_t * rightEye;
+
 void drawTow() {
     lv_scr_load(towScreen);
 
-    int leftEye[4][2] = {10, 10, 10, 50, 50, 50, 50, 10};
+    static lv_point_t leftEyePoints[] = { {5, 5}, {70, 70}, {120, 10}, {180, 60} };
+    static lv_point_t rightEyePoints[] = { {100, 100}, {100, 150}, {150, 150}, {150, 100} };
 
-    int rightEye[4][2] = {100, 100, 100, 150, 150, 150, 150, 100};
-
-    updateTow(leftEye, rightEye);
+    updateTow(&leftEyePoints[0], &rightEyePoints[0]);
 }
 
-void updateTow(int leftInputs[][2], int rightInputs[][2]) {
+void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]) {
     /*
     inputs must be in the following form:
     leftInputs: 
@@ -370,33 +371,17 @@ void updateTow(int leftInputs[][2], int rightInputs[][2]) {
     [point4X, point4Y]
     */
 
-    lv_area_t area;
-    area.x1 = 0;
-    area.y1 = 0;
-    area.x2 = 300;
-    area.y2 = 300;
+    leftEye = lv_line_create(lv_scr_act(), NULL);
+    rightEye = lv_line_create(lv_scr_act(), NULL);
 
-    lv_point_t point1;
-    point1.x = leftInputs[0][0];
-    point1.y = leftInputs[0][1];
-    lv_point_t point2;
-    point2.x = leftInputs[1][0];
-    point2.y = leftInputs[1][1];
-    lv_point_t point3;
-    point3.x = leftInputs[2][0];
-    point3.y = leftInputs[2][1];
-    lv_point_t point4;
-    point4.x = leftInputs[3][0];
-    point4.y = leftInputs[3][1];
-    
-    lv_draw_line(&point1, &point2, &area, &shapeStyle, 1);
-    lv_draw_line(&point2, &point3, &area, &shapeStyle, 1);
-    lv_draw_line(&point3, &point4, &area, &shapeStyle, 1);
-    lv_draw_line(&point4, &point1, &area, &shapeStyle, 1);
+    lv_line_set_points(leftEye, leftPoints, 4);
+    lv_line_set_points(rightEye, rightPoints, 4);
 
+    lv_obj_set_style(leftEye, &shapeStyle);
+    lv_obj_set_style(rightEye, &shapeStyle);
 
-    // after some research, masks are not available on this build of lvgl
-    
+    lv_obj_align(leftEye, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(rightEye, NULL, LV_ALIGN_CENTER, 100, 100);
 }
 
 void towCastChanges(int * leftInputs, int * rightInputs) {
