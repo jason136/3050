@@ -17,7 +17,7 @@ extern bool recSkills;
  **/
 void recordableAuton() {
     int interations = getVectorSize();
-    int8_t recOutputs[28];
+    int recOutputs[28];
     int starttime = pros::millis();
     // char filename[20];
     // sprintf(filename, "/usd/RecAuton%i.txt", selection);
@@ -26,7 +26,7 @@ void recordableAuton() {
         for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
         processInput(&recOutputs[0]);
-        std::cout << "selection: " << selection << " execute line " << x << "of" << interations << std::endl;
+        //std::cout << "selection: " << selection << " execute line " << x << "of" << interations << std::endl;
         pros::delay(20);
         }
     }

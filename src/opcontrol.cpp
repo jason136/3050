@@ -8,7 +8,7 @@
 #include "opcontrol.hpp"
 
 // Datastructures for recordable autonomous
-int8_t instInputs[28];
+int instInputs[28];
 
 // Datastructures used for console and screen diagnostics
 double buffer[12];
@@ -17,14 +17,14 @@ char chassisData[400];
 // This mutex carries protects all motor control values
 pros::Mutex mutex;
 
-extern int8_t selection;
+extern int selection;
 extern bool recSkills;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
 
 // Live state of controller is recorded in int array
-void readController(int8_t * instInputs) {
+void readController(int * instInputs) {
     instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
     instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
     instInputs[2] = master.get_analog(ANALOG_LEFT_X);
@@ -110,12 +110,12 @@ void opcontrol() {
 	}
 }
 
-void processInput(int8_t * arrInputs) {
+void processInput(int * arrInputs) {
 	// Create easily mutable versions of struct members
-	int8_t rightX = arrInputs[0];
-	int8_t rightY = arrInputs[1];
-	int8_t leftX = arrInputs[2];
-	int8_t leftY = arrInputs[3];
+	int rightX = arrInputs[0];
+	int rightY = arrInputs[1];
+	int leftX = arrInputs[2];
+	int leftY = arrInputs[3];
 
 	if (abs(rightX) < DEAD_STICK) rightX = 0; 
 	if (abs(rightY) < DEAD_STICK) rightY = 0; 
@@ -129,7 +129,7 @@ void processInput(int8_t * arrInputs) {
 	if (DRIVE_MODE == 1) {
 		// We want to do X-Drive TANK control
 
-		setIndividualMotor((rightY - average(rightX, leftX)),
+		chassisMoveIndividuals((rightY - average(rightX, leftX)),
 							(leftY + average(rightX, leftX)),
 							(rightY + average(rightX, leftX)),
 							(leftY - average(rightX, leftX)));
@@ -137,7 +137,7 @@ void processInput(int8_t * arrInputs) {
 	else if (DRIVE_MODE == 2) {
 		// We want to do X-Drive ARCADE control
 
-		setIndividualMotor((rightY - leftX - rightX),
+		chassisMoveIndividuals((rightY - leftX - rightX),
 							(rightY + leftX + rightX),
 							(rightY - leftX + rightX),
 							(rightY + leftX - rightX));
@@ -145,18 +145,18 @@ void processInput(int8_t * arrInputs) {
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
 
-		setIndividualMotor(rightY, leftY, rightY, leftY);
+		chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
         chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
 	else if (DRIVE_MODE == 4) {
 		// We are wanting to do standard ARCADE control
 
-		setIndividualMotor(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
+		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 	// else if (DRIVE_MODE == 5) {    // decomissioned until further testing and/or demand for it to actually be made
-	// 	int8_t leftX;
-	//   	int8_t leftY;
+	// 	int leftX;
+	//   	int leftY;
 
 	// 	if (master.get_digital(DIGITAL_UP)) {
 	// 		leftY = 200;
@@ -178,13 +178,13 @@ void processInput(int8_t * arrInputs) {
 	// 		leftX = 0;
 	// 	}
 
-	//   	int8_t rightX = master.get_analog(ANALOG_RIGHT_X);
+	//   	int rightX = master.get_analog(ANALOG_RIGHT_X);
 
 	// 	if(abs(rightX) < DEAD_STICK) { rightX = 0; }
 	// 	if(abs(leftX) < DEAD_STICK) { leftX = 0; }
 	// 	if(abs(leftY) < DEAD_STICK) { leftY = 0; }
 
-	// 	setIndividualMotor((rightX - leftX - rightX),
+	// 	chassisMoveIndividuals((rightX - leftX - rightX),
 	// 	 					(rightX + leftX + rightX),
 	// 						(rightX - leftX + rightX),
 	// 						(rightX + leftX - rightX));
@@ -202,30 +202,10 @@ void processInput(int8_t * arrInputs) {
 		conveyorStop();
 	}
 
-	if (arrInputs[5] == 1) {
-		frontLiftMove(127);
-	}
-	else if (arrInputs[5] == -1) {
-		frontLiftMove(-110);
-	}
-	else {
-		frontLiftLock();
-	}
+    togglePneumaticState(instInputs[11]);
 
-	if (arrInputs[6] == 1) {
-		backLiftMove(127);
-	}
-	else if (arrInputs[6] == -1) {
-		backLiftMove(-110);
-	}
-	else {
-        //backLiftMove(0);
-		backLiftLock();
-	}
-
-    if (instInputs[11]) {
-        togglePneumaticState();
-    }
+    differential('r', instInputs[4]);
+    differential('l', instInputs[5]);
 }
 
 void startRecordThread() {

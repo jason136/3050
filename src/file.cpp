@@ -1,42 +1,18 @@
 #include "main.h"
 #include "file.hpp"
 
-std::vector<std::vector<int8_t>> vectors;
-
-std::vector<int8_t> listAnalog1RightX;
-std::vector<int8_t> listAnalog1RightY;
-std::vector<int8_t> listAnalog1LeftX;
-std::vector<int8_t> listAnalog1LeftY;
-
-std::vector<int8_t> listDigital1R;
-std::vector<int8_t> listDigital1L;
-std::vector<int8_t> listDigital1UpDown;
-std::vector<int8_t> listDigital1LeftRight;
-std::vector<int8_t> listDigital1XB;
-std::vector<int8_t> listDigital1YA;
-
-std::vector<int8_t> listAnalog2RightX;
-std::vector<int8_t> listAnalog2RightY;
-std::vector<int8_t> listAnalog2LeftX;
-std::vector<int8_t> listAnalog2LeftY;
-
-std::vector<int8_t> listDigital2R;
-std::vector<int8_t> listDigital2L;
-std::vector<int8_t> listDigital2UpDown;
-std::vector<int8_t> listDigital2LeftRight;
-std::vector<int8_t> listDigital2XB;
-std::vector<int8_t> listDigital2YA;
+std::vector<std::vector<int>> vectors;
 
 void clearVectors() {
     
-    for (std::vector<int8_t> vector : vectors) {
+    for (std::vector<int> vector : vectors) {
         vector.clear(); 
     }
 
     std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(int8_t * instInputs) {
+void recordInput(int * instInputs) {
 
     for (int x = 0; x < 28; x++) {
         vectors[x].push_back(instInputs[x]);
@@ -45,28 +21,26 @@ void recordInput(int8_t * instInputs) {
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(int8_t * recInputs, int8_t index) {
+void updateIndex(int * recValues, int index) {
     
     for (int x = 0; x < 28; x++) {
-        recInputs[x] = vectors[x].at(index); 
+        recValues[x] = vectors[x].at(index); 
     }
-
-    //std::cout << "vectors returned" << std::endl;
 }
 
 int getVectorSize() {
-    std::cout << "vector size returned" << std::endl;
+    std::cout << "vector size returned" << vectors[0].size() << std::endl;
     return vectors[0].size();
 }
 
 void printVectors() {
     int interations = getVectorSize();
     std::cout << "begin vector output with size : " << interations << std::endl;
-    int8_t recOutputs[28];
+    int recOutputs[28];
     for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
-        for (int y = 0; y < 7; y++) {
-            std::cout << " " << recOutputs[1] << " ";
+        for (int y = 0; y < 28; y++) {
+            std::cout << " " << recOutputs[y] << " ";
         }
         std::cout << std::endl;
     }
@@ -77,8 +51,9 @@ void writeToFile(const char * filename) {
     std::ofstream outfile(filename);
     outfile << "data\n";
     char filebuffer[1000] = "";
-    for (int x = 0; x < getVectorSize(); x++) {
-        sprintf(filebuffer, "%hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx %hhx\n",
+    int interations = getVectorSize();
+    for (int x = 0; x < interations; x++) {
+        sprintf(filebuffer, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
                 vectors[0].at(x),
                 vectors[1].at(x),
                 vectors[2].at(x),
@@ -123,7 +98,7 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    int8_t a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab;
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab;
     while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t >> u >> v >> w >> x >> y >> z >> aa >> ab) {
         vectors[0].push_back(a);
         vectors[1].push_back(b);
@@ -168,7 +143,7 @@ bool exists(const char * name) {
 void generateDatastructures() {
 
     for (int x = 0; x < 28; x++) {
-        std::vector<int8_t> vector;
+        std::vector<int> vector;
         vectors.push_back(vector); 
     }
 

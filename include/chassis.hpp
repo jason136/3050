@@ -15,7 +15,7 @@ void chassisMove(int voltage);
 
 // Sets the speeds of each motor individually.
 // This method controls the chassis during opcontrol
-void setIndividualMotor(int FRight, int FLeft, int BRight, int BLeft);
+void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft);
 
 // Function to lock drive motors if the corresponding number is 0
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft);
