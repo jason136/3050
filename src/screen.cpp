@@ -77,7 +77,6 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
 extern const lv_img_dsc_t field_image;
 int selection;
 bool recAuton;
-bool recSkills;
 
 char text[100];
 
@@ -119,7 +118,6 @@ void resetDatastructures() {
   diagLabel = NULL;
   toggledBtn = nullptr;
   selection = -1;
-  recSkills = false;
 }
 
 static lv_res_t btnOnclickAction(lv_obj_t * btn) {
@@ -180,8 +178,6 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                 if (selection != id - 200 && toggledBtn != nullptr) {
                     btnSetToggled(toggledBtn, false);
                 }
-                recSkills = false;
-                if (id == 206) recSkills = true;
                 if (id == 211 && selection >= 0) {
                     startRecordThread();
                     sprintf(text, "see controller");

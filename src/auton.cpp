@@ -8,24 +8,31 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 
-// Pull values from screen
 extern int selection;
-extern bool recSkills;
+extern pros::Mutex mutex;
+bool recAutonActive;
 /**
  * This is where all the various autonomous routines are located
  * and subsequently called by the autonomous() selector based on GUI input
  **/
 void recordableAuton() {
+    recAutonActive = true;
+    pros::Task recAutonThread(recordLoop);
+	std::cout << "recAutonLoop started" << std::endl;
+}
+
+void recAutonLoop(void * param) {
     int interations = getVectorSize();
     int recOutputs[28];
     int starttime = pros::millis();
-    // char filename[20];
-    // sprintf(filename, "/usd/RecAuton%i.txt", selection);
-    // readFromFile(filename);
     if (interations > 0) {
         for (int x = 0; x < interations; x++) {
         updateIndex(&recOutputs[0], x);
-        processInput(&recOutputs[0]);
+        if (recAutonActive) {
+            mutex.take(5);
+            processInput(&recOutputs[0]);
+            mutex.give();
+        }
         //std::cout << "selection: " << selection << " execute line " << x << "of" << interations << std::endl;
         pros::delay(20);
         }

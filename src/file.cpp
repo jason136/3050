@@ -50,38 +50,14 @@ void printVectors() {
 void writeToFile(const char * filename) {
     std::ofstream outfile(filename);
     outfile << "data\n";
-    char filebuffer[1000] = "";
+    std::string filebuffer = "";
     int interations = getVectorSize();
     for (int x = 0; x < interations; x++) {
-        sprintf(filebuffer, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
-                vectors[0].at(x),
-                vectors[1].at(x),
-                vectors[2].at(x),
-                vectors[3].at(x),
-                vectors[4].at(x),
-                vectors[5].at(x),
-                vectors[6].at(x),
-                vectors[7].at(x),
-                vectors[8].at(x),
-                vectors[9].at(x),
-                vectors[10].at(x),
-                vectors[11].at(x),
-                vectors[12].at(x),
-                vectors[13].at(x),
-                vectors[14].at(x),
-                vectors[15].at(x),
-                vectors[16].at(x),
-                vectors[17].at(x),
-                vectors[18].at(x),
-                vectors[19].at(x),
-                vectors[20].at(x),
-                vectors[21].at(x),
-                vectors[22].at(x),
-                vectors[23].at(x),
-                vectors[24].at(x),
-                vectors[25].at(x),
-                vectors[26].at(x),
-                vectors[27].at(x));
+        filebuffer = "";
+        for (int y = 0; y < std::size(vectors); y++) {
+            filebuffer.append(std::to_string(vectors[y].at(x)));
+            filebuffer.append(" ");
+        }
         outfile << filebuffer;
     }
     outfile.close();

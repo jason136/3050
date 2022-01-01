@@ -19,44 +19,43 @@ void moveLift(int RTop, int RBottom, int LTop, int LBottom) {
 }
 
 void liftLock() {
-  rightTopLiftMotor.move(0);
-  rightBottomLiftMotor.move(0);
-  leftTopLiftMotor.move(0);
-  leftBottomLiftMotor.move(0);
-  if (rightTopLiftMotor.get_brake_mode() != 2 ) {
     rightTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     leftTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     leftBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  }
+    rightTopLiftMotor.move_velocity(0);
+    rightBottomLiftMotor.move_velocity(0);
+    leftTopLiftMotor.move_velocity(0);
+    leftBottomLiftMotor.move_velocity(0);
 }
 
 void liftResetEncoder() {
-  rightTopLiftMotor.tare_position();
-  rightBottomLiftMotor.tare_position();
-  leftTopLiftMotor.tare_position();
-  leftBottomLiftMotor.tare_position();
+    rightTopLiftMotor.tare_position();
+    rightBottomLiftMotor.tare_position();
+    leftTopLiftMotor.tare_position();
+    leftBottomLiftMotor.tare_position();
 
-  if(DEBUG_ON){
-    std::cout << "lift encoder reset" << std::endl; 
-  }
+    if(DEBUG_ON){
+        std::cout << "lift encoder reset" << std::endl; 
+    }
 }
 
 pros::motor_brake_mode_e_t getliftBrakeMode() {
-  return rightTopLiftMotor.get_brake_mode();
+    return rightTopLiftMotor.get_brake_mode();
 }
 
 void togglePneumaticState(int mode) {
     pneumatic.set_value(mode);
 }
 
-void differential (char side, int mode) {
-    if (side == 'r') {
-        if (mode) moveLift(mode * 127, mode * 127, mode * 127, mode * 127);
-        else liftLock();
+void differential(int right, int left) {
+    if (right) {
+        moveLift(right * 80, right * 80, right * -80, right * -80);
     }
-    else if (side = 'l') {
-        if (mode) moveLift(mode * -127, mode * 127, mode * -127, mode * 127);
-        else liftLock();
+    else if (left) {
+        moveLift(left * -127, left * 127, left * -127, left * 127);
+    }
+    else {
+        liftLock();
     }
 }

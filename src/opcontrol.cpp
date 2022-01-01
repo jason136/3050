@@ -18,12 +18,11 @@ char chassisData[400];
 pros::Mutex mutex;
 
 extern int selection;
-extern bool recSkills;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
 
-// Live state of controller is recorded in int array
+// Record state of controllers in int array
 void readController(int * instInputs) {
     instInputs[0] = master.get_analog(ANALOG_RIGHT_X);
     instInputs[1] = master.get_analog(ANALOG_RIGHT_Y);
@@ -204,8 +203,7 @@ void processInput(int * arrInputs) {
 
     togglePneumaticState(instInputs[11]);
 
-    differential('r', instInputs[4]);
-    differential('l', instInputs[5]);
+    differential(instInputs[4], instInputs[5]);
 }
 
 void startRecordThread() {
@@ -232,7 +230,7 @@ void recordLoop(void * param) {
     master.set_text(1, 1, countdown);
     startTime = pros::millis();
 	int duration;
-	if (recSkills) {
+	if (selection == 6) {
 		duration = 60000;
 	}
 	else {

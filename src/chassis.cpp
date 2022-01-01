@@ -3,16 +3,16 @@
 #include "portdef.hpp"
 
 // Setup the motor definitions for the motors on the chassis
-pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 1, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
   // This function drives the robot forward/backwards at given speed
-  frontRightDriveMotor.move(voltage);
-  frontLeftDriveMotor.move(-voltage);
+  frontRightDriveMotor.move(-voltage);
+  frontLeftDriveMotor.move(voltage);
   backRightDriveMotor.move(-voltage);
   backLeftDriveMotor.move(voltage);
 }
@@ -20,8 +20,8 @@ void chassisMove(int voltage) {
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
   // Function to set voltage of each motor individually, used in opcontrol
   // This function deals in voltage, and takes arguments from -127 to 127
-  frontRightDriveMotor.move(FRight);
-  frontLeftDriveMotor.move(-FLeft);
+  frontRightDriveMotor.move(-FRight);
+  frontLeftDriveMotor.move(FLeft);
   backRightDriveMotor.move(-BRight);
   backLeftDriveMotor.move(BLeft);
 
@@ -32,22 +32,22 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
 }
 
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
-  if (FRight == 0 && frontRightDriveMotor.get_brake_mode() != 2) {
-      frontRightDriveMotor.move(0);
-      frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  }
-  else if (FLeft == 0 && frontLeftDriveMotor.get_brake_mode() != 2) {
-      frontLeftDriveMotor.move(0);
-      frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  }
-  else if (BRight == 0 && backRightDriveMotor.get_brake_mode() != 2) {
-      backRightDriveMotor.move(0);
-      backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  }
-  else if (BLeft == 0 && backLeftDriveMotor.get_brake_mode() != 2) {
-      backLeftDriveMotor.move(0);
-      backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  }
+    // if (FRight == 0) {
+    //     frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    //     frontRightDriveMotor.move_velocity(0);
+    // }
+    // else if (FLeft == 0) {
+    //     frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    //     frontLeftDriveMotor.move_velocity(0);
+    // }
+    // else if (BRight == 0) {
+    //     backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    //     backRightDriveMotor.move_velocity(0);
+    // }
+    // else if (BLeft == 0) {
+    //     backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    //     backLeftDriveMotor.move_velocity(0);
+    // }
 }
 
 void chassisStopDrive() {

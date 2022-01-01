@@ -6,6 +6,8 @@
 // Functiosn facilitating the various Autonomous routien options
 void recordableAuton();
 
+void recAutonLoop(void * param);
+
 void skillRun();              // Skill Autonomous - 60Sec
 
 void autoRedLeft();           // Competition autonomous - 15Sec

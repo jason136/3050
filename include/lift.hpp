@@ -21,6 +21,6 @@ pros::motor_brake_mode_e_t getliftLockMode();
 void togglePneumaticState(int mode);
 
 // Control method for differential mechanism on lift
-void differential(char side, int mode);
+void differential(int right, int left);
 
 #endif
