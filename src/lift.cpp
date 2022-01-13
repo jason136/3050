@@ -9,7 +9,8 @@ pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR);
 pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumatic (PNEUMATIC_PORT);
+pros::ADIDigitalOut pneumatic1 (PNEUMATIC_PORT_1);
+pros::ADIDigitalOut pneumatic2 (PNEUMATIC_PORT_2);
 
 void moveLift(int RTop, int RBottom, int LTop, int LBottom) {
     rightTopLiftMotor.move(RTop);
@@ -45,7 +46,8 @@ pros::motor_brake_mode_e_t getliftBrakeMode() {
 }
 
 void togglePneumaticState(int mode) {
-    pneumatic.set_value(mode);
+    pneumatic1.set_value(mode);
+    pneumatic2.set_value(mode);
 }
 
 void differential(int right, int left) {

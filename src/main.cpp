@@ -33,6 +33,9 @@ void initialize() {
     // pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 
     // pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+    
+    pros::Vision visionSensor(VISION_PORT);
+    visionSensor.set_led(COLOR_SPRING_GREEN);
 
     generateDatastructures();
     drawScreen();

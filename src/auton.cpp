@@ -8,6 +8,7 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 
+pros::Vision visionSensor(VISION_PORT);
 extern int selection;
 extern pros::Mutex mutex;
 bool recAutonActive;
@@ -17,6 +18,9 @@ bool recAutonActive;
  **/
 void recordableAuton() {
     recAutonActive = true;
+    visionSensor.set_led(COLOR_CRIMSON);
+    visionSensor.clear_led();
+    visionSensor.set_auto_white_balance(true);
     pros::Task recAutonThread(recordLoop);
 	std::cout << "recAutonLoop started" << std::endl;
 }
