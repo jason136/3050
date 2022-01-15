@@ -10,6 +10,7 @@
 
 // Tray Motor
 #define TRAY_MOTOR_PORT 5
+#define CLAW_MOTOR 5
 
 // Lift Motor
 #define RIGHT_TOP_LIFT_MOTOR 3
@@ -24,7 +25,6 @@
 #define VEX_RADIO 21
 
 // Vision Sensors
-
 #define VISION_PORT 100
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8

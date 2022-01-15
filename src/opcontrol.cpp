@@ -29,11 +29,6 @@ void readController(int * instInputs) {
     instInputs[2] = master.get_analog(ANALOG_LEFT_X);
     instInputs[3] = master.get_analog(ANALOG_LEFT_Y);
 
-    instInputs[14] = partner.get_analog(ANALOG_RIGHT_X);
-    instInputs[15] = partner.get_analog(ANALOG_RIGHT_Y);
-    instInputs[16] = partner.get_analog(ANALOG_LEFT_X);
-    instInputs[17] = partner.get_analog(ANALOG_LEFT_Y);
-
     if (master.get_digital(DIGITAL_R1)) instInputs[4]++;
     if (master.get_digital(DIGITAL_R2)) instInputs[4]--;
     if (master.get_digital(DIGITAL_L1)) instInputs[5]++;
@@ -48,6 +43,11 @@ void readController(int * instInputs) {
     instInputs[11] = master.get_digital(DIGITAL_B);
     instInputs[12] = master.get_digital(DIGITAL_Y);
     instInputs[13] = master.get_digital(DIGITAL_A);
+
+    instInputs[14] = partner.get_analog(ANALOG_RIGHT_X);
+    instInputs[15] = partner.get_analog(ANALOG_RIGHT_Y);
+    instInputs[16] = partner.get_analog(ANALOG_LEFT_X);
+    instInputs[17] = partner.get_analog(ANALOG_LEFT_Y);
     
     if (partner.get_digital(DIGITAL_R1)) instInputs[18]++;
     if (partner.get_digital(DIGITAL_R2)) instInputs[18]--;
@@ -144,7 +144,7 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
 
-		chassisMoveIndividuals(rightY, leftY, rightY, leftY);
+		chassisMoveIndividuals(leftY, rightY, leftY, rightY);
 
         chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
@@ -204,6 +204,11 @@ void processInput(int * arrInputs) {
     togglePneumaticState(instInputs[11]);
 
     differential(instInputs[4], instInputs[5]);
+
+    if (instInputs[6]) moveClaw(1);
+    else if (instInputs[7]) moveClaw(-1);
+    else moveClaw(0);
+    
 }
 
 void startRecordThread() {

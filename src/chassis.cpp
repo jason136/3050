@@ -11,19 +11,19 @@ pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
   // This function drives the robot forward/backwards at given speed
-  frontRightDriveMotor.move(-voltage);
-  frontLeftDriveMotor.move(voltage);
-  backRightDriveMotor.move(-voltage);
-  backLeftDriveMotor.move(voltage);
+  frontRightDriveMotor.move(voltage);
+  frontLeftDriveMotor.move(-voltage);
+  backRightDriveMotor.move(voltage);
+  backLeftDriveMotor.move(-voltage);
 }
 
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
   // Function to set voltage of each motor individually, used in opcontrol
   // This function deals in voltage, and takes arguments from -127 to 127
-  frontRightDriveMotor.move(-FRight);
-  frontLeftDriveMotor.move(FLeft);
-  backRightDriveMotor.move(-BRight);
-  backLeftDriveMotor.move(BLeft);
+  frontRightDriveMotor.move(FRight);
+  frontLeftDriveMotor.move(-FLeft);
+  backRightDriveMotor.move(BRight);
+  backLeftDriveMotor.move(-BLeft);
 
   if(true) {
     std::cout << "set chassis motor values: " << FRight << " " << FLeft; 

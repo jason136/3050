@@ -20,6 +20,8 @@ pros::motor_brake_mode_e_t getliftLockMode();
 // Set pneumatics to extend or retract
 void togglePneumaticState(int mode);
 
+void moveClaw(int mode);
+
 // Control method for differential mechanism on lift
 void differential(int right, int left);
 
