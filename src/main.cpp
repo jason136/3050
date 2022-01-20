@@ -37,6 +37,9 @@ void initialize() {
     pros::Vision visionSensor(VISION_PORT);
     visionSensor.set_led(COLOR_SPRING_GREEN);
 
+    pros::Imu intertialSensor(INERTIAL_PORT);
+    intertialSensor.reset();
+
     generateDatastructures();
     drawScreen();
 }

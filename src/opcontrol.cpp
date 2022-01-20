@@ -144,9 +144,11 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
 
-		chassisMoveIndividuals(leftY, rightY, leftY, rightY);
 
-        chassisLockDrive(rightY, leftY, rightY, leftY);
+        if (instInputs[10]) chassisGyroPark();
+        else chassisMoveIndividuals(leftY, rightY, leftY, rightY);
+
+        //chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
 	else if (DRIVE_MODE == 4) {
 		// We are wanting to do standard ARCADE control
@@ -208,6 +210,10 @@ void processInput(int * arrInputs) {
     if (instInputs[6]) moveClaw(1);
     else if (instInputs[7]) moveClaw(-1);
     else moveClaw(0);
+
+    if (instInputs[8]) moveGrabber(1);
+    else if (instInputs[9]) moveGrabber(-1);
+    else moveGrabber(0);
     
 }
 

@@ -1,12 +1,15 @@
 #include "main.h"
 #include "chassis.hpp"
 #include "portdef.hpp"
+#include <cmath>
 
 // Setup the motor definitions for the motors on the chassis
 pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+
+pros::Imu intertialSensor(INERTIAL_PORT);
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
@@ -25,29 +28,40 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
   backRightDriveMotor.move(BRight);
   backLeftDriveMotor.move(-BLeft);
 
-  if(true) {
+  if(DEBUG_ON) {
     std::cout << "set chassis motor values: " << FRight << " " << FLeft; 
     std::cout << " " << BRight << " " << BLeft << std::endl; 
   }
 }
 
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
-    // if (FRight == 0) {
-    //     frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    //     frontRightDriveMotor.move_velocity(0);
-    // }
-    // else if (FLeft == 0) {
-    //     frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    //     frontLeftDriveMotor.move_velocity(0);
-    // }
-    // else if (BRight == 0) {
-    //     backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    //     backRightDriveMotor.move_velocity(0);
-    // }
-    // else if (BLeft == 0) {
-    //     backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    //     backLeftDriveMotor.move_velocity(0);
-    // }
+    if (FRight == 0) {
+        frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        frontRightDriveMotor.move_velocity(0);
+    }
+    else if (FLeft == 0) {
+        frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        frontLeftDriveMotor.move_velocity(0);
+    }
+    else if (BRight == 0) {
+        backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        backRightDriveMotor.move_velocity(0);
+    }
+    else if (BLeft == 0) {
+        backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        backLeftDriveMotor.move_velocity(0);
+    }
+}
+
+void chassisGyroPark() {
+    std::cout << "gyro things: ";
+    std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
+
+    double pitch = intertialSensor.get_pitch();
+
+    if (abs(pitch) < 5) {
+        chassisMove(pitch * -5);
+    }
 }
 
 void chassisStopDrive() {

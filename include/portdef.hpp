@@ -3,14 +3,15 @@
 
 // Motor Port Assignments
 // Drive Base Motors
-#define FRONT_RIGHT_DRIVE_MOTOR 8
-#define FRONT_LEFT_DRIVE_MOTOR 20
-#define BACK_RIGHT_DRIVE_MOTOR 14
-#define BACK_LEFT_DRIVE_MOTOR 16
+#define FRONT_RIGHT_DRIVE_MOTOR 17
+#define FRONT_LEFT_DRIVE_MOTOR 18
+#define BACK_RIGHT_DRIVE_MOTOR 19
+#define BACK_LEFT_DRIVE_MOTOR 20
 
 // Tray Motor
 #define TRAY_MOTOR_PORT 5
-#define CLAW_MOTOR 5
+#define CLAW_MOTOR 10
+#define GRABBER_MOTOR 7
 
 // Lift Motor
 #define RIGHT_TOP_LIFT_MOTOR 3
@@ -19,13 +20,14 @@
 #define LEFT_BOTTOM_LIFT_MOTOR 2
 
 // Conveyor Motors
-#define CONVEYOR_MOTOR 18
+#define CONVEYOR_MOTOR 13
 
 // Radio and Controllers Port Definitions
 #define VEX_RADIO 21
 
-// Vision Sensors
+// V5 Sensors
 #define VISION_PORT 100
+#define INERTIAL_PORT 11
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
 #define PNEUMATIC_PORT_1 1

@@ -227,7 +227,7 @@ void drawScreen() {
     lv_obj_set_style(recordScreen, &backgroundStyle);
     lv_obj_set_style(towScreen, &backgroundStyle);
 
-    drawMenu();
+    drawAuton();
 }
 
 void drawMenu() {

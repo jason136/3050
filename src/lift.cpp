@@ -8,6 +8,7 @@ pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR);
 pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR);
 pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR);
 pros::Motor clawMotor(CLAW_MOTOR);
+pros::Motor grabberMotor(GRABBER_MOTOR);
 
 // Digital out for pneumatics 
 pros::ADIDigitalOut pneumatic1 (PNEUMATIC_PORT_1);
@@ -54,17 +55,44 @@ void togglePneumaticState(int mode) {
 void moveClaw(int mode) {
     if (mode == 1) clawMotor.move(127);
     else if (mode == -1) clawMotor.move(-127);
-    else (clawMotor.move(0));
+    else {
+        clawMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        clawMotor.move_velocity(0);
+    }
 }
 
-void differential(int right, int left) {
-    if (right) {
-        moveLift(right * 80, right * 80, right * -80, right * -80);
+void moveGrabber(int mode) {
+    if (mode == 1) grabberMotor.move(127);
+    else if (mode == -1) grabberMotor.move(-127);
+    else {
+        grabberMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        grabberMotor.move_velocity(0);
     }
-    else if (left) {
-        moveLift(left * -127, left * 127, left * -127, left * 127);
+}
+
+int speed;
+int tempRight;
+int tempLeft;
+
+void differential(int right, int left) {
+    if (right != 0 || left != 0) {
+        tempRight = right;
+        tempLeft = left;
+        if (speed < 127) speed += 10;
     }
     else {
-        liftLock();
+        if (speed > 0) speed -= 10;
+        else if (speed < 0) speed = 0;
+    }
+    if (speed > 0) {
+        if (tempRight) {
+            moveLift(right * 1 * speed, right * 1 * speed, right * -1 * speed, right * -1 * speed);
+        }
+        else if (tempLeft) {
+            moveLift(left * -1 * speed, left * 1 * speed, left * -1 * speed, left * 1 * speed);
+        }
+    }
+    else {
+        liftLock(); 
     }
 }
