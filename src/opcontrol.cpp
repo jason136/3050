@@ -215,6 +215,7 @@ void processInput(int * arrInputs) {
     else if (instInputs[9]) moveGrabber(-1);
     else moveGrabber(0);
     
+    trackDistance();
 }
 
 void startRecordThread() {

@@ -53,15 +53,32 @@ void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
     }
 }
 
+double distX;
+double distY;
+
+void trackDistance() {
+    if (!intertialSensor.is_calibrating()) {
+        pros::c::imu_accel_s_t accel = intertialSensor.get_accel();
+
+        distX += accel.x;
+        distY += accel.y;
+    }
+}
+
 void chassisGyroPark() {
-    std::cout << "gyro things: ";
-    std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
+    //std::cout << "gyro things: ";
+    //std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
 
     double pitch = intertialSensor.get_pitch();
 
-    if (abs(pitch) < 5) {
-        chassisMove(pitch * -5);
+    if (abs(pitch) > 5) {
+        chassisMove(pitch * -4);
     }
+
+
+    std::cout << distX << "     " << distY << std::endl;
+
+    //std::cout << accel.x << " - " << accel.x << " - " << accel.z << std::endl;
 }
 
 void chassisStopDrive() {
