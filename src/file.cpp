@@ -4,27 +4,26 @@
 std::vector<std::vector<int>> vectors;
 
 void clearVectors() {
-    
     for (std::vector<int> vector : vectors) {
         vector.clear(); 
     }
-
     std::cout << "vectors cleared" << std::endl;
 }
 
-void recordInput(int * instInputs) {
-
+void recordInput(int index, int * instInputs, double * cords) {
+    vectors[0].push_back(index);
     for (int x = 0; x < 28; x++) {
-        vectors[x].push_back(instInputs[x]);
+        vectors[x + 1].push_back(instInputs[x]);
     }
-
+    vectors[29].push_back(cords[0]);
+    vectors[30].push_back(cords[1]);
+    vectors[31].push_back(cords[2]);
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(int * recValues, int index) {
-    
+void updateIndex(int index, int * recValues) {
     for (int x = 0; x < 28; x++) {
-        recValues[x] = vectors[x].at(index); 
+        recValues[x] = vectors[x + 1].at(index); 
     }
 }
 
@@ -38,8 +37,8 @@ void printVectors() {
     std::cout << "begin vector output with size : " << interations << std::endl;
     int recOutputs[28];
     for (int x = 0; x < interations; x++) {
-        updateIndex(&recOutputs[0], x);
-        for (int y = 0; y < 28; y++) {
+        updateIndex(x, &recOutputs[0]);
+        for (int y = 1; y < 29; y++) {
             std::cout << " " << recOutputs[y] << " ";
         }
         std::cout << std::endl;
@@ -74,8 +73,12 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab;
-    while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t >> u >> v >> w >> x >> y >> z >> aa >> ab) {
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab, ac, ad, ae, af;
+    while (infile >> a >> b >> c >> d >> e >> f >> g >> 
+            h >> i >> j >> k >> l >> m >> n >> o >> p >> 
+            q >> r >> s >> t >> u >> v >> w >> x >> y >> 
+            z >> aa >> ab >> ac >> ad >> ae >> af) {
+        
         vectors[0].push_back(a);
         vectors[1].push_back(b);
         vectors[2].push_back(c);
@@ -104,6 +107,10 @@ bool readFromFile(const char * filename) {
         vectors[25].push_back(z);
         vectors[26].push_back(aa);
         vectors[27].push_back(ab);
+        vectors[28].push_back(ac);
+        vectors[29].push_back(ad);
+        vectors[30].push_back(ae);
+        vectors[31].push_back(af);
     }
     infile.close();
 
@@ -117,8 +124,7 @@ bool exists(const char * name) {
 }
 
 void generateDatastructures() {
-
-    for (int x = 0; x < 28; x++) {
+    for (int x = 0; x < 32; x++) {
         std::vector<int> vector;
         vectors.push_back(vector); 
     }

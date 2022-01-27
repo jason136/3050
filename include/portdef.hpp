@@ -32,6 +32,8 @@
 // Tri Port Assignments, Ports A-H are mapped to 1-8
 #define PNEUMATIC_PORT_1 1
 #define PNEUMATIC_PORT_2 2
+#define LATERAL_BASE_ENCODER_TOP 3
+#define LATERAL_BASE_ENCODER_BOTTOM 4
 
 // LEGACY Port Assignments
 

@@ -10,6 +10,7 @@ pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 pros::Imu intertialSensor(INERTIAL_PORT);
+pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
@@ -53,16 +54,10 @@ void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
     }
 }
 
-double distX;
-double distY;
-
-void trackDistance() {
-    if (!intertialSensor.is_calibrating()) {
-        pros::c::imu_accel_s_t accel = intertialSensor.get_accel();
-
-        distX += accel.x;
-        distY += accel.y;
-    }
+void trackDistance(double * coords) {
+    coords[0] = ((frontRightDriveMotor.get_actual_velocity() + backRightDriveMotor.get_actual_velocity()) / 2.0) / 50.0 + coords[0];
+    coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0) / 50.0 + coords[1];
+    coords[2] = lateralEncoder.get_value() + coords[2];
 }
 
 void chassisGyroPark() {
@@ -75,10 +70,7 @@ void chassisGyroPark() {
         chassisMove(pitch * -4);
     }
 
-
-    std::cout << distX << "     " << distY << std::endl;
-
-    //std::cout << accel.x << " - " << accel.x << " - " << accel.z << std::endl;
+    //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }
 
 void chassisStopDrive() {

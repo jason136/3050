@@ -30,8 +30,8 @@ void recAutonLoop(void * param) {
     int recOutputs[28];
     int starttime = pros::millis();
     if (interations > 0) {
-        for (int x = 0; x < interations; x++) {
-        updateIndex(&recOutputs[0], x);
+        for (int index = 0; index < interations; index++) {
+        updateIndex(index, &recOutputs[0]);
         if (recAutonActive) {
             mutex.take(5);
             processInput(&recOutputs[0]);

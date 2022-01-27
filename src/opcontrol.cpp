@@ -109,6 +109,11 @@ void opcontrol() {
 	}
 }
 
+
+// right y cord, left y cord, lateral x
+double cords[] = {0.0, 0.0, 0.0};
+
+
 void processInput(int * arrInputs) {
 	// Create easily mutable versions of struct members
 	int rightX = arrInputs[0];
@@ -214,8 +219,12 @@ void processInput(int * arrInputs) {
     if (instInputs[8]) moveGrabber(1);
     else if (instInputs[9]) moveGrabber(-1);
     else moveGrabber(0);
-    
-    trackDistance();
+
+    trackDistance(&cords[0]);
+
+    if (instInputs[12]) {
+        std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
+    }
 }
 
 void startRecordThread() {
@@ -248,11 +257,14 @@ void recordLoop(void * param) {
 	else {
 		duration = 15000;
 	}
+    int index = 0;
 	while (pros::millis() < startTime + duration) {
+        index++; 
 		mutex.take(5);
-		recordInput(&instInputs[0]);
+        trackDistance(&cords[0]);
+		recordInput(index, &instInputs[0], &cords[0]);
 		mutex.give();
-		
+
 		pros::delay(20);
 	}
 

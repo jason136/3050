@@ -20,7 +20,7 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft);
 // Function to lock drive motors if the corresponding number is 0
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft);
 
-void trackDistance();
+void trackDistance(double * coords);
 
 void chassisGyroPark();
 
