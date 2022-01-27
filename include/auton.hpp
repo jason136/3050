@@ -18,4 +18,6 @@ void autoRedRight();
 
 void autoBlueLeft();
 
+void courseCorrect(int * inputs, double * cords);
+
 #endif

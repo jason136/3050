@@ -212,8 +212,8 @@ void processInput(int * arrInputs) {
 
     differential(instInputs[4], instInputs[5]);
 
-    if (instInputs[6]) moveClaw(1);
-    else if (instInputs[7]) moveClaw(-1);
+    if (instInputs[6]) moveClaw(-1);
+    else if (instInputs[7]) moveClaw(1);
     else moveClaw(0);
 
     if (instInputs[8]) moveGrabber(1);
@@ -257,6 +257,7 @@ void recordLoop(void * param) {
 	else {
 		duration = 15000;
 	}
+    cords[] = {0, 0, 0};
     int index = 0;
 	while (pros::millis() < startTime + duration) {
         index++; 

@@ -28,12 +28,15 @@ void recordableAuton() {
 void recAutonLoop(void * param) {
     int interations = getVectorSize();
     int recOutputs[28];
+    double cords[3];
     int starttime = pros::millis();
     if (interations > 0) {
         for (int index = 0; index < interations; index++) {
-        updateIndex(index, &recOutputs[0]);
+        updateVecs(index, &recOutputs[0]);
+        updateLocation(index, &cords[0]);
         if (recAutonActive) {
             mutex.take(5);
+            courseCorrect(&recOutputs[0], &cords[0]);
             processInput(&recOutputs[0]);
             mutex.give();
         }
@@ -67,7 +70,6 @@ void skillRun() {
 void autoRedLeft() {
 
     // Code Here
-
 }
 
 void autoBlueLeft() {
@@ -83,4 +85,8 @@ void autoRedRight() {
 void autoBlueRight() {
 
     // Code Here penis
+}
+
+void courseCorrect(int * inputs, double * cords) {
+    // TODO fix file.cpp cordVectors
 }

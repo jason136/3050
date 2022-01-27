@@ -10,7 +10,9 @@ void clearVectors();
 
 void recordInput(int index, int * instInputs, double * cords);
 
-void updateIndex(int index, int * recValues);
+void updateVecs(int index, int * recValues);
+
+void updateLocation(int index, double * cords);
 
 int getVectorSize();
 

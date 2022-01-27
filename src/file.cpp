@@ -2,9 +2,13 @@
 #include "file.hpp"
 
 std::vector<std::vector<int>> vectors;
+std::vector<std::vector<float>> cordVectors;
 
 void clearVectors() {
     for (std::vector<int> vector : vectors) {
+        vector.clear(); 
+    }
+    for (std::vector<float> vector : cordVectors) {
         vector.clear(); 
     }
     std::cout << "vectors cleared" << std::endl;
@@ -21,10 +25,16 @@ void recordInput(int index, int * instInputs, double * cords) {
     std::cout << "inputs recorded" << std::endl;
 }
 
-void updateIndex(int index, int * recValues) {
+void updateVecs(int index, int * recValues) {
     for (int x = 0; x < 28; x++) {
         recValues[x] = vectors[x + 1].at(index); 
     }
+}
+
+void updateLocation(int index, double * cords) {
+    cords[0] = vectors[29].at(index);
+    cords[1] = vectors[30].at(index);
+    cords[2] = vectors[31].at(index);
 }
 
 int getVectorSize() {
@@ -37,7 +47,7 @@ void printVectors() {
     std::cout << "begin vector output with size : " << interations << std::endl;
     int recOutputs[28];
     for (int x = 0; x < interations; x++) {
-        updateIndex(x, &recOutputs[0]);
+        updateVecs(x, &recOutputs[0]);
         for (int y = 1; y < 29; y++) {
             std::cout << " " << recOutputs[y] << " ";
         }
@@ -57,6 +67,7 @@ void writeToFile(const char * filename) {
             filebuffer.append(std::to_string(vectors[y].at(x)));
             filebuffer.append(" ");
         }
+        filebuffer.append("\n");
         outfile << filebuffer;
     }
     outfile.close();
