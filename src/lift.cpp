@@ -74,10 +74,14 @@ int speed;
 int tempRight;
 int tempLeft;
 
-void differential(int right, int left) {
+void liftComplex(int left, int right) {
     if (right != 0 || left != 0) {
-        tempRight = right;
-        tempLeft = left;
+        if (right < 0) tempRight = -1;
+        if (right > 0) tempRight = 1;
+        if (right == 0) tempRight = 0;
+        if (left < 0) tempLeft = -1;
+        if (left > 0) tempLeft = 1;
+        if (left == 0) tempLeft = 0;
         if (speed < 127) speed += 10;
     }
     else {
@@ -85,11 +89,14 @@ void differential(int right, int left) {
         else if (speed < 0) speed = 0;
     }
     if (speed > 0) {
+        std::cout << "life with speed called" << std::endl;
+        if (tempLeft < 0) speed *= 1;
         if (tempRight) {
-            moveLift(right * 1 * speed, right * 1 * speed, right * -1 * speed, right * -1 * speed);
+            // moveLift(right * 1 * speed, right * 1 * speed, right * -1 * speed, right * -1 * speed);
+            moveLift(right * 1 * speed, right * -1 * speed, 0, 0);
         }
         else if (tempLeft) {
-            moveLift(left * -1 * speed, left * 1 * speed, left * -1 * speed, left * 1 * speed);
+            moveLift(left * 1 * speed, left * 1 * speed, left * -1 * speed, left * -1 * speed);
         }
     }
     else {

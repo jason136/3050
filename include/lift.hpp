@@ -25,6 +25,6 @@ void moveClaw(int mode);
 void moveGrabber(int mode);
 
 // Control method for differential mechanism on lift
-void differential(int right, int left);
+void liftComplex(int right, int left);
 
 #endif

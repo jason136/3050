@@ -24,10 +24,10 @@ void chassisMove(int voltage) {
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
   // Function to set voltage of each motor individually, used in opcontrol
   // This function deals in voltage, and takes arguments from -127 to 127
-  frontRightDriveMotor.move(FRight);
-  frontLeftDriveMotor.move(-FLeft);
-  backRightDriveMotor.move(BRight);
-  backLeftDriveMotor.move(-BLeft);
+  frontRightDriveMotor.move(-FRight);
+  frontLeftDriveMotor.move(FLeft);
+  backRightDriveMotor.move(-BRight);
+  backLeftDriveMotor.move(BLeft);
 
   if(DEBUG_ON) {
     std::cout << "set chassis motor values: " << FRight << " " << FLeft; 

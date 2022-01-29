@@ -109,10 +109,8 @@ void opcontrol() {
 	}
 }
 
-
 // right y cord, left y cord, lateral x
 double cords[] = {0.0, 0.0, 0.0};
-
 
 void processInput(int * arrInputs) {
 	// Create easily mutable versions of struct members
@@ -120,6 +118,8 @@ void processInput(int * arrInputs) {
 	int rightY = arrInputs[1];
 	int leftX = arrInputs[2];
 	int leftY = arrInputs[3];
+
+    std::cout << rightX << rightY << leftX << leftY << std::endl;
 
 	if (abs(rightX) < DEAD_STICK) rightX = 0; 
 	if (abs(rightY) < DEAD_STICK) rightY = 0; 
@@ -151,7 +151,7 @@ void processInput(int * arrInputs) {
 
 
         if (instInputs[10]) chassisGyroPark();
-        else chassisMoveIndividuals(leftY, rightY, leftY, rightY);
+        else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
         //chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
@@ -160,44 +160,7 @@ void processInput(int * arrInputs) {
 
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
-	// else if (DRIVE_MODE == 5) {    // decomissioned until further testing and/or demand for it to actually be made
-	// 	int leftX;
-	//   	int leftY;
 
-	// 	if (master.get_digital(DIGITAL_UP)) {
-	// 		leftY = 200;
-	// 	}
-	// 	else if (master.get_digital(DIGITAL_DOWN)) {
-	// 		leftY = -200;
-	// 	}
-	// 	else {
-	// 		leftY = 0;
-	// 	}
-
-	// 	if (master.get_digital(DIGITAL_LEFT)) {
-	// 		leftX = 200;
-	// 	}
-	// 	else if (master.get_digital(DIGITAL_RIGHT)) {
-	// 		leftX = -200;
-	// 	}
-	// 	else {
-	// 		leftX = 0;
-	// 	}
-
-	//   	int rightX = master.get_analog(ANALOG_RIGHT_X);
-
-	// 	if(abs(rightX) < DEAD_STICK) { rightX = 0; }
-	// 	if(abs(leftX) < DEAD_STICK) { leftX = 0; }
-	// 	if(abs(leftY) < DEAD_STICK) { leftY = 0; }
-
-	// 	chassisMoveIndividuals((rightX - leftX - rightX),
-	// 	 					(rightX + leftX + rightX),
-	// 						(rightX - leftX + rightX),
-	// 						(rightX + leftX - rightX));
-
-	// }
-
-	// end chassis control, below is other modules only
 	if (arrInputs[4] == 1) {
 		conveyorMove(100);
 	}
@@ -208,9 +171,7 @@ void processInput(int * arrInputs) {
 		conveyorStop();
 	}
 
-    togglePneumaticState(instInputs[11]);
-
-    differential(instInputs[4], instInputs[5]);
+    // togglePneumaticState(instInputs[5]);
 
     if (instInputs[6]) moveClaw(-1);
     else if (instInputs[7]) moveClaw(1);
@@ -224,6 +185,24 @@ void processInput(int * arrInputs) {
 
     if (instInputs[12]) {
         std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
+    }
+
+    std::cout << " inst: " << instInputs[5] << std::endl;
+
+    if (FLIP_FLOP) {
+        
+        liftComplex(-1 * instInputs[5], -1 * instInputs[5]);
+
+    }
+    else {
+
+        // competition bot
+
+        int differentialControl = 0;
+        if (instInputs[6]) differentialControl++;
+        if (instInputs[7]) differentialControl--;
+        
+        liftComplex(instInputs[4], differentialControl);
     }
 }
 
@@ -257,7 +236,7 @@ void recordLoop(void * param) {
 	else {
 		duration = 15000;
 	}
-    cords[] = {0, 0, 0};
+    memset(cords, 0, sizeof(cords));
     int index = 0;
 	while (pros::millis() < startTime + duration) {
         index++; 
@@ -275,6 +254,7 @@ void recordLoop(void * param) {
 	std::cout << "record loop finished -- " << getVectorSize() << filename << " elapsed time: " << pros::millis() - startTime << std::endl;
 
 	writeToFile(filename);
+    clearVectors();
     finishRecording();
 }
 

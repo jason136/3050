@@ -2,13 +2,13 @@
 #include "file.hpp"
 
 std::vector<std::vector<int>> vectors;
-std::vector<std::vector<float>> cordVectors;
+std::vector<std::vector<double>> cordVectors;
 
 void clearVectors() {
     for (std::vector<int> vector : vectors) {
         vector.clear(); 
     }
-    for (std::vector<float> vector : cordVectors) {
+    for (std::vector<double> vector : cordVectors) {
         vector.clear(); 
     }
     std::cout << "vectors cleared" << std::endl;
@@ -19,9 +19,9 @@ void recordInput(int index, int * instInputs, double * cords) {
     for (int x = 0; x < 28; x++) {
         vectors[x + 1].push_back(instInputs[x]);
     }
-    vectors[29].push_back(cords[0]);
-    vectors[30].push_back(cords[1]);
-    vectors[31].push_back(cords[2]);
+    cordVectors[0].push_back(cords[0]);
+    cordVectors[1].push_back(cords[1]);
+    cordVectors[2].push_back(cords[2]);
     std::cout << "inputs recorded" << std::endl;
 }
 
@@ -32,9 +32,9 @@ void updateVecs(int index, int * recValues) {
 }
 
 void updateLocation(int index, double * cords) {
-    cords[0] = vectors[29].at(index);
-    cords[1] = vectors[30].at(index);
-    cords[2] = vectors[31].at(index);
+    cords[0] = cordVectors[0].at(index);
+    cords[1] = cordVectors[1].at(index);
+    cords[2] = cordVectors[2].at(index);
 }
 
 int getVectorSize() {
@@ -48,7 +48,7 @@ void printVectors() {
     int recOutputs[28];
     for (int x = 0; x < interations; x++) {
         updateVecs(x, &recOutputs[0]);
-        for (int y = 1; y < 29; y++) {
+        for (int y = 0; y < 29; y++) {
             std::cout << " " << recOutputs[y] << " ";
         }
         std::cout << std::endl;
@@ -67,6 +67,11 @@ void writeToFile(const char * filename) {
             filebuffer.append(std::to_string(vectors[y].at(x)));
             filebuffer.append(" ");
         }
+        filebuffer.pop_back();
+        // for (int y = 0; y < std::size(cordVectors); y++) {
+        //     filebuffer.append(std::to_string(cordVectors[y].at(x)));
+        //     filebuffer.append(" ");
+        // }
         filebuffer.append("\n");
         outfile << filebuffer;
     }
@@ -84,12 +89,10 @@ bool readFromFile(const char * filename) {
     if (strcmp(buffer, "none") == 0) {
         return false;
     }
-    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab, ac, ad, ae, af;
-    while (infile >> a >> b >> c >> d >> e >> f >> g >> 
-            h >> i >> j >> k >> l >> m >> n >> o >> p >> 
-            q >> r >> s >> t >> u >> v >> w >> x >> y >> 
-            z >> aa >> ab >> ac >> ad >> ae >> af) {
-        
+    std::cout << vectors.size() << std::endl;
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab, ac;
+    //double y1, y2, xx;
+    while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t >> u >> v >> w >> x >> y >> z >> aa >> ab >> ac) {
         vectors[0].push_back(a);
         vectors[1].push_back(b);
         vectors[2].push_back(c);
@@ -119,9 +122,10 @@ bool readFromFile(const char * filename) {
         vectors[26].push_back(aa);
         vectors[27].push_back(ab);
         vectors[28].push_back(ac);
-        vectors[29].push_back(ad);
-        vectors[30].push_back(ae);
-        vectors[31].push_back(af);
+        
+        // cordVectors[0].push_back(y1);
+        // cordVectors[1].push_back(y2);
+        // cordVectors[2].push_back(xx);
     }
     infile.close();
 
@@ -135,9 +139,13 @@ bool exists(const char * name) {
 }
 
 void generateDatastructures() {
-    for (int x = 0; x < 32; x++) {
+    for (int x = 0; x < 29; x++) {
         std::vector<int> vector;
         vectors.push_back(vector); 
+    }
+    for (int x = 0; x < 3; x++) {
+        std::vector<double> cordVector;
+        cordVectors.push_back(cordVector); 
     }
 
     char filename[20];

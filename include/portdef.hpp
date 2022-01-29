@@ -11,7 +11,7 @@
 // Tray Motor
 #define TRAY_MOTOR_PORT 5
 #define CLAW_MOTOR 10
-#define GRABBER_MOTOR 7
+#define GRABBER_MOTOR 6
 
 // Lift Motor
 #define RIGHT_TOP_LIFT_MOTOR 3
@@ -40,7 +40,7 @@
 // GLOBAL DEBUGGING Variables
 #define DEBUG_ON false
 
-#define FLIP_FLOP 1
+#define FLIP_FLOP true
 
 #define VEXNET_MANUAL true        // turns opcontrol into allowing for
                                   // testing autonomous code

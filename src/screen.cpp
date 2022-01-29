@@ -161,13 +161,13 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                 }
                 if (recAuton) {
                     char filename[20];
-                sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
-                bool success = readFromFile(filename);
-                std::cout << "success?  " << success << std::endl;
-                if (!success) {
-                    return LV_RES_OK;
-                }
-                printVectors();
+                    sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
+                    bool success = readFromFile(filename);
+                    std::cout << "success?  " << success << " " << filename << std::endl;
+                    if (!success) {
+                        return LV_RES_OK;
+                    }
+                    //printVectors();
                 }
 
                 selection = id - 100;
