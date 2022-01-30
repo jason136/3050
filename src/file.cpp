@@ -43,12 +43,13 @@ int getVectorSize() {
 }
 
 void printVectors() {
+    int recOutputs[28];
     int interations = getVectorSize();
     std::cout << "begin vector output with size : " << interations << std::endl;
-    int recOutputs[28];
     for (int x = 0; x < interations; x++) {
         updateVecs(x, &recOutputs[0]);
-        for (int y = 0; y < 29; y++) {
+        std::cout << x + 1;
+        for (int y = 0; y < 28; y++) {
             std::cout << " " << recOutputs[y] << " ";
         }
         std::cout << std::endl;

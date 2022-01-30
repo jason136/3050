@@ -66,9 +66,8 @@ void chassisGyroPark() {
 
     double pitch = intertialSensor.get_pitch();
 
-    if (abs(pitch) > 5) {
-        chassisMove(pitch * -4);
-    }
+    if (pitch < -10) chassisMove(-50);
+    else if (pitch > 10) chassisMove(-50);
 
     //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }

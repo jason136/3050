@@ -82,7 +82,7 @@ void opcontrol() {
 	while (true) {
 
 		mutex.take(25);
-        std::fill_n(instInputs, 20, 0);
+        std::fill_n(instInputs, 28, 0);
         readController(instInputs);
 		mutex.give();
 
@@ -150,7 +150,7 @@ void processInput(int * arrInputs) {
 		// we are wanting to do standard TANK Control
 
 
-        if (instInputs[10]) chassisGyroPark();
+        if (arrInputs[10]) chassisGyroPark();
         else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
         //chassisLockDrive(rightY, leftY, rightY, leftY);
@@ -171,38 +171,39 @@ void processInput(int * arrInputs) {
 		conveyorStop();
 	}
 
-    // togglePneumaticState(instInputs[5]);
 
-    if (instInputs[6]) moveClaw(-1);
-    else if (instInputs[7]) moveClaw(1);
+    if (arrInputs[6]) moveClaw(-1);
+    else if (arrInputs[7]) moveClaw(1);
     else moveClaw(0);
 
-    if (instInputs[8]) moveGrabber(1);
-    else if (instInputs[9]) moveGrabber(-1);
+    if (arrInputs[8]) moveGrabber(1);
+    else if (arrInputs[9]) moveGrabber(-1);
     else moveGrabber(0);
 
-    trackDistance(&cords[0]);
+    // trackDistance(&cords[0]);
 
-    if (instInputs[12]) {
+    if (arrInputs[12]) {
         std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
     }
 
-    std::cout << " inst: " << instInputs[5] << std::endl;
+    std::cout << " inst: " << arrInputs[5] << std::endl;
 
     if (FLIP_FLOP) {
         
-        liftComplex(-1 * instInputs[5], -1 * instInputs[5]);
+        liftComplex(-1 * arrInputs[5], -1 * arrInputs[5]);
 
     }
     else {
 
         // competition bot
 
+		togglePneumaticState(arrInputs[5]);
+
         int differentialControl = 0;
-        if (instInputs[6]) differentialControl++;
-        if (instInputs[7]) differentialControl--;
+        if (arrInputs[6]) differentialControl++;
+        if (arrInputs[7]) differentialControl--;
         
-        liftComplex(instInputs[4], differentialControl);
+        liftComplex(arrInputs[4], differentialControl);
     }
 }
 
@@ -231,11 +232,12 @@ void recordLoop(void * param) {
     startTime = pros::millis();
 	int duration;
 	if (selection == 6) {
-		duration = 60000;
-	}
-	else {
 		duration = 15000;
 	}
+	else {
+		duration = 60000;
+	}
+	/////////////////////////////////////////////////////////
     memset(cords, 0, sizeof(cords));
     int index = 0;
 	while (pros::millis() < startTime + duration) {

@@ -23,6 +23,8 @@ void recordableAuton() {
     visionSensor.clear_led();
     visionSensor.set_auto_white_balance(true);
     pros::Task recAutonThread(recAutonLoop);
+
+    while (true) {}
 }
 
 void recAutonLoop(void * param) {

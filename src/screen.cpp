@@ -160,6 +160,7 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                     btnSetToggled(toggledBtn, false);
                 }
                 if (recAuton) {
+                    clearVectors();
                     char filename[20];
                     sprintf(filename, "/usd/RecAuton%i.txt", id - 100);
                     bool success = readFromFile(filename);
@@ -179,6 +180,7 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                     btnSetToggled(toggledBtn, false);
                 }
                 if (id == 211 && selection >= 0) {
+                    clearVectors();
                     startRecordThread();
                     sprintf(text, "see controller");
                     lv_label_set_text(recordableLabel, text);
