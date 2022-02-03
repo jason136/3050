@@ -11,25 +11,29 @@ pros::Motor clawMotor(CLAW_MOTOR);
 pros::Motor grabberMotor(GRABBER_MOTOR);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumatic1 (PNEUMATIC_PORT_1);
-pros::ADIDigitalOut pneumatic2 (PNEUMATIC_PORT_2);
+pros::ADIDigitalOut pneumatic1(PNEUMATIC_PORT_1);
+pros::ADIDigitalOut pneumatic2(PNEUMATIC_PORT_2);
 
-void moveLift(int RTop, int RBottom, int LTop, int LBottom) {
-    rightTopLiftMotor.move(RTop);
-    rightBottomLiftMotor.move(RBottom);
-    leftTopLiftMotor.move(LTop);
-    leftBottomLiftMotor.move(LBottom);
+void moveLift(int LTop, int LBottom, int RTop, int RBottom) {
+    if (LTop) leftTopLiftMotor.move(LTop);
+    if (LBottom) leftBottomLiftMotor.move(LBottom);
+    if (RTop) rightTopLiftMotor.move(RTop);
+    if (RBottom) rightBottomLiftMotor.move(RBottom);
 }
 
-void liftLock() {
-    rightTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    rightBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    leftTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    leftBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    rightTopLiftMotor.move_velocity(0);
-    rightBottomLiftMotor.move_velocity(0);
-    leftTopLiftMotor.move_velocity(0);
-    leftBottomLiftMotor.move_velocity(0);
+void liftLock(bool left=false, bool right=false) {
+    if (!left) {
+        leftTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        leftBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        leftTopLiftMotor.move_velocity(0);
+        leftBottomLiftMotor.move_velocity(0);
+    }
+    if (!right) {
+        rightTopLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        rightBottomLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        rightTopLiftMotor.move_velocity(0);
+        rightBottomLiftMotor.move_velocity(0);
+    }
 }
 
 void liftResetEncoder() {
@@ -37,10 +41,6 @@ void liftResetEncoder() {
     rightBottomLiftMotor.tare_position();
     leftTopLiftMotor.tare_position();
     leftBottomLiftMotor.tare_position();
-
-    if(DEBUG_ON){
-        std::cout << "lift encoder reset" << std::endl; 
-    }
 }
 
 pros::motor_brake_mode_e_t getliftBrakeMode() {
@@ -85,18 +85,19 @@ void liftComplex(int left, int right) {
         if (speed < 127) speed += 10;
     }
     else {
-        if (speed > 0) speed -= 10;
+        if (speed > 0) speed -= 20;
         else if (speed < 0) speed = 0;
     }
     if (speed > 0) {
-        std::cout << "life with speed called" << std::endl;
+        std::cout << "lift with speed called" << std::endl;
         if (tempLeft < 0) speed *= 1;
         if (tempRight) {
-            // moveLift(right * 1 * speed, right * 1 * speed, right * -1 * speed, right * -1 * speed);
-            moveLift(right * 1 * speed, right * -1 * speed, 0, 0);
+            // moveLift(right * -1 * speed, right * -1 * speed, right * 1 * speed, right * 1 * speed);
+            moveLift(0, 0, right * 1 * speed, right * -1 * speed);
+            liftLock(false, true);
         }
         else if (tempLeft) {
-            moveLift(left * 1 * speed, left * 1 * speed, left * -1 * speed, left * -1 * speed);
+            moveLift(left * -1 * speed, left * -1 * speed, left * 1 * speed, left * 1 * speed);
         }
     }
     else {

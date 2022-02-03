@@ -28,11 +28,6 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
   frontLeftDriveMotor.move(FLeft);
   backRightDriveMotor.move(-BRight);
   backLeftDriveMotor.move(BLeft);
-
-  if(DEBUG_ON) {
-    std::cout << "set chassis motor values: " << FRight << " " << FLeft; 
-    std::cout << " " << BRight << " " << BLeft << std::endl; 
-  }
 }
 
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
@@ -67,7 +62,7 @@ void chassisGyroPark() {
     double pitch = intertialSensor.get_pitch();
 
     if (pitch < -10) chassisMove(-50);
-    else if (pitch > 10) chassisMove(-50);
+    else if (pitch > 10) chassisMove(50);
 
     //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }
@@ -84,10 +79,6 @@ void resetChassisEncoders() {
   frontLeftDriveMotor.tare_position();
   backRightDriveMotor.tare_position();
   backLeftDriveMotor.tare_position();
-
-  if(DEBUG_ON) {
-    std::cout << "chassis encoders cleared" << std::endl; 
-  }
 }
 
 void driveForDistancePID(int distance, int speed) {
@@ -98,41 +89,27 @@ void driveForDistancePID(int distance, int speed) {
  *
  * We are using motors in degree settings of the PID controller
  *
- * TODO/CHECK -- if we give negative distance wil lwe drive backwards?
 **/
 
   float wheelCircum = WHEEL_DIAMETER * 3.14;           // global WHEEL_DIAMETER is set in chassis.h
   float motorDegree = (distance / wheelCircum) * 360;  // cast into full degrees
 
-  // Calculate the lower and uppor bounds for the while loop ensuring robot drives
-  // desired distance
   float motorUpper = motorDegree + 5;
   float motorLower = motorDegree - 5;
 
-  if(DEBUG_ON) {
-    std::cout << "Dist: " << motorDegree;
-    std::cout << " Upper: " << motorUpper << " Lower: " << motorLower << std::endl; 
-  }
-
-  // First, reset all the encoders
   resetChassisEncoders();
 
-  frontRightDriveMotor.move_absolute(motorDegree, speed);    // Moves motorDegree units forward
-  frontLeftDriveMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  backRightDriveMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  backLeftDriveMotor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
+  frontRightDriveMotor.move_absolute(motorDegree, speed);
+  frontLeftDriveMotor.move_absolute(motorDegree, speed);
+  backRightDriveMotor.move_absolute(motorDegree, speed);
+  backLeftDriveMotor.move_absolute(motorDegree, speed);
 
   while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
     pros::delay(2);
   }
-  // we have reached our desired distance, stop the motors.
-  chassisStopDrive();
 
-  if(DEBUG_ON) {
-    std::cout << "Encoder Left: " << frontLeftDriveMotor.get_position();
-    std::cout << " Encoder Right: " << frontRightDriveMotor.get_position() << std::endl; 
-  }
+  chassisStopDrive();
 }
 
 void pivotTurn(int speed, long turnAngle) {
@@ -156,49 +133,26 @@ void pivotTurn(int speed, long turnAngle) {
 
   double motorDegree = ((turnRatio * turnCircum) / wheelCircum) * maxDegrees;
 
-  if(DEBUG_ON) {
-    std::cout << "TurnCircum: " << turnCircum;
-    std::cout << " Angle: " << turnAngle;
-    std::cout << " absAngle: " << absAngle;
-    std::cout << " MotorDegrees: " << motorDegree;
-    std::cout << " Speed: " << speed;
-    std::cout << " Turn Angle: " << turnRatio;
-    std::cout << " Div by Wheel: " << ((turnRatio * turnCircum) / wheelCircum) << std::endl; 
-  }
-
-  // Calculate the lower and uppor bounds for the while loop ensuring robot drives
-  // desired distance
   double motorUpper = fabs(motorDegree) + 5;
   double motorLower = fabs(motorDegree) - 5;
 
-  // reset all encoders
   resetChassisEncoders();
 
   // we are making turns - pivot left turns opposite of right motor
-  frontRightDriveMotor.move_absolute(-motorDegree, speed);   // Moves motorDegree units forward
-  frontLeftDriveMotor.move_absolute(motorDegree, speed);     // Moves motorDegree units forward
-  backRightDriveMotor.move_absolute(-motorDegree, speed);    // Moves motorDegree units forward
-  backLeftDriveMotor.move_absolute(motorDegree, speed);      // Moves motorDegree units forward
+  frontRightDriveMotor.move_absolute(-motorDegree, speed);
+  frontLeftDriveMotor.move_absolute(motorDegree, speed);
+  backRightDriveMotor.move_absolute(-motorDegree, speed);
+  backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-  // we are moving untill both sides of the robot have reached their target - we are using abs
+  // we are moving until both sides of the robot have reached their target - we are using abs
   // values of both the bounds and the desired distance so we become "insensitive" to to
   // the direction of turns.
   while ((!((fabs(frontRightDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightDriveMotor.get_position()) > fabs(motorLower)))) &&
       (!((fabs(frontLeftDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftDriveMotor.get_position()) > fabs(motorLower)))))  {
       // Continue running this loop as long as the motor is not within +-5 units of its goal
       pros::delay(2);
-      // uncomment below for debugging
-      /* if(DEBUG_ON){
-        std::cout << "Encoder Left: " << frontRightDriveMotor.get_position();
-        std::cout << " Encoder Right: " << frontLeftDriveMotor.get_position() << "\n";
-      } */
-  }
-  if(DEBUG_ON) {
-      std::cout << "Encoder Left: " << frontLeftDriveMotor.get_position();
-      std::cout << " Encoder Right: " << frontRightDriveMotor.get_position() << std::endl; 
   }
 
-  // we have reached our desired distance, so stop the motors.
   chassisStopDrive();
 }
 

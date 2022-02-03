@@ -9,10 +9,10 @@
 #define LIFT_LEVEL_LOW 100
 #define LIFT_LEVEL_HIGH 400
 
-void moveLift(int RTop, int RBottom, int LTop, int LBottom);
+void moveLift(int LTop, int LBottom, int RTop, int RBottom);
 
 // lock the front lift where it is right now....
-void liftLock();
+void liftLock(bool left, bool right);
 
 // Get the current lift lock mode of the break
 pros::motor_brake_mode_e_t getliftLockMode();

@@ -37,9 +37,7 @@
 
 // LEGACY Port Assignments
 
-// GLOBAL DEBUGGING Variables
-#define DEBUG_ON false
-
+// Define Which Robot we are Compiling for
 #define FLIP_FLOP true
 
 #define VEXNET_MANUAL true        // turns opcontrol into allowing for

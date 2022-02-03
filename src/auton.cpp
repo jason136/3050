@@ -102,5 +102,7 @@ void autoBlueRight() {
 }
 
 void courseCorrect(int * inputs, double * cords) {
-    // TODO fix file.cpp cordVectors
+    
+    
+    
 }

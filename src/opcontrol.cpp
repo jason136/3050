@@ -102,7 +102,7 @@ void opcontrol() {
 
 		updateDiag(&chassisData[0]);
 
-		if (DEBUG_ON) {
+		if (false) {
 			std::cout << chassisData;
 		}
 		pros::delay(20);
@@ -180,7 +180,7 @@ void processInput(int * arrInputs) {
     else if (arrInputs[9]) moveGrabber(-1);
     else moveGrabber(0);
 
-    // trackDistance(&cords[0]);
+    trackDistance(&cords[0]);
 
     if (arrInputs[12]) {
         std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
