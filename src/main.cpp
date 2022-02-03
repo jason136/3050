@@ -4,7 +4,6 @@
 #include "auton.hpp"
 #include "chassis.hpp"
 #include "lift.hpp"
-#include "conveyor.hpp"
 #include "screen.hpp"
 #include "file.hpp"
 

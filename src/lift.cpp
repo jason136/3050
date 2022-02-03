@@ -7,12 +7,6 @@ pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR);
 pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR);
 pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR);
 pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR);
-pros::Motor clawMotor(CLAW_MOTOR);
-pros::Motor grabberMotor(GRABBER_MOTOR);
-
-// Digital out for pneumatics 
-pros::ADIDigitalOut pneumatic1(PNEUMATIC_PORT_1);
-pros::ADIDigitalOut pneumatic2(PNEUMATIC_PORT_2);
 
 void moveLift(int LTop, int LBottom, int RTop, int RBottom) {
     if (LTop) leftTopLiftMotor.move(LTop);
@@ -36,7 +30,7 @@ void liftLock(bool left=false, bool right=false) {
     }
 }
 
-void liftResetEncoder() {
+void resetLiftEncoders() {
     rightTopLiftMotor.tare_position();
     rightBottomLiftMotor.tare_position();
     leftTopLiftMotor.tare_position();
@@ -45,29 +39,6 @@ void liftResetEncoder() {
 
 pros::motor_brake_mode_e_t getliftBrakeMode() {
     return rightTopLiftMotor.get_brake_mode();
-}
-
-void togglePneumaticState(int mode) {
-    pneumatic1.set_value(-mode);
-    pneumatic2.set_value(-mode);
-}
-
-void moveClaw(int mode) {
-    if (mode == 1) clawMotor.move(127);
-    else if (mode == -1) clawMotor.move(-127);
-    else {
-        clawMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        clawMotor.move_velocity(0);
-    }
-}
-
-void moveGrabber(int mode) {
-    if (mode == 1) grabberMotor.move(127);
-    else if (mode == -1) grabberMotor.move(-127);
-    else {
-        grabberMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        grabberMotor.move_velocity(0);
-    }
 }
 
 int speed;
@@ -102,5 +73,34 @@ void liftComplex(int left, int right) {
     }
     else {
         liftLock(); 
+    }
+}
+
+void liftRaiseForEncoder(int speed, int encDegrees, bool wait=false) {
+    resetLiftEncoders();
+    
+    leftTopLiftMotor.move_absolute(encDegrees, -speed);
+    leftBottomLiftMotor.move_absolute(encDegrees, -speed);
+    rightTopLiftMotor.move_absolute(encDegrees, speed);
+    rightBottomLiftMotor.move_absolute(encDegrees, speed);
+
+    if (wait) {
+        while (!((leftTopLiftMotor.get_position() < encDegrees + 5) && (leftTopLiftMotor.get_position() > encDegrees - 5))) {
+            pros::delay(2);
+        }
+    }
+}
+
+void spinRollerForEncoder(int speed, int encDegrees, bool wait=false) {
+    liftLock(false, true);
+    resetLiftEncoders();
+
+    rightTopLiftMotor.move_absolute(encDegrees, speed);
+    rightBottomLiftMotor.move_absolute(encDegrees, -speed);
+    
+    if (wait) {
+        while (!((rightTopLiftMotor.get_position() < encDegrees + 5) && (rightTopLiftMotor.get_position() > encDegrees - 5))) {
+            pros::delay(2);
+        }
     }
 }

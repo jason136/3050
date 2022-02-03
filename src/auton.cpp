@@ -3,7 +3,7 @@
 #include "auton.hpp"
 #include "chassis.hpp"
 #include "lift.hpp"
-#include "conveyor.hpp"
+#include "module.hpp"
 #include "file.hpp"
 #include "screen.hpp"
 #include "opcontrol.hpp"
@@ -104,5 +104,5 @@ void autoBlueRight() {
 void courseCorrect(int * inputs, double * cords) {
     
     
-    
+
 }

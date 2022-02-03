@@ -1,8 +1,8 @@
 #include "main.h"
 #include "portdef.hpp"
 #include "chassis.hpp"
-#include "conveyor.hpp"
 #include "lift.hpp"
+#include "module.hpp"
 #include "screen.hpp"
 #include "file.hpp"
 #include "opcontrol.hpp"
@@ -160,17 +160,6 @@ void processInput(int * arrInputs) {
 
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
-
-	if (arrInputs[4] == 1) {
-		conveyorMove(100);
-	}
-	else if (arrInputs[4] == -1) {
-		conveyorMove(-100);
-	}
-	else {
-		conveyorStop();
-	}
-
 
     if (arrInputs[6]) moveClaw(-1);
     else if (arrInputs[7]) moveClaw(1);
