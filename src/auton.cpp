@@ -43,12 +43,14 @@ void recAutonLoop(void * param) {
             updateVecs(index, &recOutputs[0]);
             //updateLocation(index, &cords[0]);
 
-            //mutex.take(25);
+            mutex.take(25);
             //courseCorrect(&recOutputs[0], &cords[0]);
-            std::cout << recOutputs[0] << recOutputs[1] << recOutputs[2] << recOutputs[3] << std::endl;
-            std::cout << " rec: " << recOutputs[5] << std::endl;
+
+            // std::cout << recOutputs[0] << recOutputs[1] << recOutputs[2] << recOutputs[3] << std::endl;
+            // std::cout << " rec: " << recOutputs[5] << std::endl;
+            
             processInput(&recOutputs[0]);
-            //mutex.give();
+            mutex.give();
 
 
             // if (recAutonActive) {

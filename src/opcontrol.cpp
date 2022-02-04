@@ -119,8 +119,6 @@ void processInput(int * arrInputs) {
 	int leftX = arrInputs[2];
 	int leftY = arrInputs[3];
 
-    std::cout << rightX << rightY << leftX << leftY << std::endl;
-
 	if (abs(rightX) < DEAD_STICK) rightX = 0; 
 	if (abs(rightY) < DEAD_STICK) rightY = 0; 
 	if (abs(leftX) < DEAD_STICK) leftX = 0; 
@@ -171,11 +169,10 @@ void processInput(int * arrInputs) {
 
     trackDistance(&cords[0]);
 
-    if (arrInputs[12]) {
-        std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
-    }
-
-    std::cout << " inst: " << arrInputs[5] << std::endl;
+    // if (arrInputs[12]) {
+    //     std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
+    // }
+    // std::cout << " inst: " << arrInputs[5] << std::endl;
 
     if (FLIP_FLOP) {
         

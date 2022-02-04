@@ -168,7 +168,7 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                     if (!success) {
                         return LV_RES_OK;
                     }
-                    //printVectors();
+                    printVectors();
                 }
 
                 selection = id - 100;

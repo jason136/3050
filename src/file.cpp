@@ -46,13 +46,18 @@ int getVectorSize() {
 
 void printVectors() {
     int recOutputs[28];
+    double cords[3];
     int interations = getVectorSize();
     cout << "begin vector output with size : " << interations << endl;
     for (int x = 0; x < interations; x++) {
         updateVecs(x, &recOutputs[0]);
+        updateLocation(x, &cords[0]);
         cout << x + 1;
         for (int y = 0; y < 28; y++) {
-            cout << " " << recOutputs[y] << " ";
+            cout << " " << recOutputs[y];
+        }
+        for (int z = 0; z < 3; z++) {
+            cout << " " << cords[z];
         }
         cout << endl;
     }
@@ -138,25 +143,25 @@ void writeToFile(const char * filename) {
 bool readFromFile(const char * filename) {
     clearVectors();
     ifstream infile(filename);
-    char buffer[10];
-    infile >> buffer;
+    string buffer;
+    getline(infile, buffer);
     cout << buffer << endl;
-    if (strcmp(buffer, "none") == 0) {
+    if (buffer == "none") {
         return false;
     }
     cout << vectors.size() << endl;
     string line;
     while (getline(infile, line)) {
         stringstream ss(line);
-        for (vector<int> vector : vectors) {
+        for (int x = 0; x < 29; x++) {
             int temp;
             ss >> temp;
-            vector.push_back(temp);
+            vectors[x].push_back(temp);
         }
-        for (vector<double> vector : cordVectors) {
+        for (int y = 0; y < 3; y++) {
             double temp;
             ss >> temp;
-            vector.push_back(temp);
+            cordVectors[y].push_back(temp);
         }
     }
     infile.close();
