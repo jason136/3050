@@ -20,7 +20,7 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft);
 // Function to lock drive motors if the corresponding number is 0
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft);
 
-void trackDistance(double * coords);
+void trackSpeed(double * coords);
 
 void chassisGyroPark();
 
@@ -36,7 +36,7 @@ void driveForDistancePID(int distance, int speed);
 // Make a pivot turn to the right or left for a given angle
 // angle should be greater than 10 and less equal to 360
 // Speed must take motor internal gearing into account
-void pivotTurn(int speed, long angle);
+void pivotTurn(int turnAngle, int speed);
 
 // Return motor diagnostics data for screen
 void getChassisDiag(double * buffer);

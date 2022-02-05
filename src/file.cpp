@@ -7,11 +7,11 @@ vector<vector<int>> vectors;
 vector<vector<double>> cordVectors;
 
 void clearVectors() {
-    for (vector<int> vector : vectors) {
-        vector.clear(); 
+    for (int x = 0; x < 29; x++) {
+        vectors[x].clear(); 
     }
-    for (vector<double> vector : cordVectors) {
-        vector.clear(); 
+    for (int y = 0; y < 3; y++) {
+        cordVectors[y].clear(); 
     }
     cout << "vectors cleared" << endl;
 }
@@ -76,7 +76,7 @@ void writeToFile(const char * filename) {
             filebuffer.append(" ");
         }
         for (int y = 0; y < size(cordVectors); y++) {
-            filebuffer.append(to_string(int(cordVectors[y].at(x))));
+            filebuffer.append(to_string(cordVectors[y].at(x)));
             filebuffer.append(" ");
         }
         filebuffer.pop_back();
@@ -88,58 +88,6 @@ void writeToFile(const char * filename) {
     cout << "file written" << endl;
 }
 
-// bool readFromFile(const char * filename) {
-//     clearVectors();
-//     ifstream infile(filename);
-//     char buffer[10];
-//     infile >> buffer;
-//     cout << buffer << endl;
-//     if (strcmp(buffer, "none") == 0) {
-//         return false;
-//     }
-//     cout << vectors.size() << endl;
-//     int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab, ac, y1, y2, xx;
-//     while (infile >> a >> b >> c >> d >> e >> f >> g >> h >> i >> j >> k >> l >> m >> n >> o >> p >> q >> r >> s >> t >> u >> v >> w >> x >> y >> z >> aa >> ab >> ac >> y1 >> y2 >> xx) {
-//         vectors[0].push_back(a);
-//         vectors[1].push_back(b);
-//         vectors[2].push_back(c);
-//         vectors[3].push_back(d);
-//         vectors[4].push_back(e);
-//         vectors[5].push_back(f);
-//         vectors[6].push_back(g);
-//         vectors[7].push_back(h);
-//         vectors[8].push_back(i);
-//         vectors[9].push_back(j);
-//         vectors[10].push_back(k);
-//         vectors[11].push_back(l);
-//         vectors[12].push_back(m);
-//         vectors[13].push_back(n);
-//         vectors[14].push_back(o);
-//         vectors[15].push_back(p);
-//         vectors[16].push_back(q);
-//         vectors[17].push_back(r);
-//         vectors[18].push_back(s);
-//         vectors[19].push_back(t);
-//         vectors[20].push_back(u);
-//         vectors[21].push_back(v);
-//         vectors[22].push_back(w);
-//         vectors[23].push_back(x);
-//         vectors[24].push_back(y);
-//         vectors[25].push_back(z);
-//         vectors[26].push_back(aa);
-//         vectors[27].push_back(ab);
-//         vectors[28].push_back(ac);
-        
-//         cordVectors[0].push_back(double(y1));
-//         cordVectors[1].push_back(double(y2));
-//         cordVectors[2].push_back(double(xx));
-//     }
-//     infile.close();
-
-//     cout << "file read: " << filename << getVectorSize() << endl;
-//     return true;
-// }
-
 bool readFromFile(const char * filename) {
     clearVectors();
     ifstream infile(filename);
@@ -149,7 +97,6 @@ bool readFromFile(const char * filename) {
     if (buffer == "none") {
         return false;
     }
-    cout << vectors.size() << endl;
     string line;
     while (getline(infile, line)) {
         stringstream ss(line);

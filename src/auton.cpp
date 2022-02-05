@@ -36,15 +36,15 @@ void recAutonLoop(void * param) {
     int interations = getVectorSize();
     int recOutputs[28];
 
-    // double cords[3];
+    double cords[3];
     int starttime = pros::millis();
     if (interations > 0) {
         for (int index = 0; index < interations; index++) {
             updateVecs(index, &recOutputs[0]);
-            //updateLocation(index, &cords[0]);
+            updateLocation(index, &cords[0]);
 
             mutex.take(25);
-            //courseCorrect(&recOutputs[0], &cords[0]);
+            courseCorrect(index, &recOutputs[0], &cords[0]);
 
             // std::cout << recOutputs[0] << recOutputs[1] << recOutputs[2] << recOutputs[3] << std::endl;
             // std::cout << " rec: " << recOutputs[5] << std::endl;
@@ -62,6 +62,37 @@ void recAutonLoop(void * param) {
     }
 
     std::cout << "auton run time ellapsed: " << pros::millis() - starttime << std::endl;
+}
+
+void autoRed1() {
+
+    pivotTurn(360, 200);
+}
+
+void autoBlue1() {
+
+    driveForDistancePID(12, 200);
+}
+
+void autoRed2() {
+
+    // Code Here
+}
+
+void autoBlue2() {
+
+    // Code Here penis
+}
+
+void autoRed3() {
+
+    // Code Here
+}
+
+void autoBlue3() {
+
+
+    // Code Here
 }
 
 void skillRun() {
@@ -83,28 +114,26 @@ void skillRun() {
 
 }
 
-void autoRedLeft() {
-
-    // Code Here
-}
-
-void autoBlueLeft() {
-
-    // Code Here
-}
-
-void autoRedRight() {
-
-    // Code Here
-}
-
-void autoBlueRight() {
-
-    // Code Here penis
-}
-
-void courseCorrect(int * inputs, double * cords) {
+void courseCorrect(int index, int * recOutputs, double * cords) {
+    double futureCords[3];
+    double currentCords[3];
     
-    
+    if (index + 10 < getVectorSize()) {
+        updateLocation(index + 10, &futureCords[0]);
+        trackSpeed(&currentCords[0]);
 
+        if (fabs(currentCords[0]) < fabs(futureCords[0]) - 10) {
+            recOutputs[1] *= 1.05;
+        }
+        else if (fabs(currentCords[0]) > fabs(futureCords[0] + 10)) {
+            recOutputs[1] *= 0.95;
+        }
+        
+        if (fabs(currentCords[1]) < fabs(futureCords[1] - 10)) {
+            recOutputs[3] *= 1.05;
+        }
+        else if (fabs(currentCords[1]) > fabs(futureCords[1] + 10)) {
+            recOutputs[3] *= 0.95;
+        }
+    }
 }

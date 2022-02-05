@@ -19,9 +19,6 @@
 #define LEFT_TOP_LIFT_MOTOR 1
 #define LEFT_BOTTOM_LIFT_MOTOR 2
 
-// Conveyor Motors
-#define CONVEYOR_MOTOR 13
-
 // Radio and Controllers Port Definitions
 #define VEX_RADIO 21
 

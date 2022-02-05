@@ -56,7 +56,7 @@ void liftComplex(int left, int right) {
         if (speed < 127) speed += 10;
     }
     else {
-        if (speed > 0) speed -= 20;
+        if (speed > 0) speed -= 10;
         else if (speed < 0) speed = 0;
     }
     if (speed > 0) {

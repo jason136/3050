@@ -10,14 +10,18 @@ void recAutonLoop(void * param);
 
 void skillRun();              // Skill Autonomous - 60Sec
 
-void autoRedLeft();           // Competition autonomous - 15Sec
+void autoRed1();              // Competition autonomous - 15Sec
 
-void autoBlueRight();
+void autoBlue1();
 
-void autoRedRight();
+void autoRed2();
 
-void autoBlueLeft();
+void autoBlue2();
 
-void courseCorrect(int * inputs, double * cords);
+void autoRed3();
+
+void autoBlue3();
+
+void courseCorrect(int index, int * inputs, double * cords);
 
 #endif

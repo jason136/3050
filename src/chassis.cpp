@@ -14,20 +14,20 @@ pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_B
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
-  // This function drives the robot forward/backwards at given speed
-  frontRightDriveMotor.move(voltage);
-  frontLeftDriveMotor.move(-voltage);
-  backRightDriveMotor.move(voltage);
-  backLeftDriveMotor.move(-voltage);
+    // This function drives the robot forward/backwards at given speed
+    frontRightDriveMotor.move(voltage);
+    frontLeftDriveMotor.move(-voltage);
+    backRightDriveMotor.move(voltage);
+    backLeftDriveMotor.move(-voltage);
 }
 
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
-  // Function to set voltage of each motor individually, used in opcontrol
-  // This function deals in voltage, and takes arguments from -127 to 127
-  frontRightDriveMotor.move(-FRight);
-  frontLeftDriveMotor.move(FLeft);
-  backRightDriveMotor.move(-BRight);
-  backLeftDriveMotor.move(BLeft);
+    // Function to set voltage of each motor individually, used in opcontrol
+    // This function deals in voltage, and takes arguments from -127 to 127
+    frontRightDriveMotor.move(-FRight);
+    frontLeftDriveMotor.move(FLeft);
+    backRightDriveMotor.move(-BRight);
+    backLeftDriveMotor.move(BLeft);
 }
 
 void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
@@ -49,10 +49,10 @@ void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
     }
 }
 
-void trackDistance(double * coords) {
-    coords[0] = ((frontRightDriveMotor.get_actual_velocity() + backRightDriveMotor.get_actual_velocity()) / 2.0) / 50.0 + coords[0];
-    coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0) / 50.0 + coords[1];
-    coords[2] = lateralEncoder.get_value() + coords[2];
+void trackSpeed(double * coords) {
+    coords[0] = ((frontRightDriveMotor.get_actual_velocity() + backRightDriveMotor.get_actual_velocity()) / 2.0);
+    coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0);
+    coords[2] = lateralEncoder.get_value();
 }
 
 void chassisGyroPark() {
@@ -75,10 +75,10 @@ void chassisStopDrive() {
 }
 
 void resetChassisEncoders() {
-  frontRightDriveMotor.tare_position();
-  frontLeftDriveMotor.tare_position();
-  backRightDriveMotor.tare_position();
-  backLeftDriveMotor.tare_position();
+    frontRightDriveMotor.tare_position();
+    frontLeftDriveMotor.tare_position();
+    backRightDriveMotor.tare_position();
+    backLeftDriveMotor.tare_position();
 }
 
 void driveForDistancePID(int distance, int speed) {
@@ -91,28 +91,28 @@ void driveForDistancePID(int distance, int speed) {
  *
 **/
 
-  float wheelCircum = WHEEL_DIAMETER * 3.14;           // global WHEEL_DIAMETER is set in chassis.h
-  float motorDegree = (distance / wheelCircum) * 360;  // cast into full degrees
+    float wheelCircum = WHEEL_DIAMETER * 3.14;           // global WHEEL_DIAMETER is set in chassis.h
+    float motorDegree = (distance / wheelCircum) * 360;  // cast into full degrees
 
-  float motorUpper = motorDegree + 5;
-  float motorLower = motorDegree - 5;
+    float motorUpper = motorDegree + 5;
+    float motorLower = motorDegree - 5;
 
-  resetChassisEncoders();
+    resetChassisEncoders();
 
-  frontRightDriveMotor.move_absolute(motorDegree, speed);
-  frontLeftDriveMotor.move_absolute(motorDegree, speed);
-  backRightDriveMotor.move_absolute(motorDegree, speed);
-  backLeftDriveMotor.move_absolute(motorDegree, speed);
+    frontRightDriveMotor.move_absolute(-motorDegree, speed);
+    frontLeftDriveMotor.move_absolute(motorDegree, speed);
+    backRightDriveMotor.move_absolute(-motorDegree, speed);
+    backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-  while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
-    // Continue running this loop as long as the motor is not within +-5 units of its goal
-    pros::delay(2);
-  }
+    while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
+        // Continue running this loop as long as the motor is not within +-5 units of its goal
+        pros::delay(2);
+    }
 
-  chassisStopDrive();
+    chassisStopDrive();
 }
 
-void pivotTurn(int speed, long turnAngle) {
+void pivotTurn(int turnAngle, int speed) {
 /**
   * speed -- Max 100, 200 or 600 RPM depending on cartridge
   * speed should always be positive
@@ -121,52 +121,51 @@ void pivotTurn(int speed, long turnAngle) {
   * positive angle (45) will turn Clockwise (to the right)
 **/
 
-  // incoming speed variable sanity check
-  speed = abs(speed);               // speed is always absolute
-  int absAngle = abs(turnAngle);    // used for calculations
+    // incoming speed variable sanity check
+    speed = abs(speed);               // speed is always absolute
 
-  // pivotTurn - turn radius is 1/2 * dimaeter of wheel base
-  float turnCircum = WHEEL_BASE * 3.14;           // wheel_base is defind in chassis.h
-  float wheelCircum = WHEEL_DIAMETER * 3.14;      // wheel_diameter is defined in chassis.h
-  float maxDegrees = 360.0;                       // use .0 for forced float arithmetic
-  float turnRatio = turnAngle / maxDegrees;
+    // pivotTurn - turn radius is 1/2 * dimaeter of wheel base
+    float turnCircum = WHEEL_BASE * 3.14;           // wheel_base is defind in chassis.h
+    float wheelCircum = WHEEL_DIAMETER * 3.14;      // wheel_diameter is defined in chassis.h
+    float maxDegrees = 360.0;
+    float turnRatio = turnAngle / maxDegrees;
 
-  double motorDegree = ((turnRatio * turnCircum) / wheelCircum) * maxDegrees;
+    double motorDegree = ((turnRatio * turnCircum) / wheelCircum) * maxDegrees;
 
-  double motorUpper = fabs(motorDegree) + 5;
-  double motorLower = fabs(motorDegree) - 5;
+    double motorUpper = fabs(motorDegree) + 5;
+    double motorLower = fabs(motorDegree) - 5;
 
-  resetChassisEncoders();
+    resetChassisEncoders();
 
-  // we are making turns - pivot left turns opposite of right motor
-  frontRightDriveMotor.move_absolute(-motorDegree, speed);
-  frontLeftDriveMotor.move_absolute(motorDegree, speed);
-  backRightDriveMotor.move_absolute(-motorDegree, speed);
-  backLeftDriveMotor.move_absolute(motorDegree, speed);
+    // we are making turns - pivot left turns opposite of right motor
+    frontRightDriveMotor.move_absolute(motorDegree, speed);
+    frontLeftDriveMotor.move_absolute(motorDegree, speed);
+    backRightDriveMotor.move_absolute(motorDegree, speed);
+    backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-  // we are moving until both sides of the robot have reached their target - we are using abs
-  // values of both the bounds and the desired distance so we become "insensitive" to to
-  // the direction of turns.
-  while ((!((fabs(frontRightDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightDriveMotor.get_position()) > fabs(motorLower)))) &&
-      (!((fabs(frontLeftDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftDriveMotor.get_position()) > fabs(motorLower)))))  {
-      // Continue running this loop as long as the motor is not within +-5 units of its goal
-      pros::delay(2);
-  }
+    // we are moving until both sides of the robot have reached their target - we are using abs
+    // values of both the bounds and the desired distance so we become "insensitive" to to
+    // the direction of turns.
+    while ((!((fabs(frontRightDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightDriveMotor.get_position()) > fabs(motorLower)))) &&
+            (!((fabs(frontLeftDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftDriveMotor.get_position()) > fabs(motorLower)))))  {
+            // Continue running this loop as long as the motor is not within +-5 units of its goal
+            pros::delay(2);
+    }
 
-  chassisStopDrive();
+    chassisStopDrive();
 }
 
 void getChassisDiag(double * buffer) {
-  buffer[0] = frontRightDriveMotor.get_actual_velocity();
-  buffer[1] = frontLeftDriveMotor.get_actual_velocity();
-  buffer[2] = backRightDriveMotor.get_actual_velocity();
-  buffer[3] = backLeftDriveMotor.get_actual_velocity();
-  buffer[4] = backLeftDriveMotor.get_temperature();
-  buffer[5] = backLeftDriveMotor.get_temperature();
-  buffer[6] = backLeftDriveMotor.get_temperature();
-  buffer[7] = backLeftDriveMotor.get_temperature();
-  buffer[8] = backLeftDriveMotor.get_efficiency();
-  buffer[9] = backLeftDriveMotor.get_efficiency();
-  buffer[10] = backLeftDriveMotor.get_efficiency();
-  buffer[11] = backLeftDriveMotor.get_efficiency();
+    buffer[0] = frontRightDriveMotor.get_actual_velocity();
+    buffer[1] = frontLeftDriveMotor.get_actual_velocity();
+    buffer[2] = backRightDriveMotor.get_actual_velocity();
+    buffer[3] = backLeftDriveMotor.get_actual_velocity();
+    buffer[4] = backLeftDriveMotor.get_temperature();
+    buffer[5] = backLeftDriveMotor.get_temperature();
+    buffer[6] = backLeftDriveMotor.get_temperature();
+    buffer[7] = backLeftDriveMotor.get_temperature();
+    buffer[8] = backLeftDriveMotor.get_efficiency();
+    buffer[9] = backLeftDriveMotor.get_efficiency();
+    buffer[10] = backLeftDriveMotor.get_efficiency();
+    buffer[11] = backLeftDriveMotor.get_efficiency();
 }

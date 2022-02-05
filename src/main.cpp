@@ -81,24 +81,31 @@ void autonomous() {
     // we made on the LCD
 
     if (recAuton) recordableAuton();
-
-    switch (selection) {
+    else {
+        switch (selection) {
         case 0:
-            skillRun();
+            autoRed1();
             break;
         case 1:
-            autoRedLeft();
+            autoBlue1();
             break;
         case 2:
-            autoBlueLeft();
+            autoRed2();
             break;
         case 3:
-            autoRedRight();
+            autoBlue2();
             break;
         case 4:
-            autoBlueRight();
+            autoRed3();
+            break;
+        case 5:
+            autoBlue3();
+            break;
+        case 6: 
+            skillRun();
             break;
         default:
             break;
+        }
     }
 }
