@@ -7,8 +7,9 @@ pros::Motor clawMotor(CLAW_MOTOR);
 pros::Motor grabberMotor(GRABBER_MOTOR);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumatic1(PNEUMATIC_PORT_1);
-pros::ADIDigitalOut pneumatic2(PNEUMATIC_PORT_2);
+pros::ADIDigitalOut pneumaticsMoGoal(PNEUMATIC_PORT_MOBILE_GOAL);
+pros::ADIDigitalOut pneumaticsAutonomous1(PNEUMATIC_PORT_AUTONOMOUS_1);
+pros::ADIDigitalOut pneumaticsAutonomous2(PNEUMATIC_PORT_AUTONOMOUS_2);
 
 void moveGrabber(int mode) {
     if (mode == 1) grabberMotor.move(127);
@@ -28,7 +29,11 @@ void moveClaw(int mode) {
     }
 }
 
-void togglePneumaticState(int mode) {
-    pneumatic1.set_value(-mode);
-    pneumatic2.set_value(-mode);
+void toggleMoGoalPneumatics(int mode) {
+    pneumaticsMoGoal.set_value(-mode);
+}
+
+void toggleAutonPneumatics(int mode) {
+    pneumaticsAutonomous1.set_value(mode);
+    pneumaticsAutonomous2.set_value(mode);
 }

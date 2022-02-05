@@ -6,6 +6,8 @@ void moveGrabber(int mode);
 void moveClaw(int mode);
 
 // Set pneumatics to extend or retract
-void togglePneumaticState(int mode);
+void toggleMoGoalPneumatics(int mode);
+
+void toggleAutonPneumatics(int mode);
 
 #endif

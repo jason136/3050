@@ -167,7 +167,6 @@ void processInput(int * arrInputs) {
     // if (arrInputs[12]) {
     //     std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
     // }
-    // std::cout << " inst: " << arrInputs[5] << std::endl;
 
     if (FLIP_FLOP) {
         
@@ -178,7 +177,9 @@ void processInput(int * arrInputs) {
 
         // competition bot
 
-		togglePneumaticState(arrInputs[5]);
+		toggleMoGoalPneumatics(arrInputs[5]);
+
+        toggleAutonPneumatics(arrInputs[12]);
 
         int differentialControl = 0;
         if (arrInputs[6]) differentialControl++;
