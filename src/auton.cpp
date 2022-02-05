@@ -66,22 +66,36 @@ void recAutonLoop(void * param) {
 
 void autoRed1() {
 
-    pivotTurn(360, 200);
+    gyroTurn(360, 200);
 }
 
 void autoBlue1() {
 
-    driveForDistancePID(12, 200);
+    driveForDistancePID(24, 200);
 }
 
 void autoRed2() {
 
-    // Code Here
+    gyroTurn(90, 300);
 }
 
 void autoBlue2() {
 
-    // Code Here penis
+    driveForDistancePID(12, 200);
+    pros::delay(100);
+    gyroTurn(90, 300);
+    pros::delay(100);
+    driveForDistancePID(12, 200);
+    pros::delay(100);
+    gyroTurn(90, 300);
+    pros::delay(100);
+    driveForDistancePID(12, 200);
+    pros::delay(100);
+    gyroTurn(90, 300);
+    pros::delay(100);
+    driveForDistancePID(12, 200);
+    pros::delay(100);
+    gyroTurn(90, 300);
 }
 
 void autoRed3() {

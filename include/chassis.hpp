@@ -1,9 +1,9 @@
 #ifndef _CHASSIS_H_
 #define _CHASSIS_H_
-// Place all chassis related globals, function stub declartions in this header file.
 
+// Place all chassis related globals, function stub declartions in this header file
 #define WHEEL_DIAMETER 4      // diameter of drive wheels
-#define WHEEL_BASE 18         // wheel base in inches left to right wheel diagonal
+#define WHEEL_BASE 18         // wheel base diameter
 
 // Motor max speeds for reference
 // 36 gearset (RED) -- 100
@@ -37,6 +37,8 @@ void driveForDistancePID(int distance, int speed);
 // angle should be greater than 10 and less equal to 360
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
+
+void gyroTurn(int turnAngle, int speed);
 
 // Return motor diagnostics data for screen
 void getChassisDiag(double * buffer);

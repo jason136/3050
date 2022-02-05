@@ -4,9 +4,9 @@
 #include <cmath>
 
 // Setup the motor definitions for the motors on the chassis
-pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 pros::Imu intertialSensor(INERTIAL_PORT);
@@ -16,17 +16,17 @@ pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_B
 void chassisMove(int voltage) {
     // This function drives the robot forward/backwards at given speed
     frontRightDriveMotor.move(voltage);
-    frontLeftDriveMotor.move(-voltage);
+    frontLeftDriveMotor.move(voltage);
     backRightDriveMotor.move(voltage);
-    backLeftDriveMotor.move(-voltage);
+    backLeftDriveMotor.move(voltage);
 }
 
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
     // Function to set voltage of each motor individually, used in opcontrol
     // This function deals in voltage, and takes arguments from -127 to 127
-    frontRightDriveMotor.move(-FRight);
+    frontRightDriveMotor.move(FRight);
     frontLeftDriveMotor.move(FLeft);
-    backRightDriveMotor.move(-BRight);
+    backRightDriveMotor.move(BRight);
     backLeftDriveMotor.move(BLeft);
 }
 
@@ -68,10 +68,14 @@ void chassisGyroPark() {
 }
 
 void chassisStopDrive() {
-    frontRightDriveMotor.move(0);
-    frontLeftDriveMotor.move(0);
-    backRightDriveMotor.move(0);
-    backLeftDriveMotor.move(0);
+    frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    frontRightDriveMotor.move_velocity(0);
+    frontLeftDriveMotor.move_velocity(0);
+    backRightDriveMotor.move_velocity(0);
+    backLeftDriveMotor.move_velocity(0);
 }
 
 void resetChassisEncoders() {
@@ -99,9 +103,9 @@ void driveForDistancePID(int distance, int speed) {
 
     resetChassisEncoders();
 
-    frontRightDriveMotor.move_absolute(-motorDegree, speed);
+    frontRightDriveMotor.move_absolute(motorDegree, speed);
     frontLeftDriveMotor.move_absolute(motorDegree, speed);
-    backRightDriveMotor.move_absolute(-motorDegree, speed);
+    backRightDriveMotor.move_absolute(motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
     while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
@@ -138,11 +142,12 @@ void pivotTurn(int turnAngle, int speed) {
     resetChassisEncoders();
 
     // we are making turns - pivot left turns opposite of right motor
-    frontRightDriveMotor.move_absolute(motorDegree, speed);
+    frontRightDriveMotor.move_absolute(-motorDegree, speed);
     frontLeftDriveMotor.move_absolute(motorDegree, speed);
-    backRightDriveMotor.move_absolute(motorDegree, speed);
+    backRightDriveMotor.move_absolute(-motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
+    intertialSensor.set_rotation(0);
     // we are moving until both sides of the robot have reached their target - we are using abs
     // values of both the bounds and the desired distance so we become "insensitive" to to
     // the direction of turns.
@@ -152,6 +157,66 @@ void pivotTurn(int turnAngle, int speed) {
             pros::delay(2);
     }
 
+    std::cout << intertialSensor.get_rotation() << std::endl;
+
+    chassisStopDrive();
+}
+
+void gyroTurn(int turnAngle, int speed) {
+/**
+  * speed -- Max 100, 200 or 600 RPM depending on cartridge
+  * speed should always be positive
+  * angle -- desired turn angle in degrees - -359 -- +359
+  * negative angle (-45) will turn robot CC (to the left)
+  * positive angle (45) will turn Clockwise (to the right)
+**/
+
+    // incoming speed variable sanity check
+    speed = abs(speed);               // speed is always absolute
+    float maxDegrees = 360.0;
+
+    // we are moving until both sides of the robot have reached their target - we are using abs
+    // values of both the bounds and the desired distance so we become "insensitive" to to
+    // the direction of turns.
+    
+    while (intertialSensor.is_calibrating()) {
+        pros::delay(5);
+    }
+
+    intertialSensor.set_rotation(0);
+    std::cout << intertialSensor.get_rotation() << std::endl;
+    std::cout << fabs(intertialSensor.get_rotation()) << "          " << fabs(turnAngle * 0.888) << std::endl;
+    
+    double error = turnAngle;
+    double pidSpeed, derivitive, totalError, previousError = 0.0;
+    float p = 3.0;
+    float i = 0.1;
+    // float i = 0.01791;
+    float d = 0.012;
+
+    while (true)  {
+        error = fabs(turnAngle) - fabs(intertialSensor.get_rotation());
+        totalError += error * 0.02;
+        derivitive = (error - previousError) / 0.02;
+
+        int direction;
+        if (turnAngle > 0) direction = 1;
+        else direction = -1;
+
+        pidSpeed = p * error + i * totalError;
+        std::cout << pidSpeed <<  "   " << (pidSpeed / maxDegrees) * speed << std::endl;
+
+        frontRightDriveMotor.move_velocity(-direction * (pidSpeed / maxDegrees) * speed);
+        frontLeftDriveMotor.move_velocity(direction * (pidSpeed / maxDegrees) * speed);
+        backRightDriveMotor.move_velocity(-direction * (pidSpeed / maxDegrees) * speed);
+        backLeftDriveMotor.move_velocity(direction * (pidSpeed / maxDegrees) * speed);
+
+        previousError = error;
+        pros::delay(20);
+    }
+
+    std::cout << "turn done " << intertialSensor.get_rotation() << std::endl;
+ 
     chassisStopDrive();
 }
 

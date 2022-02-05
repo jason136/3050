@@ -36,9 +36,6 @@ void initialize() {
     pros::Vision visionSensor(VISION_PORT);
     visionSensor.set_led(COLOR_SPRING_GREEN);
 
-    pros::Imu intertialSensor(INERTIAL_PORT);
-    intertialSensor.reset();
-
     generateDatastructures();
     drawScreen();
 }
@@ -51,7 +48,7 @@ void initialize() {
 void disabled() {}
 
 /**
- * Runs after initialize(), a   nd before autonomous when connected to the Field
+ * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
  * competition-specific initialization routines, such as an autonomous selector
  * on the LCD.
@@ -61,8 +58,12 @@ void disabled() {}
  */
 void competition_initialize() {
 
+    pros::Imu intertialSensor(INERTIAL_PORT);
+    intertialSensor.reset();
+
 }
 
+bool screenInit;
 extern int selection;
 extern bool recAuton;
 /**
@@ -80,6 +81,10 @@ void autonomous() {
     // We are calling a autonomous function based on the selection
     // we made on the LCD
 
+    if (!screenInit) {
+        recAuton = DEFAULT_RECAUTON;
+        selection = DEFAULT_SELECTION;
+    }
     if (recAuton) recordableAuton();
     else {
         switch (selection) {

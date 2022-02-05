@@ -32,7 +32,9 @@
 #define LATERAL_BASE_ENCODER_TOP 3
 #define LATERAL_BASE_ENCODER_BOTTOM 4
 
-// LEGACY Port Assignments
+// Define Default Autonomous Behavior
+#define DEFAULT_RECAUTON false
+#define DEFAULT_SELECTION 2
 
 // Define Which Robot we are Compiling for
 #define FLIP_FLOP true

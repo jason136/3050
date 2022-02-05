@@ -1,4 +1,5 @@
 #include "main.h"
+#include "portdef.hpp"
 #include "screen.hpp"
 #include "opcontrol.hpp"
 #include "file.hpp"
@@ -74,6 +75,7 @@ void btnSetToggled(lv_obj_t * btn, bool toggled) {
     if(toggled != (lv_btn_get_state(btn) >= 2)) lv_btn_toggle(btn);
 }
 
+extern bool screenInit;
 extern const lv_img_dsc_t field_image;
 int selection;
 bool recAuton;
@@ -114,10 +116,10 @@ lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 7);
 lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
 
 void resetDatastructures() {
-  clearVectors(); 
-  diagLabel = NULL;
-  toggledBtn = nullptr;
-  selection = -1;
+    clearVectors(); 
+    diagLabel = NULL;
+    toggledBtn = nullptr;
+    selection = DEFAULT_SELECTION;
 }
 
 static lv_res_t btnOnclickAction(lv_obj_t * btn) {
@@ -230,6 +232,8 @@ void drawScreen() {
     lv_obj_set_style(towScreen, &backgroundStyle);
 
     drawAuton();
+
+    screenInit = true;
 }
 
 void drawMenu() {
@@ -252,26 +256,35 @@ void drawAuton() {
     resetDatastructures();
     lv_scr_load(autonScreen);
 
-    tempButton = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redStyle);
+    lv_obj_t * buttons[7];
 
-    tempButton = createBtn(lv_scr_act(), 335, 10, 100, 50, 101, "2", blueStyle);
+    buttons[0] = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redStyle);
 
-    tempButton = createBtn(lv_scr_act(), 45, 68, 100, 50, 102, "3", redStyle);
+    buttons[1] = createBtn(lv_scr_act(), 335, 10, 100, 50, 101, "2", blueStyle);
 
-    tempButton = createBtn(lv_scr_act(), 335, 68, 100, 50, 103, "4", blueStyle);
+    buttons[2] = createBtn(lv_scr_act(), 45, 68, 100, 50, 102, "3", redStyle);
 
-    tempButton = createBtn(lv_scr_act(), 45, 126, 100, 50, 104, "5", redStyle);
+    buttons[3] = createBtn(lv_scr_act(), 335, 68, 100, 50, 103, "4", blueStyle);
 
-    tempButton = createBtn(lv_scr_act(), 335, 126, 100, 50, 105, "6", blueStyle);
+    buttons[4] = createBtn(lv_scr_act(), 45, 126, 100, 50, 104, "5", redStyle);
+
+    buttons[5] = createBtn(lv_scr_act(), 335, 126, 100, 50, 105, "6", blueStyle);
 
     menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
 
-    tempButton = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", standardStyle);
+    buttons[6] = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", standardStyle);
 
     recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", standardStyle);
 
-    recAuton = true;
-    btnSetToggled(recAutonButton, true);
+    if (DEFAULT_RECAUTON) {
+        recAuton = true;
+        btnSetToggled(recAutonButton, true);
+    }
+    if (DEFAULT_SELECTION > -1) {
+        selection = DEFAULT_SELECTION;
+        btnSetToggled(buttons[DEFAULT_SELECTION], true);
+        toggledBtn = buttons[DEFAULT_SELECTION];
+    }
 
     LV_IMG_DECLARE(field_image);
     lv_obj_t * imageObj = lv_img_create(lv_scr_act(), NULL);
