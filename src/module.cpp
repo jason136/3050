@@ -34,6 +34,16 @@ void toggleMoGoalPneumatics(int mode) {
 }
 
 void toggleAutonPneumatics(int mode) {
-    pneumaticsAutonomous1.set_value(mode);
-    pneumaticsAutonomous2.set_value(mode);
+
+    pneumaticsAutonomous1.set_value(!mode);
+    pneumaticsAutonomous2.set_value(!mode);
+
+    // if (mode) {
+    //     pneumaticsAutonomous1.set_value(1);
+    //     pneumaticsAutonomous2.set_value(1);
+    // }
+    // else {
+    //     pneumaticsAutonomous1.set_value(0);
+    //     pneumaticsAutonomous2.set_value(0);
+    // }
 }

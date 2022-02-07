@@ -30,25 +30,6 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
     backLeftDriveMotor.move(BLeft);
 }
 
-void chassisLockDrive(int FRight, int FLeft, int BRight, int BLeft) {
-    if (FRight == 0) {
-        frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        frontRightDriveMotor.move_velocity(0);
-    }
-    else if (FLeft == 0) {
-        frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        frontLeftDriveMotor.move_velocity(0);
-    }
-    else if (BRight == 0) {
-        backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        backRightDriveMotor.move_velocity(0);
-    }
-    else if (BLeft == 0) {
-        backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        backLeftDriveMotor.move_velocity(0);
-    }
-}
-
 void trackSpeed(double * coords) {
     coords[0] = ((frontRightDriveMotor.get_actual_velocity() + backRightDriveMotor.get_actual_velocity()) / 2.0);
     coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0);
@@ -67,15 +48,19 @@ void chassisGyroPark() {
     //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }
 
-void chassisStopDrive() {
-    frontRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    frontLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    backRightDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    backLeftDriveMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    frontRightDriveMotor.move_velocity(0);
+void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left=false, bool right=false) {
+  if (!left) {
+    frontLeftDriveMotor.set_brake_mode(brakeType);
+    backLeftDriveMotor.set_brake_mode(brakeType);
     frontLeftDriveMotor.move_velocity(0);
-    backRightDriveMotor.move_velocity(0);
     backLeftDriveMotor.move_velocity(0);
+  }
+  if (!right) {
+    frontRightDriveMotor.set_brake_mode(brakeType);
+    backRightDriveMotor.set_brake_mode(brakeType);
+    frontRightDriveMotor.move_velocity(0);
+    backRightDriveMotor.move_velocity(0);
+  }
 }
 
 void resetChassisEncoders() {
@@ -113,7 +98,7 @@ void driveForDistancePID(int distance, int speed) {
         pros::delay(2);
     }
 
-    chassisStopDrive();
+    chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 void pivotTurn(int turnAngle, int speed) {
@@ -159,7 +144,7 @@ void pivotTurn(int turnAngle, int speed) {
 
     std::cout << intertialSensor.get_rotation() << std::endl;
 
-    chassisStopDrive();
+    chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 void gyroTurn(int turnAngle, int speed) {
@@ -217,7 +202,7 @@ void gyroTurn(int turnAngle, int speed) {
 
     std::cout << "turn done " << intertialSensor.get_rotation() << std::endl;
  
-    chassisStopDrive();
+    chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 void getChassisDiag(double * buffer) {

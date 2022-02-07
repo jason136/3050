@@ -35,7 +35,7 @@
 
 // Define Default Autonomous Behavior
 #define DEFAULT_RECAUTON false
-#define DEFAULT_SELECTION 2
+#define DEFAULT_SELECTION 0
 
 // Define Which Robot we are Compiling for
 #define FLIP_FLOP false

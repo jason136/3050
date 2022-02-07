@@ -66,7 +66,8 @@ void recAutonLoop(void * param) {
 
 void autoRed1() {
 
-    gyroTurn(360, 200);
+
+
 }
 
 void autoBlue1() {

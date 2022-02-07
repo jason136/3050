@@ -145,24 +145,15 @@ void processInput(int * arrInputs) {
 		// we are wanting to do standard TANK Control
 
 
-        if (arrInputs[10]) chassisGyroPark();
-        else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
+        /*if (arrInputs[10]) chassisGyroPark();
+        else */chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
-        //chassisLockDrive(rightY, leftY, rightY, leftY);
 	}
 	else if (DRIVE_MODE == 4) {
 		// We are wanting to do standard ARCADE control
 
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
-
-    if (arrInputs[6]) moveClaw(-1);
-    else if (arrInputs[7]) moveClaw(1);
-    else moveClaw(0);
-
-    if (arrInputs[8]) moveGrabber(1);
-    else if (arrInputs[9]) moveGrabber(-1);
-    else moveGrabber(0);
 
     // if (arrInputs[12]) {
     //     std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
@@ -172,20 +163,28 @@ void processInput(int * arrInputs) {
         
         liftComplex(-1 * arrInputs[5], -1 * arrInputs[5]);
 
+        if (arrInputs[6]) moveClaw(-1);
+        else if (arrInputs[7]) moveClaw(1);
+        else moveClaw(0);
+
+        if (arrInputs[8]) moveGrabber(1);
+        else if (arrInputs[9]) moveGrabber(-1);
+        else moveGrabber(0);
+
     }
     else {
 
         // competition bot
 
-		toggleMoGoalPneumatics(arrInputs[5]);
+		toggleMoGoalPneumatics(arrInputs[19]);
 
-        toggleAutonPneumatics(arrInputs[12]);
+        // toggleAutonPneumatics(arrInputs[12]);
 
         int differentialControl = 0;
-        if (arrInputs[6]) differentialControl++;
-        if (arrInputs[7]) differentialControl--;
+        if (arrInputs[20]) differentialControl++;
+        if (arrInputs[21]) differentialControl--;
         
-        liftComplex(arrInputs[4], differentialControl);
+        liftComplex(arrInputs[18], differentialControl);
     }
 }
 
