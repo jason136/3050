@@ -42,4 +42,6 @@ void gyroTurn(int turnAngle, int speed);
 // Return motor diagnostics data for screen
 void getChassisDiag(double * buffer);
 
+void visPathfind(); 
+
 #endif // _CHASSIS_H_

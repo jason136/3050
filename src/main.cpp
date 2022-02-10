@@ -19,25 +19,13 @@ void initialize() {
     // GEARSET_18 -- GREEN (default)
     // GEARSET_6 -- BLUE
 
-    // pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-    // pros::Motor tray_motor(TRAY_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-    // pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-    // pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-    // pros::Motor conveyor_motor(CONVEYOR_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-    
     pros::Vision visionSensor(VISION_PORT);
-    visionSensor.set_led(COLOR_SPRING_GREEN);
+    visionSensor.set_led(COLOR_CRIMSON);
 
     generateDatastructures();
     drawScreen();
+
+    visPathfind();
 }
 
 /**

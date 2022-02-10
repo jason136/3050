@@ -23,7 +23,7 @@
 #define VEX_RADIO 21
 
 // V5 Sensors
-#define VISION_PORT 100
+#define VISION_PORT 11
 #define INERTIAL_PORT 11
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
