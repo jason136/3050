@@ -25,7 +25,7 @@ void initialize() {
     generateDatastructures();
     drawScreen();
 
-    visPathfind();
+    // visPathfind();
 }
 
 /**

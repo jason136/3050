@@ -145,8 +145,9 @@ void processInput(int * arrInputs) {
 		// we are wanting to do standard TANK Control
 
 
-        /*if (arrInputs[10]) chassisGyroPark();
-        else */chassisMoveIndividuals(rightY, leftY, rightY, leftY);
+        if (arrInputs[10]) chassisGyroPark();
+        else if (instInputs[7]) visPathfind();
+        else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
 	}
 	else if (DRIVE_MODE == 4) {

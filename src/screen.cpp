@@ -22,7 +22,7 @@
     lv_label_set_text(label, title);
     lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_MID, 0, 5);
     setBtnStyle(style, btn);
-	  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btnOnclickAction);
+	lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btnOnclickAction);
 
     return btn;
 }
@@ -79,25 +79,25 @@ extern bool screenInit;
 extern const lv_img_dsc_t field_image;
 int selection;
 bool recAuton;
+bool visionInUse = false;
 
-char text[100];
+char textBuffer[100];
 
-lv_style_t * redStyle;
-lv_style_t * blueStyle;
-lv_style_t * standardStyle;
+lv_style_t * redBtnStyle;
+lv_style_t * blueBtnStyle;
+lv_style_t * yellowBtnStyle;
 
-lv_style_t shapeStyle;
+lv_style_t whiteShapeStyle;
+lv_style_t redShapeStyle;
+lv_style_t blueShapeStyle;
+lv_style_t yellowShapeStyle;
 lv_style_t backgroundStyle;
 
 lv_obj_t * menuScreen;
 lv_obj_t * autonScreen;
 lv_obj_t * diagScreen;
 lv_obj_t * recordScreen;
-lv_obj_t * towScreen;
-
-lv_obj_t * eyeLeft;
-lv_obj_t * eyeRight;
-lv_obj_t * mouth;
+lv_obj_t * visionScreen;
 
 lv_obj_t * tempButton;
 lv_obj_t * menuButton;
@@ -105,15 +105,11 @@ lv_obj_t * recAutonButton;
 lv_obj_t * toggledBtn;
 lv_obj_t * recordableBtn;
 
-lv_obj_t * autonButtunLabel;
 lv_obj_t * diagLabel = NULL;
-lv_obj_t * chassisLabel;
 lv_obj_t * recordableLabel;
+lv_obj_t * chassisLabel;
 
 lv_obj_t * fieldImage;
-
-lv_obj_t * autonObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 7);
-lv_obj_t * menuObjs = (lv_obj_t *)malloc(sizeof(lv_obj_t) * 4);
 
 void resetDatastructures() {
     clearVectors(); 
@@ -128,6 +124,7 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
         case 0:
             lv_obj_clean(lv_scr_act());
             diagLabel = NULL;
+            if (visionInUse) visionInUse = false;
             drawMenu();
             break;
         case 1:
@@ -144,7 +141,7 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
             break;
         case 4:
             lv_obj_clean(lv_scr_act());
-            drawTow();
+            drawVision();
             break;
         case 10:
             if (recAuton) {
@@ -184,8 +181,8 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
                 if (id == 211 && selection >= 0) {
                     clearVectors();
                     startRecordThread();
-                    sprintf(text, "see controller");
-                    lv_label_set_text(recordableLabel, text);
+                    sprintf(textBuffer, "see controller");
+                    lv_label_set_text(recordableLabel, textBuffer);
                 }
                 else {
                     selection = id - 200;
@@ -198,38 +195,53 @@ static lv_res_t btnOnclickAction(lv_obj_t * btn) {
         return LV_RES_OK;
 }
 
-//memcpy(&menuObjs[0], tempButton, sizeof(lv_obj_t));
-
 void drawScreen() {
-    redStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
+    redBtnStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 0, 0), LV_COLOR_MAKE(0, 0, 0),
     LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(255, 0, 0));
 
-    blueStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
+    blueBtnStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(0, 0, 255), LV_COLOR_MAKE(0, 0, 0),
     LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 255));
 
-    standardStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
+    yellowBtnStyle = createBtnStyle(&lv_style_plain, LV_COLOR_MAKE(255, 255, 0), LV_COLOR_MAKE(0, 0, 0),
     LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(0, 0, 0), LV_COLOR_MAKE(255, 255, 0));
 
-    lv_style_copy(&shapeStyle, &lv_style_plain);
-    shapeStyle.line.color = LV_COLOR_MAKE(255, 255, 255);
-    shapeStyle.line.width = 5;
-    shapeStyle.text.color = LV_COLOR_MAKE(255, 255, 255);
+    lv_style_copy(&whiteShapeStyle, &lv_style_plain);
+    whiteShapeStyle.line.color = LV_COLOR_MAKE(255, 255, 255);
+    whiteShapeStyle.line.width = 5;
+    whiteShapeStyle.text.color = LV_COLOR_MAKE(255, 255, 255);
+    whiteShapeStyle.body.radius = 3;
+
+    lv_style_copy(&redShapeStyle, &lv_style_plain);
+    redShapeStyle.body.main_color = LV_COLOR_MAKE(255, 0, 0);
+    redShapeStyle.body.grad_color = LV_COLOR_MAKE(255, 0, 0);
+    redShapeStyle.body.radius = 0;
+
+    lv_style_copy(&blueShapeStyle, &lv_style_plain);
+    blueShapeStyle.body.main_color = LV_COLOR_MAKE(0, 0, 255);
+    blueShapeStyle.body.grad_color = LV_COLOR_MAKE(0, 0, 255);
+    blueShapeStyle.body.radius = 0;
+
+    lv_style_copy(&yellowShapeStyle, &lv_style_plain);
+    yellowShapeStyle.body.main_color = LV_COLOR_MAKE(255, 255, 0);
+    yellowShapeStyle.body.grad_color = LV_COLOR_MAKE(255, 255, 0);
+    yellowShapeStyle.body.radius = 0;
     
     lv_style_copy(&backgroundStyle, &lv_style_plain);
     backgroundStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
     backgroundStyle.body.grad_color = LV_COLOR_MAKE(0, 0, 0);
+    backgroundStyle.body.radius = 0;
 
     menuScreen = lv_obj_create(NULL, NULL);
     autonScreen = lv_obj_create(NULL, NULL);
     diagScreen = lv_obj_create(NULL, NULL);
     recordScreen = lv_obj_create(NULL, NULL);
-    towScreen = lv_obj_create(NULL, NULL);
+    visionScreen = lv_obj_create(NULL, NULL);
     
     lv_obj_set_style(menuScreen, &backgroundStyle);
     lv_obj_set_style(autonScreen, &backgroundStyle);
     lv_obj_set_style(diagScreen, &backgroundStyle);
     lv_obj_set_style(recordScreen, &backgroundStyle);
-    lv_obj_set_style(towScreen, &backgroundStyle);
+    lv_obj_set_style(visionScreen, &backgroundStyle);
 
     drawAuton();
 
@@ -239,42 +251,33 @@ void drawScreen() {
 void drawMenu() {
     lv_scr_load(menuScreen);
 
-    tempButton = createBtn(lv_scr_act(), 0, 0, 180, 50, 1, "Auton Select", standardStyle);
+    tempButton = createBtn(lv_scr_act(), 0, 0, 180, 50, 1, "Auton Select", yellowBtnStyle);
     lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
 
-    tempButton = createBtn(lv_scr_act(), 0, 0, 160, 50, 2, "Diagnostics", standardStyle);
+    tempButton = createBtn(lv_scr_act(), 0, 0, 160, 50, 2, "Diagnostics", yellowBtnStyle);
     lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 66);
 
-    tempButton = createBtn(lv_scr_act(), 0, 0, 180, 50, 3, "Record Auton", standardStyle);
+    tempButton = createBtn(lv_scr_act(), 0, 0, 180, 50, 3, "Record Auton", yellowBtnStyle);
     lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 122);
 
-    tempButton = createBtn(lv_scr_act(), 0, 0, 120, 50, 4, "Tow Mode", standardStyle);
+    tempButton = createBtn(lv_scr_act(), 0, 0, 120, 50, 4, "Vision", yellowBtnStyle);
     lv_obj_align(tempButton, NULL, LV_ALIGN_IN_TOP_MID, 0, 178);
 }
 
 void drawAuton() {
     resetDatastructures();
     lv_scr_load(autonScreen);
-
     lv_obj_t * buttons[7];
 
-    buttons[0] = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redStyle);
-
-    buttons[1] = createBtn(lv_scr_act(), 335, 10, 100, 50, 101, "2", blueStyle);
-
-    buttons[2] = createBtn(lv_scr_act(), 45, 68, 100, 50, 102, "3", redStyle);
-
-    buttons[3] = createBtn(lv_scr_act(), 335, 68, 100, 50, 103, "4", blueStyle);
-
-    buttons[4] = createBtn(lv_scr_act(), 45, 126, 100, 50, 104, "5", redStyle);
-
-    buttons[5] = createBtn(lv_scr_act(), 335, 126, 100, 50, 105, "6", blueStyle);
-
-    menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
-
-    buttons[6] = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", standardStyle);
-
-    recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", standardStyle);
+    buttons[0] = createBtn(lv_scr_act(), 45, 10, 100, 50, 100, "1", redBtnStyle);
+    buttons[1] = createBtn(lv_scr_act(), 335, 10, 100, 50, 101, "2", blueBtnStyle);
+    buttons[2] = createBtn(lv_scr_act(), 45, 68, 100, 50, 102, "3", redBtnStyle);
+    buttons[3] = createBtn(lv_scr_act(), 335, 68, 100, 50, 103, "4", blueBtnStyle);
+    buttons[4] = createBtn(lv_scr_act(), 45, 126, 100, 50, 104, "5", redBtnStyle);
+    buttons[5] = createBtn(lv_scr_act(), 335, 126, 100, 50, 105, "6", blueBtnStyle);
+    menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", yellowBtnStyle);
+    buttons[6] = createBtn(lv_scr_act(), 170, 184, 140, 48, 106, "Skills", yellowBtnStyle);
+    recAutonButton = createBtn(lv_scr_act(), 320, 184, 140, 48, 10, "RecAuton", yellowBtnStyle);
 
     if (DEFAULT_RECAUTON) {
         recAuton = true;
@@ -296,7 +299,7 @@ void drawAuton() {
 void drawDiag() {
     lv_scr_load(diagScreen);
 
-    menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", standardStyle);
+    menuButton = createBtn(lv_scr_act(), 0, 0, 140, 50, 0, "Menu", yellowBtnStyle);
     lv_obj_align(menuButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
 
     diagLabel = lv_label_create(lv_scr_act(), NULL);
@@ -310,8 +313,8 @@ void drawDiag() {
 void updateDiag(char * chassisData) {
     if (diagLabel != NULL) {
         lv_label_set_text(chassisLabel, chassisData);
-        sprintf(text, "milliseconds since start: %i\nbelow only works during opcontrol", pros::millis());
-        lv_label_set_text(diagLabel, text);
+        sprintf(textBuffer, "milliseconds since start: %i\nbelow only works during opcontrol", pros::millis());
+        lv_label_set_text(diagLabel, textBuffer);
     }
 }
 
@@ -320,87 +323,175 @@ void drawRecordable() {
     lv_scr_load(recordScreen);
 
     selection = -1;
-    recordableBtn = createBtn(lv_scr_act(), 0, 0, 160, 50, 211, "Record", standardStyle);
+    recordableBtn = createBtn(lv_scr_act(), 0, 0, 160, 50, 211, "Record", yellowBtnStyle);
     lv_obj_align(recordableBtn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 70);
 
     recordableLabel = lv_label_create(lv_scr_act(), NULL);
-    lv_obj_set_style(recordableLabel, &shapeStyle);
+    lv_obj_set_style(recordableLabel, &whiteShapeStyle);
     lv_label_set_text(recordableLabel, "click buttun to record");
     lv_obj_align(recordableLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 140);
 
-    tempButton = createBtn(lv_scr_act(), 240, 10, 100, 50, 200, "1", redStyle);
-
-    tempButton = createBtn(lv_scr_act(), 340, 10, 100, 50, 201, "2", blueStyle);
-
-    tempButton = createBtn(lv_scr_act(), 240, 68, 100, 50, 202, "3", redStyle);
-
-    tempButton = createBtn(lv_scr_act(), 340, 68, 100, 50, 203, "4", blueStyle);
-
-    tempButton = createBtn(lv_scr_act(), 240, 126, 100, 50, 204, "5", redStyle);
-
-    tempButton = createBtn(lv_scr_act(), 340, 126, 100, 50, 205, "6", blueStyle);
-
-    menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", standardStyle);
-
-    tempButton = createBtn(lv_scr_act(), 300, 184, 140, 48, 206, "recSkills", standardStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 10, 100, 50, 200, "1", redBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 10, 100, 50, 201, "2", blueBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 68, 100, 50, 202, "3", redBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 68, 100, 50, 203, "4", blueBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 240, 126, 100, 50, 204, "5", redBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 340, 126, 100, 50, 205, "6", blueBtnStyle);
+    menuButton = createBtn(lv_scr_act(), 20, 184, 140, 48, 0, "Menu", yellowBtnStyle);
+    tempButton = createBtn(lv_scr_act(), 300, 184, 140, 48, 206, "recSkills", yellowBtnStyle);
 }
 
 void finishRecording() {
-    sprintf(text, "recording complete!");
-    lv_label_set_text(recordableLabel, text);
+    sprintf(textBuffer, "recording complete!");
+    lv_label_set_text(recordableLabel, textBuffer);
     resetDatastructures();
 }
 
-int percentComplete;
-int eyerightX;
-int eyerightY;
-int eyeleftX;
-int eyeleftY;
+extern pros::Vision visionSensor;
+lv_obj_t * visionWindow;
+lv_obj_t * signatureLabel;
+int squareCount; 
+vector<lv_obj_t *> squares;
 
-lv_obj_t * leftEye;
-lv_obj_t * rightEye;
+void drawVision() {
+    lv_scr_load(visionScreen);
+    visionInUse = true;
 
-void drawTow() {
-    lv_scr_load(towScreen);
+    lv_obj_t * visionOuter = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_style(visionOuter, &whiteShapeStyle);
+    lv_obj_set_pos(visionOuter, 140, 7);
+    lv_obj_set_size(visionOuter, 330, 225);
 
-    static lv_point_t leftEyePoints[] = { {5, 5}, {70, 70}, {120, 10}, {180, 60} };
-    static lv_point_t rightEyePoints[] = { {100, 100}, {100, 150}, {150, 150}, {150, 100} };
+    visionWindow = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_style(visionWindow, &backgroundStyle);
+    lv_obj_set_pos(visionWindow, 145, 12);
+    lv_obj_set_size(visionWindow, 320, 215);
 
-    updateTow(&leftEyePoints[0], &rightEyePoints[0]);
+    signatureLabel = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_style(signatureLabel, &whiteShapeStyle);
+    lv_obj_align(signatureLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
+
+    menuButton = createBtn(lv_scr_act(), 5, 184, 130, 48, 0, "Menu", yellowBtnStyle);
+
+    pros::Task drawVisionThread(drawVisionLoop);
 }
 
-void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]) {
-    /*
-    inputs must be in the following form:
-    leftInputs: 
-    [point1X, point1Y]
-    [point2X, point2Y]
-    [point3X, point3Y]
-    [point4X, point4Y]
-    rightInputs: 
-    [point1X, point1Y]
-    [point2X, point2Y]
-    [point3X, point3Y]
-    [point4X, point4Y]
-    */
+extern pros::vision_signature_s_t RED_SIG;
 
-    leftEye = lv_line_create(lv_scr_act(), NULL);
-    rightEye = lv_line_create(lv_scr_act(), NULL);
+void drawVisionLoop(void * param) {
 
-    lv_line_set_points(leftEye, leftPoints, 4);
-    lv_line_set_points(rightEye, rightPoints, 4);
+    visionSensor.set_signature(1, &RED_SIG);
 
-    lv_obj_set_style(leftEye, &shapeStyle);
-    lv_obj_set_style(rightEye, &shapeStyle);
+    while (visionInUse) {
+        
 
-    lv_obj_align(leftEye, NULL, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_align(rightEye, NULL, LV_ALIGN_CENTER, 100, 100);
+        int sigCount = visionSensor.get_object_count();
+        int squareCount = squares.size();
+
+        std::cout << "sigCout: " << sigCount << std::endl;
+
+        int redSigs, blueSigs, yellowSigs = 0;
+
+        // delete old squares
+        for (int x = 0; x < squareCount; x++) {
+            if (x > sigCount) {
+                std::cout << "SQUARE DELETED ===================================================" << std::endl;
+                lv_obj_set_pos(squares.at(x), 200, 200);
+                lv_obj_set_size(squares.at(x), 1, 1);
+                lv_obj_del(squares.at(x));
+                squares.pop_back();
+                lv_obj_set_top(visionWindow, true);
+            }
+        }
+        // create new squares
+        for (int x = 0; x < sigCount; x++) {
+            if (x >= squareCount) {
+                lv_obj_t * square = lv_obj_create(lv_scr_act(), NULL);
+                squares.push_back(square);
+            }
+        }
+        
+        // loop over and edit squares
+        for (int x = 0; x < sigCount; x++) {
+
+            pros::vision_object_s_t detectedObject = visionSensor.get_by_size(x);
+
+            if (detectedObject.signature == 1) {
+                lv_obj_set_style(squares.at(x), &redShapeStyle);
+                redSigs += 1;
+            }
+            else if (detectedObject.signature == 2) {
+                lv_obj_set_style(squares.at(x), &blueShapeStyle);
+                blueSigs += 1; 
+            }
+            else if (detectedObject.signature == 3) {
+                lv_obj_set_style(squares.at(x), &yellowShapeStyle);
+                yellowSigs += 1; 
+            }
+            
+            lv_obj_set_pos(squares.at(x), 145 + detectedObject.left_coord, 12 + detectedObject.top_coord);
+            lv_obj_set_size(squares.at(x), detectedObject.width, detectedObject.height);
+        }
+
+        sprintf(textBuffer, "Red Sigs: \n%i\n\nBlue Sigs: \n%i\n\nYellow Sigs: \n%i\n\n", redSigs, blueSigs, yellowSigs);
+        lv_label_set_text(signatureLabel, textBuffer);
+        redSigs, blueSigs, yellowSigs = 0;
+
+        squareCount = sigCount;
+        if (!visionInUse) return;            
+        pros::delay(20);
+    }
 }
 
-void towCastChanges(int * leftInputs, int * rightInputs) {
+// int percentComplete;
+// int eyerightX;
+// int eyerightY;
+// int eyeleftX;
+// int eyeleftY;
+
+// lv_obj_t * leftEye;
+// lv_obj_t * rightEye;
+
+// void drawTow() {
+//     lv_scr_load(towScreen);
+
+//     static lv_point_t leftEyePoints[] = { {5, 5}, {70, 70}, {120, 10}, {180, 60} };
+//     static lv_point_t rightEyePoints[] = { {100, 100}, {100, 150}, {150, 150}, {150, 100} };
+
+//     updateTow(&leftEyePoints[0], &rightEyePoints[0]);
+// }
+
+// void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]) {
+//     /*
+//     inputs must be in the following form:
+//     leftInputs: 
+//     [point1X, point1Y]
+//     [point2X, point2Y]
+//     [point3X, point3Y]
+//     [point4X, point4Y]
+//     rightInputs: 
+//     [point1X, point1Y]
+//     [point2X, point2Y]
+//     [point3X, point3Y]
+//     [point4X, point4Y]
+//     */
+
+//     leftEye = lv_line_create(lv_scr_act(), NULL);
+//     rightEye = lv_line_create(lv_scr_act(), NULL);
+
+//     lv_line_set_points(leftEye, leftPoints, 4);
+//     lv_line_set_points(rightEye, rightPoints, 4);
+
+//     lv_obj_set_style(leftEye, &whiteShapeStyle);
+//     lv_obj_set_style(rightEye, &whiteShapeStyle);
+
+//     lv_obj_align(leftEye, NULL, LV_ALIGN_CENTER, 0, 0);
+//     lv_obj_align(rightEye, NULL, LV_ALIGN_CENTER, 100, 100);
+// }
+
+// void towCastChanges(int * leftInputs, int * rightInputs) {
+
     
-
-    
-}
+// }
 
 //https://docs.lvgl.io/latest/en/html/widgets/objmask.html

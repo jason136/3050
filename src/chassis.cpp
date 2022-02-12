@@ -12,6 +12,8 @@ pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 
 pros::Imu intertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
+pros::Vision visionSensor(VISION_PORT);
+
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
     // This function drives the robot forward/backwards at given speed
@@ -220,67 +222,67 @@ void getChassisDiag(double * buffer) {
     buffer[11] = backLeftDriveMotor.get_efficiency();
 }
 
-pros::Vision visionSensor(VISION_PORT);
+pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 7839, 9557, 8698, -1203, -615, -909, 3.000, 0);
 
 void visPathfind() {
 
     visionSensor.set_led(COLOR_SPRING_GREEN);
     
-    pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 7839, 9557, 8698, -1203, -615, -909, 3.000, 0);
     visionSensor.set_signature(1, &RED_SIG);
 
     std::cout << "vis pathfind starting" << std::endl;
 
     int turn_Error = 160;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-    float turn_P = 1.0;
-    float turn_I = 0.01;
-    float turn_D = 0.0012;
+    float turn_P = 0.6;
+    float turn_I = 0.00;
+    float turn_D = 0.000;
 
     int dist_Error = 160;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
-    float dist_P = 1.0;
-    float dist_I = 0.01;
-    float dist_D = 0.0012;
+    float dist_P = 0.0;
+    float dist_I = 0.00;
+    float dist_D = 0.000;
 
     while (true) {
 
         pros::vision_object_s_t object = visionSensor.get_by_sig(0, 1);
+        // pros::vision_object_s_t object = visionSensor.get_by_size(0);
+
+        std::cout << visionSensor.get_object_count() << std::endl;
 
         if (object.signature != 255 && object.width > 10) {
-                
+            
             std::cout << "object signiture detected " << object.signature << " ";
-
-
 
             turn_Error = 160 - object.x_middle_coord;
             turn_TotalError += turn_Error * 0.02;
             turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
-
             turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError/* + turn_D * turn_Derivitive*/;
-
-
 
             dist_Error = 250 - object.width;
             dist_TotalError += dist_Error * 0.02;
             dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
-
             dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
 
-
-
             std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+
+            turn_PreviousError = turn_Error;
+            dist_PreviousError = dist_Error;
 
             frontRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
             frontLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
             backRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
             backLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
-
-            turn_PreviousError = turn_Error;
-            dist_PreviousError = dist_Error;
-
-            pros::delay(20);
-
         }
+        else {
+            frontRightDriveMotor.move(0);
+            frontLeftDriveMotor.move(0);
+            backRightDriveMotor.move(0);
+            backLeftDriveMotor.move(0);
+        }
+
+        pros::delay(20);
+
     }
 }

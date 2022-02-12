@@ -2,6 +2,7 @@
 #define SCREEN_H_
 
 #include "api.h"
+#include <vector>
 
 lv_obj_t * createBtn(lv_obj_t * parent, lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height,
     int id, const char * title, lv_style_t * style);
@@ -29,8 +30,11 @@ void updateDiag(char * buffer);
 void drawRecordable();
 void finishRecording();
 
-void drawTow();
-void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]);
-void towCastChanges(int * leftInputs, int * rightInputs);
+void drawVision();
+void drawVisionLoop(void * param);
+
+// void drawTow();
+// void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]);
+// void towCastChanges(int * leftInputs, int * rightInputs);
 
 #endif
