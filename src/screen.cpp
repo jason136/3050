@@ -350,8 +350,8 @@ void finishRecording() {
 extern pros::Vision visionSensor;
 lv_obj_t * visionWindow;
 lv_obj_t * signatureLabel;
-int squareCount; 
-vector<lv_obj_t *> squares;
+int recCount; 
+vector<lv_obj_t *> rects;
 
 void drawVision() {
     lv_scr_load(visionScreen);
@@ -377,67 +377,71 @@ void drawVision() {
 }
 
 extern pros::vision_signature_s_t RED_SIG;
+extern pros::vision_signature_s_t BLUE_SIG;
+extern pros::vision_signature_s_t YELLOW_SIG;
 
 void drawVisionLoop(void * param) {
 
     visionSensor.set_signature(1, &RED_SIG);
+    visionSensor.set_signature(2, &BLUE_SIG);
+    visionSensor.set_signature(3, &YELLOW_SIG);
 
     while (visionInUse) {
         
-
-        int sigCount = visionSensor.get_object_count();
-        int squareCount = squares.size();
-
-        std::cout << "sigCout: " << sigCount << std::endl;
-
         int redSigs, blueSigs, yellowSigs = 0;
 
-        // delete old squares
-        for (int x = 0; x < squareCount; x++) {
-            if (x > sigCount) {
-                std::cout << "SQUARE DELETED ===================================================" << std::endl;
-                lv_obj_set_pos(squares.at(x), 200, 200);
-                lv_obj_set_size(squares.at(x), 1, 1);
-                lv_obj_del(squares.at(x));
-                squares.pop_back();
+        // delete old rects
+        int sigCount = visionSensor.get_object_count();
+        int rectsSize = rects.size();
+
+        if (rectsSize > sigCount) {
+            for (int x = 0; x < rectsSize - sigCount; x++) {
+                // std::cout << "RECT DELETED ===================================================" << std::endl;
+                lv_obj_set_pos(rects.at(rectsSize - 1 - x), 200, 200);
+                lv_obj_set_size(rects.at(rectsSize - 1 - x), 1, 1);
+                lv_obj_del(rects.at(rectsSize - 1 - x));
+                rects.pop_back();
                 lv_obj_set_top(visionWindow, true);
             }
         }
-        // create new squares
-        for (int x = 0; x < sigCount; x++) {
-            if (x >= squareCount) {
-                lv_obj_t * square = lv_obj_create(lv_scr_act(), NULL);
-                squares.push_back(square);
+        else if (rectsSize < sigCount) {
+            for (int x = 0; x < sigCount - rectsSize; x++) {
+                lv_obj_t * rect = lv_obj_create(lv_scr_act(), NULL);
+                rects.insert(rects.begin(), rect);
             }
         }
-        
-        // loop over and edit squares
+
+        // std::cout << "sigCout: " << sigCount << " vector size: " << rects.size() << std::endl;
+
+        // loop over and edit rects
         for (int x = 0; x < sigCount; x++) {
 
             pros::vision_object_s_t detectedObject = visionSensor.get_by_size(x);
 
             if (detectedObject.signature == 1) {
-                lv_obj_set_style(squares.at(x), &redShapeStyle);
+                lv_obj_set_style(rects.at(x), &redShapeStyle);
                 redSigs += 1;
             }
             else if (detectedObject.signature == 2) {
-                lv_obj_set_style(squares.at(x), &blueShapeStyle);
+                lv_obj_set_style(rects.at(x), &blueShapeStyle);
                 blueSigs += 1; 
             }
             else if (detectedObject.signature == 3) {
-                lv_obj_set_style(squares.at(x), &yellowShapeStyle);
+                lv_obj_set_style(rects.at(x), &yellowShapeStyle);
                 yellowSigs += 1; 
             }
             
-            lv_obj_set_pos(squares.at(x), 145 + detectedObject.left_coord, 12 + detectedObject.top_coord);
-            lv_obj_set_size(squares.at(x), detectedObject.width, detectedObject.height);
+            lv_obj_set_pos(rects.at(x), 145 + detectedObject.left_coord, 12 + detectedObject.top_coord);
+            lv_obj_set_size(rects.at(x), detectedObject.width, detectedObject.height);
         }
 
         sprintf(textBuffer, "Red Sigs: \n%i\n\nBlue Sigs: \n%i\n\nYellow Sigs: \n%i\n\n", redSigs, blueSigs, yellowSigs);
         lv_label_set_text(signatureLabel, textBuffer);
-        redSigs, blueSigs, yellowSigs = 0;
+        redSigs = 0;
+        blueSigs = 0;
+        yellowSigs = 0;
 
-        squareCount = sigCount;
+        recCount = sigCount;
         if (!visionInUse) return;            
         pros::delay(20);
     }

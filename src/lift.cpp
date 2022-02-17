@@ -3,10 +3,10 @@
 #include "lift.hpp"
 
 // Setup the motor definition for the lift motor
-pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR);
-pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR);
-pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR);
-pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR);
+pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 void moveLift(int LTop, int LBottom, int RTop, int RBottom) {
     if (LTop) leftTopLiftMotor.move(LTop);

@@ -223,6 +223,8 @@ void getChassisDiag(double * buffer) {
 }
 
 pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 7839, 9557, 8698, -1203, -615, -909, 3.000, 0);
+pros::vision_signature_s_t BLUE_SIG = pros::Vision::signature_from_utility(2, -2639, -1809, -2224, 6611, 9223, 7917, 3.000, 0);
+pros::vision_signature_s_t YELLOW_SIG = pros::Vision::signature_from_utility(3, 2053, 2849, 2451, -4491, -3983, -4237, 3.000, 0);
 
 void visPathfind() {
 
