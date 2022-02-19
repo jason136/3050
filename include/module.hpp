@@ -1,6 +1,8 @@
 #ifndef _MODULE_H_
 #define _MODULE_H_
 
+void initializeVision();
+
 void moveGrabber(int mode);
 
 void moveClaw(int mode);

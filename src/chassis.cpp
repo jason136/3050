@@ -12,7 +12,7 @@ pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, 
 pros::Imu intertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
-pros::Vision visionSensor(VISION_PORT);
+extern pros::Vision visionSensor;
 
 // Chassis Speciic Function definitions
 void chassisMove(int voltage) {
@@ -70,6 +70,21 @@ void resetChassisEncoders() {
     frontLeftDriveMotor.tare_position();
     backRightDriveMotor.tare_position();
     backLeftDriveMotor.tare_position();
+}
+
+void getChassisDiag(double * buffer) {
+    buffer[0] = frontRightDriveMotor.get_actual_velocity();
+    buffer[1] = frontLeftDriveMotor.get_actual_velocity();
+    buffer[2] = backRightDriveMotor.get_actual_velocity();
+    buffer[3] = backLeftDriveMotor.get_actual_velocity();
+    buffer[4] = backLeftDriveMotor.get_temperature();
+    buffer[5] = backLeftDriveMotor.get_temperature();
+    buffer[6] = backLeftDriveMotor.get_temperature();
+    buffer[7] = backLeftDriveMotor.get_temperature();
+    buffer[8] = backLeftDriveMotor.get_efficiency();
+    buffer[9] = backLeftDriveMotor.get_efficiency();
+    buffer[10] = backLeftDriveMotor.get_efficiency();
+    buffer[11] = backLeftDriveMotor.get_efficiency();
 }
 
 void driveForDistancePID(int distance, int speed) {
@@ -149,22 +164,7 @@ void pivotTurn(int turnAngle, int speed) {
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
-void gyroTurn(int turnAngle, int speed) {
-/**
-  * speed -- Max 100, 200 or 600 RPM depending on cartridge
-  * speed should always be positive
-  * angle -- desired turn angle in degrees - -359 -- +359
-  * negative angle (-45) will turn robot CC (to the left)
-  * positive angle (45) will turn Clockwise (to the right)
-**/
-
-    // incoming speed variable sanity check
-    speed = abs(speed);               // speed is always absolute
-    float maxDegrees = 360.0;
-
-    // we are moving until both sides of the robot have reached their target - we are using abs
-    // values of both the bounds and the desired distance so we become "insensitive" to to
-    // the direction of turns.
+void gyroTurn(int turnAngle, int time) {
     
     while (intertialSensor.is_calibrating()) {
         pros::delay(5);
@@ -181,7 +181,7 @@ void gyroTurn(int turnAngle, int speed) {
     // float i = 0.01791;
     float d = 0.012;
 
-    while (true)  {
+    for (int x = 0; x < time; x += 20)  {
         error = fabs(turnAngle) - fabs(intertialSensor.get_rotation());
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
@@ -191,12 +191,11 @@ void gyroTurn(int turnAngle, int speed) {
         else direction = -1;
 
         pidSpeed = p * error + i * totalError + d * derivitive;
-        std::cout << pidSpeed <<  "   " << (pidSpeed / maxDegrees) * speed << std::endl;
 
-        frontRightDriveMotor.move_velocity(-direction * (pidSpeed / maxDegrees) * speed);
-        frontLeftDriveMotor.move_velocity(direction * (pidSpeed / maxDegrees) * speed);
-        backRightDriveMotor.move_velocity(-direction * (pidSpeed / maxDegrees) * speed);
-        backLeftDriveMotor.move_velocity(direction * (pidSpeed / maxDegrees) * speed);
+        frontRightDriveMotor.move_velocity(-direction * (pidSpeed * 200));
+        frontLeftDriveMotor.move_velocity(direction * (pidSpeed * 200));
+        backRightDriveMotor.move_velocity(-direction * (pidSpeed * 200));
+        backLeftDriveMotor.move_velocity(direction * (pidSpeed * 200));
 
         previousError = error;
         pros::delay(20);
@@ -207,48 +206,30 @@ void gyroTurn(int turnAngle, int speed) {
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
-void getChassisDiag(double * buffer) {
-    buffer[0] = frontRightDriveMotor.get_actual_velocity();
-    buffer[1] = frontLeftDriveMotor.get_actual_velocity();
-    buffer[2] = backRightDriveMotor.get_actual_velocity();
-    buffer[3] = backLeftDriveMotor.get_actual_velocity();
-    buffer[4] = backLeftDriveMotor.get_temperature();
-    buffer[5] = backLeftDriveMotor.get_temperature();
-    buffer[6] = backLeftDriveMotor.get_temperature();
-    buffer[7] = backLeftDriveMotor.get_temperature();
-    buffer[8] = backLeftDriveMotor.get_efficiency();
-    buffer[9] = backLeftDriveMotor.get_efficiency();
-    buffer[10] = backLeftDriveMotor.get_efficiency();
-    buffer[11] = backLeftDriveMotor.get_efficiency();
-}
+void visPathfind(int sig, int time) {
 
-pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 7839, 9557, 8698, -1203, -615, -909, 3.000, 0);
-pros::vision_signature_s_t BLUE_SIG = pros::Vision::signature_from_utility(2, -2639, -1809, -2224, 6611, 9223, 7917, 3.000, 0);
-pros::vision_signature_s_t YELLOW_SIG = pros::Vision::signature_from_utility(3, 2053, 2849, 2451, -4491, -3983, -4237, 3.000, 0);
-
-void visPathfind() {
-
-    visionSensor.set_led(COLOR_SPRING_GREEN);
+    if (sig == 1) visionSensor.set_led(COLOR_RED);
+    else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
+    else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
     
-    visionSensor.set_signature(1, &RED_SIG);
 
-    std::cout << "vis pathfind starting" << std::endl;
+    std::cout << "vis pathfind starting, sig: " << sig << std::endl;
 
     int turn_Error = 160;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-    float turn_P = 0.6;
-    float turn_I = 0.00;
-    float turn_D = 0.000;
+    float turn_P = 0.7;
+    float turn_I = 0.18;
+    float turn_D = 0.05;
 
-    int dist_Error = 160;
+    int dist_Error = 250;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
-    float dist_P = 0.0;
-    float dist_I = 0.00;
-    float dist_D = 0.000;
+    float dist_P = 1.2;
+    float dist_I = 0.15;
+    float dist_D = 0.01;
 
-    while (true) {
+    for (int x = 0; x < time; x += 20) {
 
-        pros::vision_object_s_t object = visionSensor.get_by_sig(0, 1);
+        pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
         // pros::vision_object_s_t object = visionSensor.get_by_size(0);
 
         std::cout << visionSensor.get_object_count() << std::endl;
@@ -260,7 +241,7 @@ void visPathfind() {
             turn_Error = 160 - object.x_middle_coord;
             turn_TotalError += turn_Error * 0.02;
             turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
-            turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError/* + turn_D * turn_Derivitive*/;
+            turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
 
             dist_Error = 250 - object.width;
             dist_TotalError += dist_Error * 0.02;
@@ -283,8 +264,7 @@ void visPathfind() {
             backRightDriveMotor.move(0);
             backLeftDriveMotor.move(0);
         }
-
         pros::delay(20);
-
     }
+    visionSensor.set_led(COLOR_WHITE);
 }

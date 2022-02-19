@@ -6,6 +6,7 @@
 #include "lift.hpp"
 #include "screen.hpp"
 #include "file.hpp"
+#include "module.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -19,13 +20,10 @@ void initialize() {
     // GEARSET_18 -- GREEN (default)
     // GEARSET_6 -- BLUE
 
-    pros::Vision visionSensor(VISION_PORT);
-    visionSensor.set_led(COLOR_CRIMSON);
-
     generateDatastructures();
     drawScreen();
 
-    // visPathfind();
+    initializeVision();
 }
 
 /**

@@ -111,13 +111,6 @@ lv_obj_t * chassisLabel;
 
 lv_obj_t * fieldImage;
 
-void resetDatastructures() {
-    clearVectors(); 
-    diagLabel = NULL;
-    toggledBtn = nullptr;
-    selection = DEFAULT_SELECTION;
-}
-
 static lv_res_t btnOnclickAction(lv_obj_t * btn) {
     uint8_t id = lv_obj_get_free_num(btn);
     switch(id) {
@@ -376,16 +369,7 @@ void drawVision() {
     pros::Task drawVisionThread(drawVisionLoop);
 }
 
-extern pros::vision_signature_s_t RED_SIG;
-extern pros::vision_signature_s_t BLUE_SIG;
-extern pros::vision_signature_s_t YELLOW_SIG;
-
 void drawVisionLoop(void * param) {
-
-    visionSensor.set_signature(1, &RED_SIG);
-    visionSensor.set_signature(2, &BLUE_SIG);
-    visionSensor.set_signature(3, &YELLOW_SIG);
-
     while (visionInUse) {
         
         int redSigs, blueSigs, yellowSigs = 0;
@@ -499,3 +483,11 @@ void drawVisionLoop(void * param) {
 // }
 
 //https://docs.lvgl.io/latest/en/html/widgets/objmask.html
+
+void resetDatastructures() {
+    clearVectors(); 
+    rects.clear();
+    diagLabel = NULL;
+    toggledBtn = nullptr;
+    selection = DEFAULT_SELECTION;
+}

@@ -146,7 +146,8 @@ void processInput(int * arrInputs) {
 
 
         if (arrInputs[10]) chassisGyroPark();
-        else if (instInputs[7]) visPathfind();
+        else if (instInputs[7]) visPathfind(3, 5000);
+        else if (instInputs[6]) visPathfind(1, 5000);
         else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
 	}

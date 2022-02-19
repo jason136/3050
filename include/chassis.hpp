@@ -26,8 +26,12 @@ void chassisGyroPark();
 
 // Helper method to stop all chassis motors
 void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool right);
+
 // Reset chassis encoders
 void resetChassisEncoders();
+
+// Return motor diagnostics data for screen
+void getChassisDiag(double * buffer);
 
 // Drive with PID control for a given distnace in inches
 void driveForDistancePID(int distance, int speed);
@@ -37,11 +41,10 @@ void driveForDistancePID(int distance, int speed);
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
 
-void gyroTurn(int turnAngle, int speed);
+void gyroTurn(int turnAngle, int time);
 
-// Return motor diagnostics data for screen
-void getChassisDiag(double * buffer);
+// Time parameter for both corresponds to number of seconds
 
-void visPathfind(); 
+void visPathfind(int sig, int time); 
 
 #endif // _CHASSIS_H_
