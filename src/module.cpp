@@ -7,9 +7,10 @@ pros::Motor clawMotor(CLAW_MOTOR);
 pros::Motor grabberMotor(GRABBER_MOTOR);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumaticsMoGoal(PNEUMATIC_PORT_MOBILE_GOAL);
-pros::ADIDigitalOut pneumaticsAutonomous1(PNEUMATIC_PORT_AUTONOMOUS_1);
-pros::ADIDigitalOut pneumaticsAutonomous2(PNEUMATIC_PORT_AUTONOMOUS_2);
+pros::ADIDigitalOut pneumaticsLiftClaw1(PNEUMATIC_LIFT_CLAW_1);
+pros::ADIDigitalOut pneumaticsLiftClaw2(PNEUMATIC_LIFT_CLAW_2);
+pros::ADIDigitalOut pneumaticsBackClaw1(PNEUMATIC_BACK_CLAW_1);
+pros::ADIDigitalOut pneumaticsBackClaw2(PNEUMATIC_BACK_CLAW_2);
 
 pros::Vision visionSensor(VISION_PORT);
 
@@ -42,13 +43,24 @@ void moveClaw(int mode) {
     }
 }
 
-void toggleMoGoalPneumatics(int mode) {
-    pneumaticsMoGoal.set_value(-mode);
+void toggleLiftClawPneumatics(int mode) {
+    pneumaticsLiftClaw1.set_value(!mode);
+    pneumaticsLiftClaw2.set_value(!mode);
 }
 
-void toggleAutonPneumatics(int mode) {
+void toggleBackClawPneumatics(int mode) {
+    pneumaticsBackClaw1.set_value(!mode);
+    pneumaticsBackClaw2.set_value(!mode);
+}
 
-    pneumaticsAutonomous1.set_value(!mode);
-    pneumaticsAutonomous2.set_value(!mode);
+void closeLiftClaw(void* param) {
+    pros::delay((int)param);
+    pneumaticsLiftClaw1.set_value(0);
+    pneumaticsLiftClaw2.set_value(0);
+}
 
+void closeBackClaw(void* param) {
+    pros::delay((int)param);
+    pneumaticsBackClaw1.set_value(0);
+    pneumaticsBackClaw2.set_value(0);
 }

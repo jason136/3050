@@ -3,12 +3,6 @@
 
 #include "api.h"
 
-// ----------- SETTINGS FOR AUTO LIFT CONTROL -------
-#define LIFT_FULL_RETRACT 0
-#define LIFT_MAX_HEIGHT 550
-#define LIFT_LEVEL_LOW 100
-#define LIFT_LEVEL_HIGH 400
-
 void moveLift(int LTop, int LBottom, int RTop, int RBottom);
 
 // lock the front lift where it is right now....
@@ -21,5 +15,9 @@ pros::motor_brake_mode_e_t getliftLockMode();
 
 // Control method for differential mechanism on lift
 void liftComplex(int right, int left);
+
+void liftRaiseForEncoder(int encDegrees, int speed, bool wait=false);
+
+void spinRollerForEncoder(int encDegrees, int speed, bool wait=false);
 
 #endif

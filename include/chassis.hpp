@@ -41,9 +41,10 @@ void driveForDistancePID(int distance, int speed);
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
 
+// positive is ccw, negative is cw
 void gyroTurn(int turnAngle, int time);
 
-// Time parameter for both corresponds to number of seconds
+// Time parameter for both corresponds to number of milliseconds
 
 void visPathfind(int sig, int time); 
 

@@ -86,7 +86,7 @@ void liftComplex(int left, int right) {
     }
 }
 
-void liftRaiseForEncoder(int speed, int encDegrees, bool wait=false) {
+void liftRaiseForEncoder(int encDegrees, int speed, bool wait=false) {
     resetLiftEncoders();
     
     leftTopLiftMotor.move_absolute(encDegrees, -speed);
@@ -101,7 +101,7 @@ void liftRaiseForEncoder(int speed, int encDegrees, bool wait=false) {
     }
 }
 
-void spinRollerForEncoder(int speed, int encDegrees, bool wait=false) {
+void spinRollerForEncoder(int encDegrees, int speed, bool wait=false) {
     liftLock(pros::E_MOTOR_BRAKE_HOLD, false, true);
     resetLiftEncoders();
 

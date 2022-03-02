@@ -178,9 +178,9 @@ void processInput(int * arrInputs) {
 
         // competition bot
 
-		toggleMoGoalPneumatics(arrInputs[19]);
+		toggleLiftClawPneumatics(arrInputs[19]);
 
-        // toggleAutonPneumatics(arrInputs[12]);
+        // toggleBackClawPneumatics(arrInputs[12]);
 
         int differentialControl = 0;
         if (arrInputs[20]) differentialControl++;
