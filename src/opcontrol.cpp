@@ -145,10 +145,10 @@ void processInput(int * arrInputs) {
 		// we are wanting to do standard TANK Control
 
 
-        if (arrInputs[10]) chassisGyroPark();
-        else if (instInputs[7]) visPathfind(3, 5000);
-        else if (instInputs[6]) visPathfind(1, 5000);
-        else chassisMoveIndividuals(rightY, leftY, rightY, leftY);
+        // if (arrInputs[10]) chassisGyroPark();
+        // else if (instInputs[7]) visPathfind(3, 5000);
+        // else if (instInputs[6]) visPathfind(1, 5000);
+        chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
 	}
 	else if (DRIVE_MODE == 4) {
@@ -161,7 +161,7 @@ void processInput(int * arrInputs) {
     //     std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
     // }
 
-    if (FLIP_FLOP) {
+    if (false) {
         
         liftComplex(-1 * arrInputs[5], -1 * arrInputs[5]);
 

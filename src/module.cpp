@@ -2,15 +2,9 @@
 #include "module.hpp"
 #include "portdef.hpp"
 
-// Miscellaneous motor construction
-pros::Motor clawMotor(CLAW_MOTOR);
-pros::Motor grabberMotor(GRABBER_MOTOR);
-
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumaticsLiftClaw1(PNEUMATIC_LIFT_CLAW_1);
-pros::ADIDigitalOut pneumaticsLiftClaw2(PNEUMATIC_LIFT_CLAW_2);
-pros::ADIDigitalOut pneumaticsBackClaw1(PNEUMATIC_BACK_CLAW_1);
-pros::ADIDigitalOut pneumaticsBackClaw2(PNEUMATIC_BACK_CLAW_2);
+pros::ADIDigitalOut pneumaticsLiftClaw(PNEUMATIC_LIFT_CLAW);
+pros::ADIDigitalOut pneumaticsBackClaw(PNEUMATIC_BACK_CLAW);
 
 pros::Vision visionSensor(VISION_PORT);
 
@@ -25,42 +19,20 @@ void initializeVision() {
     visionSensor.set_signature(3, &YELLOW_SIG);
 }
 
-void moveGrabber(int mode) {
-    if (mode == 1) grabberMotor.move(127);
-    else if (mode == -1) grabberMotor.move(-127);
-    else {
-        grabberMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        grabberMotor.move_velocity(0);
-    }
-}
-
-void moveClaw(int mode) {
-    if (mode == 1) clawMotor.move(127);
-    else if (mode == -1) clawMotor.move(-127);
-    else {
-        clawMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        clawMotor.move_velocity(0);
-    }
-}
-
 void toggleLiftClawPneumatics(int mode) {
-    pneumaticsLiftClaw1.set_value(!mode);
-    pneumaticsLiftClaw2.set_value(!mode);
+    pneumaticsLiftClaw.set_value(!mode);
 }
 
 void toggleBackClawPneumatics(int mode) {
-    pneumaticsBackClaw1.set_value(!mode);
-    pneumaticsBackClaw2.set_value(!mode);
+    pneumaticsBackClaw.set_value(!mode);
 }
 
 void closeLiftClaw(void* param) {
     pros::delay((int)param);
-    pneumaticsLiftClaw1.set_value(0);
-    pneumaticsLiftClaw2.set_value(0);
+    pneumaticsLiftClaw.set_value(0);
 }
 
 void closeBackClaw(void* param) {
     pros::delay((int)param);
-    pneumaticsBackClaw1.set_value(0);
-    pneumaticsBackClaw2.set_value(0);
+    pneumaticsBackClaw.set_value(0);
 }

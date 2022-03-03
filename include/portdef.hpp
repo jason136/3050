@@ -8,11 +8,6 @@
 #define BACK_RIGHT_DRIVE_MOTOR 19
 #define BACK_LEFT_DRIVE_MOTOR 20
 
-// Tray Motor
-#define TRAY_MOTOR_PORT 5
-#define CLAW_MOTOR 10
-#define GRABBER_MOTOR 6
-
 // Lift Motor
 #define RIGHT_TOP_LIFT_MOTOR 3
 #define RIGHT_BOTTOM_LIFT_MOTOR 4
@@ -24,13 +19,11 @@
 
 // V5 Sensors
 #define VISION_PORT 11
-#define INERTIAL_PORT 11
+#define INERTIAL_PORT 7
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
-#define PNEUMATIC_LIFT_CLAW_1 2
-#define PNEUMATIC_LIFT_CLAW_2 2
-#define PNEUMATIC_BACK_CLAW_1 1
-#define PNEUMATIC_BACK_CLAW_2 8
+#define PNEUMATIC_LIFT_CLAW 2
+#define PNEUMATIC_BACK_CLAW 1
 
 #define LATERAL_BASE_ENCODER_TOP 3
 #define LATERAL_BASE_ENCODER_BOTTOM 4

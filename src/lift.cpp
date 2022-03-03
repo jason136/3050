@@ -67,11 +67,10 @@ void liftComplex(int left, int right) {
         }
     }
     if (decelerating) {
-        liftLock(pros::E_MOTOR_BRAKE_BRAKE);
+        liftLock(pros::E_MOTOR_BRAKE_COAST);
     }
     else if (speed > 0) {
         std::cout << "lift with speed called" << std::endl;
-        if (tempLeft < 0) speed *= 1;
         if (tempRight) {
             // moveLift(right * -1 * speed, right * -1 * speed, right * 1 * speed, right * 1 * speed);
             moveLift(0, 0, right * 1 * speed, right * -1 * speed);
@@ -86,9 +85,9 @@ void liftComplex(int left, int right) {
     }
 }
 
-void liftRaiseForEncoder(int encDegrees, int speed, bool wait=false) {
+void liftRaiseForEncoder(int encDegrees, int speed, bool wait) {
     resetLiftEncoders();
-    
+
     leftTopLiftMotor.move_absolute(encDegrees, -speed);
     leftBottomLiftMotor.move_absolute(encDegrees, -speed);
     rightTopLiftMotor.move_absolute(encDegrees, speed);
@@ -101,13 +100,13 @@ void liftRaiseForEncoder(int encDegrees, int speed, bool wait=false) {
     }
 }
 
-void spinRollerForEncoder(int encDegrees, int speed, bool wait=false) {
+void spinRollerForEncoder(int encDegrees, int speed, bool wait) {
     liftLock(pros::E_MOTOR_BRAKE_HOLD, false, true);
     resetLiftEncoders();
 
     rightTopLiftMotor.move_absolute(encDegrees, speed);
     rightBottomLiftMotor.move_absolute(encDegrees, -speed);
-    
+
     if (wait) {
         while (!((rightTopLiftMotor.get_position() < encDegrees + 5) && (rightTopLiftMotor.get_position() > encDegrees - 5))) {
             pros::delay(2);

@@ -60,7 +60,7 @@ void recAutonLoop(void * param) {
     std::cout << "auton run time ellapsed: " << pros::millis() - starttime << std::endl;
 }
 
-extern pros::Imu intertialSensor(INERTIAL_PORT);
+extern pros::Imu intertialSensor;
 
 void autoRed1() {
 
@@ -71,7 +71,7 @@ void autoRed1() {
     driveForDistancePID(-12, 200);
 
     gyroTurn(90, 500);
-    pros::Task closeClawThread(closeBackClaw, (void*)500);
+    pros::Task thread1(closeBackClaw, (void*)500);
     driveForDistancePID(-4, 200);
     driveForDistancePID(24, 200);
 
@@ -79,7 +79,7 @@ void autoRed1() {
     driveForDistancePID(-72, 200);
     toggleBackClawPneumatics(1);
     spinRollerForEncoder(1000, 200);
-    pros::Task closeClawThread(closeBackClaw, (void*)1000);
+    pros::Task thread2(closeBackClaw, (void*)1000);
     driveForDistancePID(12, 50);
 
     gyroTurn(90, 500);
@@ -96,20 +96,20 @@ void autoBlue1() {
 
     visPathfind(3, 2000);
     toggleLiftClawPneumatics(1);
-    pros::Task closeClawThread(closeLiftClaw, (void*)200);
+    pros::Task thread2(closeLiftClaw, (void*)200);
     driveForDistancePID(-48, 200);
     gyroTurn(45, 100);
 
     visPathfind(3, 1500);
     toggleLiftClawPneumatics(1);
-    pros::Task closeClawThread(closeLiftClaw, (void*)500);
+    pros::Task thread3(closeLiftClaw, (void*)500);
     driveForDistancePID(-60, 200);
 
     gyroTurn(90, 500);
     driveForDistancePID(-48, 200);
     toggleBackClawPneumatics(1);
     spinRollerForEncoder(1000, 200);
-    pros::Task closeClawThread(closeBackClaw, (void*)1000);
+    pros::Task thread4(closeBackClaw, (void*)1000);
     driveForDistancePID(12, 50);
 
 }
@@ -140,7 +140,6 @@ void autoBlue2() {
     driveForDistancePID(-72, 200);
 
     gyroTurn(90, 500);
-    driveForDistancePID
 
 }
 
