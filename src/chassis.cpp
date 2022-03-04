@@ -228,7 +228,6 @@ void visPathfind(int sig, int time) {
     for (int x = 0; x < time; x += 20) {
 
         pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
-        // pros::vision_object_s_t object = visionSensor.get_by_size(0);
 
         std::cout << visionSensor.get_object_count() << std::endl;
 

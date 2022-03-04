@@ -25,13 +25,12 @@ void recordableAuton() {
 
 void recAutonLoop(void * param) {
 	std::cout << "recAutonLoop started" << std::endl;
-    char filename[20];
-    sprintf(filename, "/usd/RecAuton%i.txt", selection);
-    readFromFile(filename);
+    // char filename[20];
+    // sprintf(filename, "/usd/RecAuton%i.txt", selection);
+    // readFromFile(filename);
 
     int interations = getVectorSize();
     int recOutputs[28];
-
     double cords[3];
     int starttime = pros::millis();
     if (interations > 0) {
@@ -40,19 +39,10 @@ void recAutonLoop(void * param) {
             updateLocation(index, &cords[0]);
 
             mutex.take(25);
-            courseCorrect(index, &recOutputs[0], &cords[0]);
-
-            // std::cout << recOutputs[0] << recOutputs[1] << recOutputs[2] << recOutputs[3] << std::endl;
-            // std::cout << " rec: " << recOutputs[5] << std::endl;
-            
+            // courseCorrect(index, &recOutputs[0], &cords[0]);
             processInput(&recOutputs[0]);
             mutex.give();
 
-
-            // if (recAutonActive) {
-            // }
-
-            //std::cout << "selection: " << selection << " execute line " << x << "of" << interations << std::endl;
             pros::delay(20);
         }
     }

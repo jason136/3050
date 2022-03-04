@@ -157,37 +157,14 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-    // if (arrInputs[12]) {
-    //     std::cout << cords[0] << " " << cords[1] << " " << cords[2] << std::endl;
-    // }
+    toggleLiftClawPneumatics(arrInputs[19]);
+    toggleBackClawPneumatics(arrInputs[12]);
 
-    if (false) {
-        
-        liftComplex(-1 * arrInputs[5], -1 * arrInputs[5]);
-
-        if (arrInputs[6]) moveClaw(-1);
-        else if (arrInputs[7]) moveClaw(1);
-        else moveClaw(0);
-
-        if (arrInputs[8]) moveGrabber(1);
-        else if (arrInputs[9]) moveGrabber(-1);
-        else moveGrabber(0);
-
-    }
-    else {
-
-        // competition bot
-
-		toggleLiftClawPneumatics(arrInputs[19]);
-
-        // toggleBackClawPneumatics(arrInputs[12]);
-
-        int differentialControl = 0;
-        if (arrInputs[20]) differentialControl++;
-        if (arrInputs[21]) differentialControl--;
-        
-        liftComplex(arrInputs[18], differentialControl);
-    }
+    int differentialControl = 0;
+    if (arrInputs[20]) differentialControl++;
+    if (arrInputs[21]) differentialControl--;
+    
+    liftComplex(arrInputs[18], differentialControl);
 }
 
 void startRecordThread() {

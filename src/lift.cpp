@@ -43,19 +43,9 @@ pros::motor_brake_mode_e_t getliftBrakeMode() {
 
 int speed;
 bool decelerating;
-int tempRight;
-int tempLeft;
 
 void liftComplex(int left, int right) {
-    if (right != 0 || left != 0) {
-        if (right < 0) tempRight = -1;
-        if (right > 0) tempRight = 1;
-        if (right == 0) tempRight = 0;
-        if (left < 0) tempLeft = -1;
-        if (left > 0) tempLeft = 1;
-        if (left == 0) tempLeft = 0;
-        if (speed < 127) speed += 10;
-    }
+    if ((right || left) && speed < 127) speed += 10;
     else {
         if (speed > 0) {
             decelerating = true;
@@ -66,17 +56,18 @@ void liftComplex(int left, int right) {
             speed = 0;
         }
     }
+    
     if (decelerating) {
         liftLock(pros::E_MOTOR_BRAKE_COAST);
     }
-    else if (speed > 0) {
+    else if (right || left) {
         std::cout << "lift with speed called" << std::endl;
-        if (tempRight) {
+        if (right) {
             // moveLift(right * -1 * speed, right * -1 * speed, right * 1 * speed, right * 1 * speed);
             moveLift(0, 0, right * 1 * speed, right * -1 * speed);
             liftLock(pros::E_MOTOR_BRAKE_HOLD, false, true);
         }
-        else if (tempLeft) {
+        else if (left) {
             moveLift(left * -1 * speed, left * -1 * speed, left * 1 * speed, left * 1 * speed);
         }
     }
