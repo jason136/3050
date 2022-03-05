@@ -380,7 +380,6 @@ void drawVisionLoop(void * param) {
 
         if (rectsSize > sigCount) {
             for (int x = 0; x < rectsSize - sigCount; x++) {
-                // std::cout << "RECT DELETED ===================================================" << std::endl;
                 lv_obj_set_pos(rects.at(rectsSize - 1 - x), 200, 200);
                 lv_obj_set_size(rects.at(rectsSize - 1 - x), 1, 1);
                 lv_obj_del(rects.at(rectsSize - 1 - x));

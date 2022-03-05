@@ -169,9 +169,6 @@ void gyroTurn(int turnAngle, int time) {
     while (intertialSensor.is_calibrating()) {
         pros::delay(5);
     }
-
-    std::cout << intertialSensor.get_rotation() << std::endl;
-    std::cout << fabs(intertialSensor.get_rotation()) << "          " << fabs(turnAngle * 0.888) << std::endl;
     
     double error = turnAngle;
     double pidSpeed, derivitive, totalError, previousError = 0.0;
@@ -180,11 +177,15 @@ void gyroTurn(int turnAngle, int time) {
     // float i = 0.01791;
     float d = 0.012;
 
+    std::cout << "pre turn rotation: " << intertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
+
     int direction;
     if (turnAngle > intertialSensor.get_rotation()) direction = 1;
     else direction = -1;
 
     for (int x = 0; x < time; x += 20)  {
+        std::cout << error << std::endl;
+
         error = fabs(turnAngle) - fabs(intertialSensor.get_rotation());
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
@@ -240,7 +241,7 @@ void visPathfind(int sig, int time) {
             turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
             turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
 
-            dist_Error = 300 - object.width;
+            dist_Error = 270 - object.width;
             dist_TotalError += dist_Error * 0.02;
             dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
             dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;

@@ -22,8 +22,8 @@
 #define INERTIAL_PORT 7
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
-#define PNEUMATIC_LIFT_CLAW 2
-#define PNEUMATIC_BACK_CLAW 1
+#define PNEUMATIC_LIFT_CLAW 1
+#define PNEUMATIC_BACK_CLAW 2
 
 #define LATERAL_BASE_ENCODER_TOP 3
 #define LATERAL_BASE_ENCODER_BOTTOM 4
@@ -31,9 +31,6 @@
 // Define Default Autonomous Behavior
 #define DEFAULT_RECAUTON false
 #define DEFAULT_SELECTION 0
-
-// Define Which Robot we are Compiling for
-#define FLIP_FLOP false
 
 #define VEXNET_MANUAL true        // turns opcontrol into allowing for
                                   // testing autonomous code

@@ -57,7 +57,7 @@ void autoRed1() {
     intertialSensor.set_rotation(0);
 
     driveForDistancePID(12, 200);
-    toggleLiftClawPneumatics(1);
+    setLiftClawPneumatics(1);
     driveForDistancePID(-12, 200);
 
     gyroTurn(90, 500);
@@ -67,14 +67,15 @@ void autoRed1() {
 
     gyroTurn(180, 500);
     driveForDistancePID(-72, 200);
-    toggleBackClawPneumatics(1);
-    spinRollerForEncoder(1000, 200);
+    setBackClawPneumatics(1);
+    moveLift(0, 0, 127, -127);
     pros::Task thread2(closeBackClaw, (void*)1000);
     driveForDistancePID(12, 50);
+    liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
 
     gyroTurn(90, 500);
     visPathfind(3, 2000);
-    toggleLiftClawPneumatics(1);
+    setLiftClawPneumatics(1);
     gyroTurn(90, 100);
     driveForDistancePID(-24, 200);
 
@@ -85,22 +86,23 @@ void autoBlue1() {
     intertialSensor.set_rotation(0);
 
     visPathfind(3, 2000);
-    toggleLiftClawPneumatics(1);
+    setLiftClawPneumatics(1);
     pros::Task thread2(closeLiftClaw, (void*)200);
     driveForDistancePID(-48, 200);
     gyroTurn(45, 100);
 
     visPathfind(3, 1500);
-    toggleLiftClawPneumatics(1);
+    setLiftClawPneumatics(1);
     pros::Task thread3(closeLiftClaw, (void*)500);
     driveForDistancePID(-60, 200);
 
     gyroTurn(90, 500);
     driveForDistancePID(-48, 200);
-    toggleBackClawPneumatics(1);
-    spinRollerForEncoder(1000, 200);
+    setBackClawPneumatics(1);
+    moveLift(0, 0, 127, -127);
     pros::Task thread4(closeBackClaw, (void*)1000);
     driveForDistancePID(12, 50);
+    liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
 
 }
 
@@ -109,14 +111,15 @@ void autoRed2() {
     intertialSensor.set_rotation(0);
 
     visPathfind(3, 2000);
-    toggleLiftClawPneumatics(1);
+    setLiftClawPneumatics(1);
     driveForDistancePID(-72, 200);
 
     gyroTurn(90, 500);
     driveForDistancePID(-24, 50);
-    toggleBackClawPneumatics(1);
-    spinRollerForEncoder(1000, 200);
+    setBackClawPneumatics(1);
+    moveLift(0, 0, 127, -127);
     driveForDistancePID(12, 50);
+    liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
 
 }
 
@@ -124,10 +127,13 @@ void autoBlue2() {
 
     // test methods
     intertialSensor.set_rotation(0);
-
-    visPathfind(3, 2000);
-    toggleLiftClawPneumatics(1);
-    driveForDistancePID(-72, 200);
+    moveLift(0, 0, 127, -127);
+    visPathfind(3, 1000);
+    driveForDistancePID(24, 200);
+    liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
+    setLiftClawPneumatics(1);
+    pros::Task thread5(closeBackClaw, (void*)200);
+    driveForDistancePID(-24, 200);
 
     gyroTurn(90, 500);
 
@@ -135,13 +141,18 @@ void autoBlue2() {
 
 void autoRed3() {
 
-    // Code Here
+    gyroTurn(90, 2000);
+    pros::delay(1000);
+    gyroTurn(0, 2000);
+
 }
 
 void autoBlue3() {
 
+    moveLift(0, 0, 127, -127);
+    pros::delay(1000);
+    liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
 
-    // Code Here
 }
 
 void skillRun() {

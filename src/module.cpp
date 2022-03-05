@@ -19,11 +19,37 @@ void initializeVision() {
     visionSensor.set_signature(3, &YELLOW_SIG);
 }
 
-void toggleLiftClawPneumatics(int mode) {
+bool liftPressed = false;
+bool liftToggle = false;
+void toggleLiftClawPneumatics(int toggle) {
+    if (toggle) {
+        liftPressed = true;
+    }
+    else if (liftPressed) {
+        liftPressed = false;
+        liftToggle = !liftToggle;
+    }
+    pneumaticsLiftClaw.set_value(liftToggle);
+}
+
+bool clawPressed = false;
+bool clawToggle = false;
+void toggleBackClawPneumatics(int toggle) {
+    if (toggle) {
+        clawPressed = true;
+    }
+    else if (clawPressed) {
+        clawPressed = false;
+        clawToggle = !clawToggle;
+    }
+    pneumaticsBackClaw.set_value(clawToggle);
+}
+
+void setLiftClawPneumatics(int mode) {
     pneumaticsLiftClaw.set_value(!mode);
 }
 
-void toggleBackClawPneumatics(int mode) {
+void setBackClawPneumatics(int mode) {
     pneumaticsBackClaw.set_value(!mode);
 }
 

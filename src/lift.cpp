@@ -3,10 +3,10 @@
 #include "lift.hpp"
 
 // Setup the motor definition for the lift motor
-pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightTopLiftMotor(RIGHT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightBottomLiftMotor(RIGHT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftTopLiftMotor(LEFT_TOP_LIFT_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftBottomLiftMotor(LEFT_BOTTOM_LIFT_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 void moveLift(int LTop, int LBottom, int RTop, int RBottom) {
     if (LTop) leftTopLiftMotor.move(LTop);
@@ -15,14 +15,14 @@ void moveLift(int LTop, int LBottom, int RTop, int RBottom) {
     if (RBottom) rightBottomLiftMotor.move(RBottom);
 }
 
-void liftLock(pros::motor_brake_mode_e_t brakeType, bool left=false, bool right=false) {
-    if (!left) {
+void liftLock(pros::motor_brake_mode_e_t brakeType, bool left=true, bool right=true) {
+    if (left) {
         leftTopLiftMotor.set_brake_mode(brakeType);
         leftBottomLiftMotor.set_brake_mode(brakeType);
         leftTopLiftMotor.move_velocity(0);
         leftBottomLiftMotor.move_velocity(0);
     }
-    if (!right) {
+    if (right) {
         rightTopLiftMotor.set_brake_mode(brakeType);
         rightBottomLiftMotor.set_brake_mode(brakeType);
         rightTopLiftMotor.move_velocity(0);
@@ -41,66 +41,32 @@ pros::motor_brake_mode_e_t getliftBrakeMode() {
     return rightTopLiftMotor.get_brake_mode();
 }
 
-int speed;
-bool decelerating;
+int liftSpeed = 0;
 
 void liftComplex(int left, int right) {
-    if ((right || left) && speed < 127) speed += 10;
-    else {
-        if (speed > 0) {
-            decelerating = true;
-            speed -= 20;
-        }
-        else if (speed <= 0) {
-            decelerating = false;
-            speed = 0;
-        }
+
+    std::cout << liftSpeed << std::endl;
+
+    if (left) {
+        if (liftSpeed < 127) liftSpeed += 20;
+        std::cout << "lift with liftSpeed called" << std::endl;
+        
+        moveLift(left * 1 * liftSpeed, left * 1 * liftSpeed, left * -1 * liftSpeed, left * -1 * liftSpeed);
     }
-    
-    if (decelerating) {
-        liftLock(pros::E_MOTOR_BRAKE_COAST);
-    }
-    else if (right || left) {
-        std::cout << "lift with speed called" << std::endl;
-        if (right) {
-            // moveLift(right * -1 * speed, right * -1 * speed, right * 1 * speed, right * 1 * speed);
-            moveLift(0, 0, right * 1 * speed, right * -1 * speed);
-            liftLock(pros::E_MOTOR_BRAKE_HOLD, false, true);
-        }
-        else if (left) {
-            moveLift(left * -1 * speed, left * -1 * speed, left * 1 * speed, left * 1 * speed);
-        }
+    else if (right) {
+        liftSpeed = 0;
+        moveLift(0, 0, right * 1 * 127, right * -1 * 127);
+        liftLock(pros::E_MOTOR_BRAKE_HOLD, true, false);
     }
     else {
-        liftLock(pros::E_MOTOR_BRAKE_HOLD); 
-    }
-}
-
-void liftRaiseForEncoder(int encDegrees, int speed, bool wait) {
-    resetLiftEncoders();
-
-    leftTopLiftMotor.move_absolute(encDegrees, -speed);
-    leftBottomLiftMotor.move_absolute(encDegrees, -speed);
-    rightTopLiftMotor.move_absolute(encDegrees, speed);
-    rightBottomLiftMotor.move_absolute(encDegrees, speed);
-
-    if (wait) {
-        while (!((leftTopLiftMotor.get_position() < encDegrees + 5) && (leftTopLiftMotor.get_position() > encDegrees - 5))) {
-            pros::delay(2);
+        if (liftSpeed > 0) {
+            liftSpeed -= 10;
+            liftLock(pros::E_MOTOR_BRAKE_BRAKE);
         }
-    }
-}
-
-void spinRollerForEncoder(int encDegrees, int speed, bool wait) {
-    liftLock(pros::E_MOTOR_BRAKE_HOLD, false, true);
-    resetLiftEncoders();
-
-    rightTopLiftMotor.move_absolute(encDegrees, speed);
-    rightBottomLiftMotor.move_absolute(encDegrees, -speed);
-
-    if (wait) {
-        while (!((rightTopLiftMotor.get_position() < encDegrees + 5) && (rightTopLiftMotor.get_position() > encDegrees - 5))) {
-            pros::delay(2);
+        else if (liftSpeed <= 0) {
+            liftSpeed = 0;
+            std::cout << "holding" << std::endl;
+            liftLock(pros::E_MOTOR_BRAKE_HOLD);
         }
     }
 }

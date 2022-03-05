@@ -16,8 +16,4 @@ pros::motor_brake_mode_e_t getliftLockMode();
 // Control method for differential mechanism on lift
 void liftComplex(int right, int left);
 
-void liftRaiseForEncoder(int encDegrees, int speed, bool wait=false);
-
-void spinRollerForEncoder(int encDegrees, int speed, bool wait=false);
-
 #endif

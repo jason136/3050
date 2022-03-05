@@ -157,14 +157,14 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-    toggleLiftClawPneumatics(arrInputs[19]);
-    toggleBackClawPneumatics(arrInputs[12]);
+    toggleLiftClawPneumatics(arrInputs[6]);
+    toggleBackClawPneumatics(arrInputs[21]);
 
-    int differentialControl = 0;
-    if (arrInputs[20]) differentialControl++;
-    if (arrInputs[21]) differentialControl--;
+    // int differentialControl = 0;
+    // if (arrInputs[20]) differentialControl++;
+    // if (arrInputs[21]) differentialControl--;
     
-    liftComplex(arrInputs[18], differentialControl);
+    liftComplex(arrInputs[19], arrInputs[18]);
 }
 
 void startRecordThread() {
