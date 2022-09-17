@@ -1,7 +1,7 @@
 #include "main.h"
 #include "portdef.hpp"
 #include "chassis.hpp"
-#include "lift.hpp"
+#include "flywheel.hpp"
 #include "module.hpp"
 #include "screen.hpp"
 #include "file.hpp"
@@ -164,7 +164,12 @@ void processInput(int * arrInputs) {
     // if (arrInputs[20]) differentialControl++;
     // if (arrInputs[21]) differentialControl--;
     
-    liftComplex(arrInputs[19], arrInputs[18]);
+	if (arrInputs[13]) {
+		spinFlywheel(127);
+	}
+	else {
+		stopFlywheel(pros::E_MOTOR_BRAKE_COAST);
+	}
 }
 
 void startRecordThread() {

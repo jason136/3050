@@ -3,7 +3,7 @@
 #include "portdef.hpp"
 #include "auton.hpp"
 #include "chassis.hpp"
-#include "lift.hpp"
+#include "flywheel.hpp"
 #include "screen.hpp"
 #include "file.hpp"
 #include "module.hpp"
@@ -44,8 +44,8 @@ void disabled() {}
  */
 void competition_initialize() {
 
-    pros::Imu intertialSensor(INERTIAL_PORT);
-    intertialSensor.reset();
+    // pros::Imu intertialSensor(INERTIAL_PORT);
+    // intertialSensor.reset();
 
 }
 

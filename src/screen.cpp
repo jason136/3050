@@ -343,12 +343,12 @@ void finishRecording() {
 extern pros::Vision visionSensor;
 lv_obj_t * visionWindow;
 lv_obj_t * signatureLabel;
-int recCount; 
 vector<lv_obj_t *> rects;
 
 void drawVision() {
     lv_scr_load(visionScreen);
     visionInUse = true;
+    std::cout << "vision sensor port: " << visionSensor.get_port() << std::endl;
 
     lv_obj_t * visionOuter = lv_obj_create(lv_scr_act(), NULL);
     lv_obj_set_style(visionOuter, &whiteShapeStyle);
@@ -371,7 +371,6 @@ void drawVision() {
 
 void drawVisionLoop(void * param) {
     while (visionInUse) {
-        
         int redSigs, blueSigs, yellowSigs = 0;
 
         // delete old rects
@@ -394,7 +393,7 @@ void drawVisionLoop(void * param) {
             }
         }
 
-        // std::cout << "sigCout: " << sigCount << " vector size: " << rects.size() << std::endl;
+        std::cout << "sigCout: " << sigCount << " vector size: " << rects.size() << std::endl;
 
         // loop over and edit rects
         for (int x = 0; x < sigCount; x++) {
@@ -424,7 +423,6 @@ void drawVisionLoop(void * param) {
         blueSigs = 0;
         yellowSigs = 0;
 
-        recCount = sigCount;
         if (!visionInUse) return;            
         pros::delay(20);
     }

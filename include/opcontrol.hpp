@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define DRIVE_MODE 3          // 1 for x-drive TANK
+#define DRIVE_MODE 1          // 1 for x-drive TANK
                               // 2 for x-drive ARDCADE
                               // 3 for standard TANK
                               // 4 for standard ARCADE

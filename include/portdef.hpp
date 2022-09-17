@@ -9,8 +9,8 @@
 #define BACK_LEFT_DRIVE_MOTOR 20
 
 // Lift Motor
-#define RIGHT_TOP_LIFT_MOTOR 3
-#define RIGHT_BOTTOM_LIFT_MOTOR 4
+#define FLYWHEEL_1 3
+#define FLYWHEEL_2 4
 #define LEFT_TOP_LIFT_MOTOR 1
 #define LEFT_BOTTOM_LIFT_MOTOR 2
 
@@ -18,7 +18,7 @@
 #define VEX_RADIO 21
 
 // V5 Sensors
-#define VISION_PORT 11
+#define VISION_PORT 15
 #define INERTIAL_PORT 7
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
