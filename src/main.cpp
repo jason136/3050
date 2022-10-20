@@ -24,6 +24,7 @@ void initialize() {
     drawScreen();
 
     initializeVision();
+    initializeGps(1.0, 1.0, 90.0, -0.0225, -0.0234);
 }
 
 /**

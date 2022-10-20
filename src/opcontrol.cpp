@@ -157,19 +157,12 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-    toggleLiftClawPneumatics(arrInputs[6]);
-    toggleBackClawPneumatics(arrInputs[21]);
+	spinFlywheel(arrInputs[13], 500);
 
-    // int differentialControl = 0;
-    // if (arrInputs[20]) differentialControl++;
-    // if (arrInputs[21]) differentialControl--;
-    
-	if (arrInputs[13]) {
-		spinFlywheel(127);
-	}
-	else {
-		stopFlywheel(pros::E_MOTOR_BRAKE_COAST);
-	}
+	//pollGps();
+
+	displayFlywheelData();
+
 }
 
 void startRecordThread() {

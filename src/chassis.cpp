@@ -4,10 +4,10 @@
 #include <cmath>
 
 // Setup the motor definitions for the motors on the chassis
-pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 pros::Imu intertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
@@ -214,13 +214,13 @@ void visPathfind(int sig, int time) {
 
     std::cout << "vis pathfind starting, sig: " << sig << std::endl;
 
-    int turn_Error = 160;
+    int turn_Error;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
     float turn_P = 0.7;
     float turn_I = 0.18;
     float turn_D = 0.05;
 
-    int dist_Error = 250;
+    int dist_Error;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
     float dist_P = 1.2;
     float dist_I = 0.15;

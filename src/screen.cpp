@@ -349,6 +349,7 @@ void drawVision() {
     lv_scr_load(visionScreen);
     visionInUse = true;
     std::cout << "vision sensor port: " << visionSensor.get_port() << std::endl;
+    std::cout << visionSensor.get_port() << std::endl;
 
     lv_obj_t * visionOuter = lv_obj_create(lv_scr_act(), NULL);
     lv_obj_set_style(visionOuter, &whiteShapeStyle);

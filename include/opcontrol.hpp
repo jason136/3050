@@ -6,11 +6,10 @@
 
 using namespace std;
 
-#define DRIVE_MODE 1          // 1 for x-drive TANK
+#define DRIVE_MODE 2          // 1 for x-drive TANK
                               // 2 for x-drive ARDCADE
                               // 3 for standard TANK
                               // 4 for standard ARCADE
-                              // 5 for Ryan Mode (arcade but with the arrow keys for movement)
 
 #define JOY_SCALE 0.5          // scale the joysticks to 50% valid values are 0 - 1
                               // note: 0 will disable joysticks 0 * x = 0 always....

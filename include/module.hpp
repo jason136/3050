@@ -3,21 +3,17 @@
 
 void initializeVision();
 
-void moveGrabber(int mode);
+void initializeGps(
+    double xInit = 0.0, 
+    double yInit = 0.0, 
+    double headingInit = 0.0, 
+    double xOffset = 0.0, 
+    double yOffset = 0.0
+);
 
-void moveClaw(int mode);
+void pollGps();
 
 // Set pneumatics to extend (1) or retract (0)
 void toggleLiftClawPneumatics(int toggle);
-
-void toggleBackClawPneumatics(int toggle);
-
-void setLiftClawPneumatics(int mode);
-
-void setBackClawPneumatics(int mode);
-
-void closeLiftClaw(void* param);
-
-void closeBackClaw(void* param);
 
 #endif
