@@ -16,4 +16,8 @@ void pollGps();
 // Set pneumatics to extend (1) or retract (0)
 void toggleLiftClawPneumatics(int toggle);
 
+void spinIndexer(bool triggered);
+
+void spinIntake(int speed);
+
 #endif

@@ -10,10 +10,6 @@
 // Datastructures for recordable autonomous
 int instInputs[28];
 
-// Datastructures used for console and screen diagnostics
-double buffer[12];
-char chassisData[400];
-
 // This mutex carries protects all motor control values
 pros::Mutex mutex;
 
@@ -79,6 +75,7 @@ void readController(int * instInputs) {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+
 	while (true) {
 
 		mutex.take(25);
@@ -88,23 +85,6 @@ void opcontrol() {
 
 		processInput(&instInputs[0]);
 		
-		// Get data from module functions
-		getChassisDiag(buffer);
-		sprintf(chassisData,
-		"Fn R Mtr V: %f -- T: %f -- E: %f\n"
-		"Fn L Mtr V: %f -- T: %f -- E: %f\n"
-		"Bk R Mtr V: %f -- T: %f -- E: %f\n"
-		"Bk L Mtr V: %f -- T: %f -- E: %f\n",
-		buffer[0], buffer[4], buffer[8],
-		buffer[1], buffer[5], buffer[9],
-		buffer[2], buffer[6], buffer[10],
-		buffer[3], buffer[7], buffer[11]);
-
-		updateDiag(&chassisData[0]);
-
-		if (false) {
-			std::cout << chassisData;
-		}
 		pros::delay(20);
 	}
 }
@@ -157,11 +137,13 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-	spinFlywheel(arrInputs[13], 500);
+	spinFlywheel(arrInputs[13], 600);
 
-	//pollGps();
+	spinIndexer(arrInputs[11]);
 
-	displayFlywheelData();
+	spinIntake(arrInputs[5] * 127);
+
+	pollGps();
 
 }
 

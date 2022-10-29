@@ -72,21 +72,6 @@ void resetChassisEncoders() {
     backLeftDriveMotor.tare_position();
 }
 
-void getChassisDiag(double * buffer) {
-    buffer[0] = frontRightDriveMotor.get_actual_velocity();
-    buffer[1] = frontLeftDriveMotor.get_actual_velocity();
-    buffer[2] = backRightDriveMotor.get_actual_velocity();
-    buffer[3] = backLeftDriveMotor.get_actual_velocity();
-    buffer[4] = backLeftDriveMotor.get_temperature();
-    buffer[5] = backLeftDriveMotor.get_temperature();
-    buffer[6] = backLeftDriveMotor.get_temperature();
-    buffer[7] = backLeftDriveMotor.get_temperature();
-    buffer[8] = backLeftDriveMotor.get_efficiency();
-    buffer[9] = backLeftDriveMotor.get_efficiency();
-    buffer[10] = backLeftDriveMotor.get_efficiency();
-    buffer[11] = backLeftDriveMotor.get_efficiency();
-}
-
 void driveForDistancePID(int distance, int speed) {
 /**
  * drive the robot using the build in PID control on the drive base for a given
@@ -210,7 +195,6 @@ void visPathfind(int sig, int time) {
     if (sig == 1) visionSensor.set_led(COLOR_RED);
     else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
     else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
-    
 
     std::cout << "vis pathfind starting, sig: " << sig << std::endl;
 

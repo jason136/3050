@@ -3,6 +3,7 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 #include "file.hpp"
+#include "flywheel.hpp"
 
 /**
  * Code for controlling screen graphics and such
@@ -107,7 +108,6 @@ lv_obj_t * recordableBtn;
 
 lv_obj_t * diagLabel = NULL;
 lv_obj_t * recordableLabel;
-lv_obj_t * chassisLabel;
 
 lv_obj_t * fieldImage;
 
@@ -296,18 +296,16 @@ void drawDiag() {
     lv_obj_align(menuButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
 
     diagLabel = lv_label_create(lv_scr_act(), NULL);
-    lv_label_set_text(diagLabel, "");
+    lv_label_set_text(diagLabel, "Motor Diagnostics");
     lv_obj_align(diagLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 160, 15);
-
-    chassisLabel = lv_label_create(lv_scr_act(), NULL);
-    lv_obj_align(chassisLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 68);
 }
 
 void updateDiag(char * chassisData) {
     if (diagLabel != NULL) {
-        lv_label_set_text(chassisLabel, chassisData);
         sprintf(textBuffer, "milliseconds since start: %i\nbelow only works during opcontrol", pros::millis());
         lv_label_set_text(diagLabel, textBuffer);
+
+        displayFlywheelData();
     }
 }
 

@@ -3,21 +3,27 @@
 
 // Motor Port Assignments
 // Drive Base Motors
-#define FRONT_RIGHT_DRIVE_MOTOR 3
+#define FRONT_RIGHT_DRIVE_MOTOR 2
 #define FRONT_LEFT_DRIVE_MOTOR 5
-#define BACK_RIGHT_DRIVE_MOTOR 8
+#define BACK_RIGHT_DRIVE_MOTOR 6
 #define BACK_LEFT_DRIVE_MOTOR 10
 
 // Lift Motor
-#define FLYWHEEL_1 15
+#define FLYWHEEL_1 13
 #define FLYWHEEL_2 16
 
+// Indexer Motor
+#define INDEXER_MOTOR 3
+
+// Intake Motor
+#define INTAKE_MOTOR 8
+
 // Radio and Controllers Port Definitions
-#define VEX_RADIO 20
+#define VEX_RADIO 22
 
 // V5 Sensors
-#define VISION_PORT 21
-#define GPS_PORT 17
+#define VISION_PORT 22
+#define GPS_PORT 21
 #define INERTIAL_PORT 7
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8

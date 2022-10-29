@@ -5,6 +5,9 @@
 #include <errno.h>
 extern int errno;
 
+pros::Motor indexerMotor(INDEXER_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intakeMotor(INTAKE_MOTOR, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
+
 // Digital out for pneumatics 
 pros::ADIDigitalOut pneumaticsLiftClaw(PNEUMATIC_LIFT_CLAW);
 pros::ADIDigitalOut pneumaticsBackClaw(PNEUMATIC_BACK_CLAW);
@@ -32,16 +35,20 @@ void initializeGps(double xInit, double yInit, double headingInit, double xOffse
     // if (xOffset || yOffset) {
         gpsSensor.set_offset(xOffset, yOffset);
     // }
-}
+
+    std::cout << "gps initialized" << std::endl;
+} 
 
 void pollGps() {
 
     pros::c::gps_status_s_t status = gpsSensor.get_status();
-    // pros::screen::print(TEXT_MEDIUM, 1, "x: %3f, y: %3f", status.x, status.y);
-    // pros::screen::print(TEXT_MEDIUM, 2, "yaw: %3f, roll: %3f", status.pitch, status.yaw);
-    // pros::screen::print(TEXT_MEDIUM, 3, "roll: %3f", status.roll);
 
-    std::cout << errno << std::endl;
+    std::cout << status.x << std::endl;
+
+    pros::screen::print(TEXT_MEDIUM, 2, "error: %3f", gpsSensor.get_error());
+    pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f", status.x, status.y);
+    pros::screen::print(TEXT_MEDIUM, 4, "pitch: %3f, yaw: %3f, roll: %3f", status.pitch, status.yaw, status.roll);
+
 }
 
 float distanceToTarget() {
@@ -59,6 +66,19 @@ void toggleLiftClawPneumatics(int input) {
         liftToggle = !liftToggle;
     }
     pneumaticsLiftClaw.set_value(liftToggle);
+}
+
+void spinIndexer(bool triggered) {
+    if (triggered) {
+        indexerMotor.move(-50); 
+    }
+    else {
+        indexerMotor.move(0);
+    }
+}
+
+void spinIntake(int speed) {
+    intakeMotor.move(speed);
 }
 
 // void closeLiftClaw(void* param) {

@@ -30,9 +30,6 @@ void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool righ
 // Reset chassis encoders
 void resetChassisEncoders();
 
-// Return motor diagnostics data for screen
-void getChassisDiag(double * buffer);
-
 // Drive with PID control for a given distnace in inches
 void driveForDistancePID(int distance, int speed);
 
