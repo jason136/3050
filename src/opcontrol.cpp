@@ -116,10 +116,12 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 2) {
 		// We want to do X-Drive ARCADE control
 
-		chassisMoveIndividuals((rightY - leftX - rightX),
-							(rightY + leftX + rightX),
-							(rightY - leftX + rightX),
-							(rightY + leftX - rightX));
+		int aimAmount = int(visAimAssist(3));
+
+		chassisMoveIndividuals((rightY - leftX - rightX) + aimAmount,
+							(rightY + leftX + rightX) - aimAmount,
+							(rightY - leftX + rightX) + aimAmount,
+							(rightY + leftX - rightX) - aimAmount);
 	}
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
@@ -128,6 +130,7 @@ void processInput(int * arrInputs) {
         // if (arrInputs[10]) chassisGyroPark();
         // else if (instInputs[7]) visPathfind(3, 5000);
         // else if (instInputs[6]) visPathfind(1, 5000);
+
         chassisMoveIndividuals(rightY, leftY, rightY, leftY);
 
 	}
@@ -137,11 +140,11 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-	spinFlywheel(arrInputs[13], 600);
+	spinFlywheel(arrInputs[13], 500);
 
 	spinIndexer(arrInputs[11]);
 
-	spinIntake(arrInputs[5] * 127);
+	spinIntake(arrInputs[5] * 80);
 
 	pollGps();
 

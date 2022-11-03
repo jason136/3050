@@ -7,7 +7,7 @@
 void spinFlywheel(bool pressed, int speed);
 
 // stop the flywheel with the given brake mode
-void stopFlywheel(pros::motor_brake_mode_e_t brakeType);
+void stopFlywheel();
 
 void resetFlywheelEncoders();
 

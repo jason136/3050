@@ -10,7 +10,7 @@
 
 // Lift Motor
 #define FLYWHEEL_1 13
-#define FLYWHEEL_2 16
+#define FLYWHEEL_2 17
 
 // Indexer Motor
 #define INDEXER_MOTOR 3
@@ -22,8 +22,8 @@
 #define VEX_RADIO 22
 
 // V5 Sensors
-#define VISION_PORT 22
-#define GPS_PORT 21
+#define VISION_PORT 20
+#define GPS_PORT 22
 #define INERTIAL_PORT 7
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8

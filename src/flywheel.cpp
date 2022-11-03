@@ -14,18 +14,21 @@ void spinFlywheel(bool pressed, int speed) {
         flywheel2.move_velocity(-speed);
 
     }
-    else if (!pressed) {
+    else if (!pressed && flywheelSpinning) {
         flywheelSpinning = false;
-        stopFlywheel(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_COAST);
+        stopFlywheel();
     }
 }
 
-void stopFlywheel(pros::motor_brake_mode_e_t brakeType) {
-    flywheel1.set_brake_mode(brakeType);
-    flywheel2.set_brake_mode(brakeType);
+void stopFlywheel() {
     flywheel1.move_velocity(0);
     flywheel2.move_velocity(0);
 }
+
+
+    // flywheel1.set_brake_mode(brakeType);
+    // flywheel2.set_brake_mode(brakeType);
+        // stopFlywheel(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_COAST);
 
 void resetFlywheelEncoders() {
     flywheel1.tare_position();

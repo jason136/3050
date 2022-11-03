@@ -70,15 +70,25 @@ void toggleLiftClawPneumatics(int input) {
 
 void spinIndexer(bool triggered) {
     if (triggered) {
-        indexerMotor.move(-50); 
+        indexerMotor.move_velocity(-75);
     }
     else {
-        indexerMotor.move(0);
+        indexerMotor.move_velocity(0);
     }
 }
 
+bool intakeSpinning = false;
 void spinIntake(int speed) {
-    intakeMotor.move(speed);
+    if (speed && !intakeSpinning) {
+        intakeSpinning = true;
+
+        intakeMotor.move_velocity(speed);
+
+    }
+    else if (!speed && intakeSpinning) {
+        intakeSpinning = false;
+        intakeMotor.move_velocity(0);
+    }
 }
 
 // void closeLiftClaw(void* param) {

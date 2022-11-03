@@ -2,6 +2,10 @@
 #include "chassis.hpp"
 #include "portdef.hpp"
 #include <cmath>
+#include <vector>
+#include <numeric>
+#include <iostream>
+#include <algorithm>
 
 // Setup the motor definitions for the motors on the chassis
 pros::Motor frontRightDriveMotor(FRONT_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
@@ -26,10 +30,10 @@ void chassisMove(int voltage) {
 void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
     // Function to set voltage of each motor individually, used in opcontrol
     // This function deals in voltage, and takes arguments from -127 to 127
-    frontRightDriveMotor.move(FRight);
-    frontLeftDriveMotor.move(FLeft);
-    backRightDriveMotor.move(BRight);
-    backLeftDriveMotor.move(BLeft);
+    frontRightDriveMotor.move(std::min(FRight, 90));
+    frontLeftDriveMotor.move(std::min(FLeft, 90));
+    backRightDriveMotor.move(std::min(BRight, 90));
+    backLeftDriveMotor.move(std::min(BLeft, 90));
 }
 
 void trackSpeed(double * coords) {
@@ -37,7 +41,7 @@ void trackSpeed(double * coords) {
     coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0);
     coords[2] = lateralEncoder.get_value();
 }
-
+ 
 void chassisGyroPark() {
     //std::cout << "gyro things: ";
     //std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
@@ -188,6 +192,43 @@ void gyroTurn(int turnAngle, int time) {
     std::cout << "turn done " << intertialSensor.get_rotation() << std::endl;
  
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
+}
+
+int turn_Error;
+double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
+float turn_P = 0.6;
+float turn_I = 0.2;
+float turn_D = 0.05;
+std::vector<int> pastN;
+
+double visAimAssist(int sig) {
+
+    if (sig == 1) visionSensor.set_led(COLOR_RED);
+    else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
+    else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
+
+    pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
+
+    std::cout << visionSensor.get_object_count() << std::endl;
+
+    if (object.signature != 255 && object.width > 10) {
+        
+        pastN.insert(pastN.begin(), object.x_middle_coord);
+        pastN.resize(25, 158);
+        int average = std::reduce(pastN.begin(), pastN.end()) / 25;
+
+        turn_Error = 220 - average;
+        turn_TotalError += turn_Error * 0.02;
+        turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
+        turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
+
+        turn_PreviousError = turn_Error;
+
+        return turn_PidSpeed;
+    }
+    else {
+        return 0.0;
+    }    
 }
 
 void visPathfind(int sig, int time) {

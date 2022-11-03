@@ -43,6 +43,8 @@ void gyroTurn(int turnAngle, int time);
 
 // Time parameter for both corresponds to number of milliseconds
 
+double visAimAssist(int sig);
+
 void visPathfind(int sig, int time); 
 
 #endif // _CHASSIS_H_
