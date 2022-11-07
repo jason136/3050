@@ -196,24 +196,39 @@ void gyroTurn(int turnAngle, int time) {
 
 int turn_Error;
 double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-float turn_P = 0.6;
+float turn_P = 0.7;
 float turn_I = 0.2;
 float turn_D = 0.05;
 std::vector<int> pastN;
 
 double visAimAssist(int sig) {
 
-    if (sig == 1) visionSensor.set_led(COLOR_RED);
-    else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
-    else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
+    // Sig 1 is red
+    // Sig 2 is blue
+    // Sig 3 is yellow
 
-    pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
+    pros::vision_object_s_t object_array[5];
+    pros::vision_object_s_t preprocessed;
+    bool validSigFound = false;
+
+    visionSensor.read_by_sig(0, sig, 5, object_array);
+    for (int x = 0; x < 5; x++) {
+        if (
+                object_array[x].signature != 255 && 
+                object_array[x].width > 10 &&
+                object_array[x].width > object_array[x].height * 2
+            ) {
+            preprocessed = object_array[x];
+            validSigFound = true;
+            break;
+        }
+    }
 
     std::cout << visionSensor.get_object_count() << std::endl;
 
-    if (object.signature != 255 && object.width > 10) {
+    if (validSigFound) {
         
-        pastN.insert(pastN.begin(), object.x_middle_coord);
+        pastN.insert(pastN.begin(), preprocessed.x_middle_coord);
         pastN.resize(25, 158);
         int average = std::reduce(pastN.begin(), pastN.end()) / 25;
 

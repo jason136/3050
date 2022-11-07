@@ -43,8 +43,6 @@ void pollGps() {
 
     pros::c::gps_status_s_t status = gpsSensor.get_status();
 
-    std::cout << status.x << std::endl;
-
     pros::screen::print(TEXT_MEDIUM, 2, "error: %3f", gpsSensor.get_error());
     pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f", status.x, status.y);
     pros::screen::print(TEXT_MEDIUM, 4, "pitch: %3f, yaw: %3f, roll: %3f", status.pitch, status.yaw, status.roll);

@@ -13,6 +13,8 @@ int instInputs[28];
 // This mutex carries protects all motor control values
 pros::Mutex mutex;
 
+extern pros::Vision visionSensor;
+
 extern int selection;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -116,8 +118,23 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 2) {
 		// We want to do X-Drive ARCADE control
 
-		int aimAmount = int(visAimAssist(3));
+		int aimAmount = 0;
 
+		if (instInputs[6]) {
+    		visionSensor.set_led(COLOR_GREEN);
+
+			if (selection == 0 || selection == 2 || selection == 4) {
+				aimAmount = int(visAimAssist(1));
+			}
+			else if (selection == 1 || selection == 3 || selection == 5) {
+				aimAmount = int(visAimAssist(2));
+			}
+			std::cout << "selection:" << selection << "    aimAmount" << aimAmount << std::endl; 
+		}
+		else {
+			visionSensor.set_led(COLOR_WHITE);
+		}
+		
 		chassisMoveIndividuals((rightY - leftX - rightX) + aimAmount,
 							(rightY + leftX + rightX) - aimAmount,
 							(rightY - leftX + rightX) + aimAmount,
@@ -140,9 +157,11 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-	spinFlywheel(arrInputs[13], 500);
+	toggleLiftClawPneumatics(instInputs[18] && instInputs[4]);
 
-	spinIndexer(arrInputs[11]);
+	spinFlywheel(arrInputs[27], 500);
+
+	spinIndexer(arrInputs[25]);
 
 	spinIntake(arrInputs[5] * 80);
 

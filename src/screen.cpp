@@ -5,13 +5,6 @@
 #include "file.hpp"
 #include "flywheel.hpp"
 
-/**
- * Code for controlling screen graphics and such
- * Uses LVGL built into PROS graphics library
- * Under development
- * https://team81k.github.io/ProsLVGLTutorial/
- **/
-
  lv_obj_t * createBtn(lv_obj_t * parent, lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height,
     int id, const char * title, lv_style_t * style) {
     lv_obj_t * btn = lv_btn_create(parent, NULL);
@@ -484,6 +477,4 @@ void resetDatastructures() {
     clearVectors(); 
     rects.clear();
     diagLabel = NULL;
-    toggledBtn = nullptr;
-    selection = DEFAULT_SELECTION;
 }
