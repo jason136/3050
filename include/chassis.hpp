@@ -2,7 +2,7 @@
 #define _CHASSIS_H_
 
 // Place all chassis related globals, function stub declartions in this header file
-#define WHEEL_DIAMETER 4      // diameter of drive wheels
+#define WHEEL_DIAMETER 3.25      // diameter of drive wheels
 #define WHEEL_BASE 18         // wheel base diameter
 
 // Motor max speeds for reference
@@ -32,6 +32,10 @@ void resetChassisEncoders();
 
 // Drive with PID control for a given distnace in inches
 void driveForDistancePID(int distance, int speed);
+
+void pollGyro();
+
+void calibrateGyro();
 
 // Make a pivot turn to the right or left for a given angle
 // angle should be greater than 10 and less equal to 360

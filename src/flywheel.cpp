@@ -5,19 +5,24 @@
 pros::Motor flywheel1(FLYWHEEL_1, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flywheel2(FLYWHEEL_2, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_DEGREES);
 
+int flywheelSpeed;
 bool flywheelSpinning = false;
-void spinFlywheel(bool pressed, int speed) {
+void spinFlywheel(bool pressed) {
     if (pressed && !flywheelSpinning) {
         flywheelSpinning = true;
 
-        flywheel1.move_velocity(speed);
-        flywheel2.move_velocity(-speed);
+        flywheel1.move_velocity(flywheelSpeed);
+        flywheel2.move_velocity(-flywheelSpeed);
 
     }
     else if (!pressed && flywheelSpinning) {
         flywheelSpinning = false;
         stopFlywheel();
     }
+}
+
+void setFlywheelSpeed(int speed) {
+    flywheelSpeed = speed;
 }
 
 void stopFlywheel() {

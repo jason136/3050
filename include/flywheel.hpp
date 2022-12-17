@@ -4,7 +4,9 @@
 #include "api.h"
 
 // spin the Fhywheel, range: +-600
-void spinFlywheel(bool pressed, int speed);
+void spinFlywheel(bool pressed);
+
+void setFlywheelSpeed(int speed);
 
 // stop the flywheel with the given brake mode
 void stopFlywheel();

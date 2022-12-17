@@ -143,12 +143,7 @@ void processInput(int * arrInputs) {
 	else if (DRIVE_MODE == 3) {
 		// we are wanting to do standard TANK Control
 
-
-        // if (arrInputs[10]) chassisGyroPark();
-        // else if (instInputs[7]) visPathfind(3, 5000);
-        // else if (instInputs[6]) visPathfind(1, 5000);
-
-        chassisMoveIndividuals(rightY, leftY, rightY, leftY);
+        chassisMoveIndividuals(-rightY, -leftY, -rightY, -leftY);
 
 	}
 	else if (DRIVE_MODE == 4) {
@@ -159,14 +154,22 @@ void processInput(int * arrInputs) {
 
 	toggleLiftClawPneumatics(instInputs[18] && instInputs[4]);
 
-	spinFlywheel(arrInputs[27], 500);
+	if (arrInputs[27]) setFlywheelSpeed(500);
+	if (arrInputs[26]) setFlywheelSpeed(450);
+	if (arrInputs[25]) setFlywheelSpeed(400);
+	if (arrInputs[24]) setFlywheelSpeed(350);
+
+	spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
 
 	spinIndexer(arrInputs[25]);
 
 	spinIntake(arrInputs[5] * 80);
 
-	pollGps();
-
+	// pollGps();
+	if (instInputs[20]) {
+		calibrateGyro();
+	}
+	pollGyro();
 }
 
 void startRecordThread() {

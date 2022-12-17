@@ -8,6 +8,7 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 
+extern pros::Imu intertialSensor;
 extern int selection;
 extern pros::Mutex mutex;
 bool recAutonActive;
@@ -49,8 +50,6 @@ void recAutonLoop(void * param) {
 
     std::cout << "auton run time ellapsed: " << pros::millis() - starttime << std::endl;
 }
-
-extern pros::Imu intertialSensor;
 
 void autoRed1() {
 

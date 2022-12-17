@@ -46,9 +46,6 @@ void disabled() {}
  */
 void competition_initialize() {
 
-    // pros::Imu intertialSensor(INERTIAL_PORT);
-    // intertialSensor.reset();
-
 }
 
 bool screenInit;
