@@ -22,7 +22,6 @@ void initialize() {
 
     generateDatastructures();
     drawScreen();
-
     initializeVision();
 
     // initializeGps(-1.5, -1.14, 90, .223, -.223);
@@ -45,6 +44,8 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
+
+    calibrateGyro();
 
 }
 

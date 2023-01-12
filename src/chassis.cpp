@@ -168,29 +168,35 @@ void calibrateGyro() {
     intertialSensor.reset();
 }
 
+void resetGyro() {
+    intertialSensor.set_rotation(0);
+}
+
 void gyroTurn(int turnAngle, int time) {
     
     while (intertialSensor.is_calibrating()) {
         pros::delay(5);
     }
+
+    resetGyro();
     
     // p / i ~ 1 / 30
     double error = turnAngle;
     double pidSpeed, derivitive, totalError, previousError = 0.0;
     float p = 0.13;
-    float i = 0.0047;
+    float i = 0.0001;
     float d = 0.00;
 
     std::cout << "pre turn rotation: " << intertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
 
     int direction;
-    if (turnAngle > intertialSensor.get_rotation()) direction = -1;
-    else direction = 1;
+    if (turnAngle < 0) direction = 1;
+    else direction = -1;
 
     for (int x = 0; x < time; x += 20)  {
         std::cout << error << std::endl;
 
-        error = turnAngle - intertialSensor.get_rotation();
+        error = fabs(turnAngle) - fabs(intertialSensor.get_rotation());
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
         pidSpeed = p * error + i * totalError + d * derivitive;

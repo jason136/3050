@@ -152,7 +152,7 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-	toggleLiftClawPneumatics(instInputs[18] && instInputs[4]);
+	toggleIndexer(instInputs[18] && instInputs[4]);
 
 	if (arrInputs[27]) setFlywheelSpeed(500);
 	if (arrInputs[26]) setFlywheelSpeed(450);

@@ -9,7 +9,7 @@ pros::Motor intakeMotor1(INTAKE_1, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_
 pros::Motor intakeMotor2(INTAKE_2, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumaticsLiftClaw(PNEUMATIC_LIFT_CLAW);
+pros::ADIDigitalOut pneumaticsIndexer(PNEUMATIC_LIFT_CLAW);
 pros::ADIDigitalOut pneumaticsBackClaw(PNEUMATIC_BACK_CLAW);
 
 pros::Vision visionSensor(VISION_PORT);
@@ -55,7 +55,7 @@ float distanceToTarget() {
 
 bool liftPressed = false;
 bool liftToggle = false;
-void toggleLiftClawPneumatics(int input) {
+void toggleIndexer(int input) {
     if (input) {
         liftPressed = true;
     }
@@ -63,7 +63,11 @@ void toggleLiftClawPneumatics(int input) {
         liftPressed = false;
         liftToggle = !liftToggle;
     }
-    pneumaticsLiftClaw.set_value(liftToggle);
+    pneumaticsIndexer.set_value(liftToggle);
+}
+
+void setIndexer(int input) {
+    pneumaticsIndexer.set_value(input);
 }
 
 bool intakeSpinning = false;
@@ -80,7 +84,7 @@ void spinIntake(int speed) {
     }
 }
 
-// void closeLiftClaw(void* param) {
-//     pros::delay((int)param);
-//     pneumaticsLiftClaw.set_value(0);
-// }
+void stopIntakeDelayed(void* param) {
+    pros::delay((int)param);
+    spinIntake(0);
+}

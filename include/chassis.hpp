@@ -37,6 +37,8 @@ void pollGyro();
 
 void calibrateGyro();
 
+void resetGyro();
+
 // Make a pivot turn to the right or left for a given angle
 // angle should be greater than 10 and less equal to 360
 // Speed must take motor internal gearing into account

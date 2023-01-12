@@ -51,33 +51,33 @@ void recAutonLoop(void * param) {
     std::cout << "auton run time ellapsed: " << pros::millis() - starttime << std::endl;
 }
 
+    // pros::Task thread1(closeBackClaw, (void*)500);
+
 void autoRed1() {
 
-    // intertialSensor.set_rotation(0);
+    resetGyro();
 
-    // driveForDistancePID(12, 200);
-    // setLiftClawPneumatics(1);
-    // driveForDistancePID(-12, 200);
+    driveForDistancePID(-2, 75);
+    spinIntake(80);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 75);
 
-    // gyroTurn(90, 500);
-    // pros::Task thread1(closeBackClaw, (void*)500);
-    // driveForDistancePID(-4, 200);
-    // driveForDistancePID(24, 200);
+    gyroTurn(-45, 1000);
+    driveForDistancePID(12, 75);
+    gyroTurn(90, 2000);
 
-    // gyroTurn(180, 500);
-    // driveForDistancePID(-72, 200);
-    // setBackClawPneumatics(1);
-    // moveLift(0, 0, 127, -127);
-    // pros::Task thread2(closeBackClaw, (void*)1000);
-    // driveForDistancePID(12, 50);
-    // liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
+	setFlywheelSpeed(450);
+	spinFlywheel(true);
+    pros::delay(500);
 
-    // gyroTurn(90, 500);
-    // visPathfind(3, 2000);
-    // setLiftClawPneumatics(1);
-    // gyroTurn(90, 100);
-    // driveForDistancePID(-24, 200);
+    setIndexer(0);
+    setIndexer(1);
 
+    pros::delay(1000);
+
+    setIndexer(0);
+    setIndexer(1);
 }
 
 void autoBlue1() {

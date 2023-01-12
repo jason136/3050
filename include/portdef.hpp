@@ -9,7 +9,7 @@
 #define BACK_LEFT_DRIVE_MOTOR 10
 
 // Lift Motor
-#define FLYWHEEL_1 13
+#define FLYWHEEL_1 14
 #define FLYWHEEL_2 18
 
 // Indexer Motor
