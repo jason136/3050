@@ -161,8 +161,6 @@ void processInput(int * arrInputs) {
 
 	spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
 
-	spinIndexer(arrInputs[25]);
-
 	spinIntake(arrInputs[5] * 80);
 
 	// pollGps();

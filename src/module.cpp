@@ -5,8 +5,8 @@
 #include <errno.h>
 extern int errno;
 
-pros::Motor indexerMotor(INDEXER_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intakeMotor(INTAKE_MOTOR, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intakeMotor1(INTAKE_1, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intakeMotor2(INTAKE_2, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Digital out for pneumatics 
 pros::ADIDigitalOut pneumaticsLiftClaw(PNEUMATIC_LIFT_CLAW);
@@ -66,26 +66,17 @@ void toggleLiftClawPneumatics(int input) {
     pneumaticsLiftClaw.set_value(liftToggle);
 }
 
-void spinIndexer(bool triggered) {
-    if (triggered) {
-        indexerMotor.move_velocity(-75);
-    }
-    else {
-        indexerMotor.move_velocity(0);
-    }
-}
-
 bool intakeSpinning = false;
 void spinIntake(int speed) {
     if (speed && !intakeSpinning) {
         intakeSpinning = true;
-
-        intakeMotor.move_velocity(speed);
-
+        intakeMotor1.move_velocity(speed);
+        intakeMotor2.move_velocity(-speed);
     }
     else if (!speed && intakeSpinning) {
         intakeSpinning = false;
-        intakeMotor.move_velocity(0);
+        intakeMotor1.move_velocity(0);
+        intakeMotor2.move_velocity(0);
     }
 }
 

@@ -140,10 +140,6 @@ void autoBlue2() {
 
 void autoRed3() {
 
-    // gyroTurn(90, 2000);
-    // pros::delay(1000);
-    // gyroTurn(0, 2000);
-
 }
 
 void autoBlue3() {
@@ -151,6 +147,23 @@ void autoBlue3() {
 }
 
 void skillRun() {
+    
+    std::cout << "running skills" << std::endl;
+
+    calibrateGyro();
+    std::cout << "calibrated" << std::endl;
+    gyroTurn(360, 4000000);
+
+    // gyroTurn(90, 1000);
+    // pros::delay(1000);
+    // gyroTurn(180, 1000);
+    // pros::delay(1000);
+    // gyroTurn(270, 1000);
+    // pros::delay(1000);
+    // gyroTurn(360, 1000);
+
+    // driveForDistancePID(12, 200);
+    // driveForDistancePID(-12, 200);
 
 }
 

@@ -10,21 +10,22 @@
 
 // Lift Motor
 #define FLYWHEEL_1 13
-#define FLYWHEEL_2 17
+#define FLYWHEEL_2 18
 
 // Indexer Motor
 #define INDEXER_MOTOR 3
 
 // Intake Motor
-#define INTAKE_MOTOR 8
+#define INTAKE_1 8
+#define INTAKE_2 9
 
 // Radio and Controllers Port Definitions
-#define VEX_RADIO 22
+#define VEX_RADIO 11
 
 // V5 Sensors
 #define VISION_PORT 20
 #define GPS_PORT 22
-#define INERTIAL_PORT 7
+#define INERTIAL_PORT 12
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8
 #define PNEUMATIC_LIFT_CLAW 1

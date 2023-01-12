@@ -13,8 +13,7 @@ pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN
 pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::Imu intertialSensor1(11);
-pros::Imu intertialSensor2(12);
+pros::Imu intertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
 extern pros::Vision visionSensor;
@@ -45,9 +44,9 @@ void trackSpeed(double * coords) {
  
 void chassisGyroPark() {
     //std::cout << "gyro things: ";
-    //std::cout << intertialSensor1.get_pitch() << " --  " << intertialSensor1.get_yaw() << " --  " << intertialSensor1.get_roll() << " --  " << std::endl;
+    //std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
 
-    double pitch = intertialSensor1.get_pitch();
+    double pitch = intertialSensor.get_pitch();
 
     if (pitch < -10) chassisMove(-50);
     else if (pitch > 10) chassisMove(50);
@@ -139,7 +138,7 @@ void pivotTurn(int turnAngle, int speed) {
     backRightDriveMotor.move_absolute(-motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-    intertialSensor1.set_rotation(0);
+    intertialSensor.set_rotation(0);
     // we are moving until both sides of the robot have reached their target - we are using abs
     // values of both the bounds and the desired distance so we become "insensitive" to to
     // the direction of turns.
@@ -149,67 +148,63 @@ void pivotTurn(int turnAngle, int speed) {
             pros::delay(2);
     }
 
-    std::cout << intertialSensor1.get_rotation() << std::endl;
+    std::cout << intertialSensor.get_rotation() << std::endl;
 
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 void pollGyro() {
-    if (intertialSensor2.is_calibrating()) {
+    if (intertialSensor.is_calibrating()) {
         pros::screen::print(TEXT_MEDIUM, 2, "calibrating");
     }
     else {
-        pros::c::imu_accel_s_t accel1 = intertialSensor1.get_accel();
-        pros::c::imu_accel_s_t accel2 = intertialSensor2.get_accel();
-        pros::screen::print(TEXT_MEDIUM, 2, "top sensor: %3f", intertialSensor1.get_rotation());
+        pros::c::imu_accel_s_t accel1 = intertialSensor.get_accel();
+        pros::screen::print(TEXT_MEDIUM, 2, "gyro: %3f", intertialSensor.get_rotation());
         pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f, z: %3f", accel1.x, accel1.y, accel1.z);
-        pros::screen::print(TEXT_MEDIUM, 4, "bottom sensor: %3f", intertialSensor2.get_rotation());
-        pros::screen::print(TEXT_MEDIUM, 5, "x: %3f, y: %3f, z: %3f", accel2.x, accel2.y, accel2.z);
     }
 }
 
 void calibrateGyro() {
-    intertialSensor1.reset();
-    intertialSensor2.reset();
+    intertialSensor.reset();
 }
 
 void gyroTurn(int turnAngle, int time) {
     
-    while (intertialSensor1.is_calibrating()) {
+    while (intertialSensor.is_calibrating()) {
         pros::delay(5);
     }
     
+    // p / i ~ 1 / 30
     double error = turnAngle;
     double pidSpeed, derivitive, totalError, previousError = 0.0;
-    float p = 3.0;
-    float i = 0.1;
-    // float i = 0.01791;
-    float d = 0.012;
+    float p = 0.13;
+    float i = 0.0047;
+    float d = 0.00;
 
-    std::cout << "pre turn rotation: " << intertialSensor1.get_rotation() << " turnAngle " << turnAngle << std::endl;
+    std::cout << "pre turn rotation: " << intertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
 
     int direction;
-    if (turnAngle > intertialSensor1.get_rotation()) direction = 1;
-    else direction = -1;
+    if (turnAngle > intertialSensor.get_rotation()) direction = -1;
+    else direction = 1;
 
     for (int x = 0; x < time; x += 20)  {
         std::cout << error << std::endl;
 
-        error = fabs(turnAngle) - fabs(intertialSensor1.get_rotation());
+        error = turnAngle - intertialSensor.get_rotation();
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
         pidSpeed = p * error + i * totalError + d * derivitive;
 
-        frontRightDriveMotor.move_velocity(-direction * (pidSpeed * 200));
-        frontLeftDriveMotor.move_velocity(direction * (pidSpeed * 200));
-        backRightDriveMotor.move_velocity(-direction * (pidSpeed * 200));
-        backLeftDriveMotor.move_velocity(direction * (pidSpeed * 200));
+        frontRightDriveMotor.move_velocity(-direction * (pidSpeed * 10));
+        frontLeftDriveMotor.move_velocity(direction * (pidSpeed * 10));
+        backRightDriveMotor.move_velocity(-direction * (pidSpeed * 10));
+        backLeftDriveMotor.move_velocity(direction * (pidSpeed * 10));
 
         previousError = error;
         pros::delay(20);
     }
 
-    std::cout << "turn done " << intertialSensor1.get_rotation() << std::endl;
+    std::cout << "turn done " << intertialSensor.get_rotation() << std::endl;
  
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
