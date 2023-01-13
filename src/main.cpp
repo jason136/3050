@@ -45,6 +45,7 @@ void disabled() {}
  */
 void competition_initialize() {
 
+    setIndexer(1);
     calibrateGyro();
 
 }

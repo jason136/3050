@@ -31,7 +31,7 @@ void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool righ
 void resetChassisEncoders();
 
 // Drive with PID control for a given distnace in inches
-void driveForDistancePID(int distance, int speed);
+void driveForDistancePID(int distance, int speed, int maxTime=0);
 
 void pollGyro();
 

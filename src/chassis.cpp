@@ -76,7 +76,7 @@ void resetChassisEncoders() {
     backLeftDriveMotor.tare_position();
 }
 
-void driveForDistancePID(int distance, int speed) {
+void driveForDistancePID(int distance, int speed, int maxTime) {
 /**
  * drive the robot using the build in PID control on the drive base for a given
  * distance. Distance is supplied in inches, and speed is givin in velocity
@@ -99,8 +99,12 @@ void driveForDistancePID(int distance, int speed) {
     backRightDriveMotor.move_absolute(motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
+    int timer = 0;
     while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
         // Continue running this loop as long as the motor is not within +-5 units of its goal
+        
+        if (maxTime != 0 && timer >= maxTime) break;
+        maxTime += 2;
         pros::delay(2);
     }
 
@@ -178,13 +182,13 @@ void gyroTurn(int turnAngle, int time) {
         pros::delay(5);
     }
 
-    resetGyro();
+    double zero_point_offset = intertialSensor.get_rotation();
     
     // p / i ~ 1 / 30
     double error = turnAngle;
     double pidSpeed, derivitive, totalError, previousError = 0.0;
     float p = 0.13;
-    float i = 0.0001;
+    float i = 0.00005;
     float d = 0.00;
 
     std::cout << "pre turn rotation: " << intertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
@@ -196,7 +200,7 @@ void gyroTurn(int turnAngle, int time) {
     for (int x = 0; x < time; x += 20)  {
         std::cout << error << std::endl;
 
-        error = fabs(turnAngle) - fabs(intertialSensor.get_rotation());
+        error = fabs(turnAngle) - fabs(intertialSensor.get_rotation() - zero_point_offset);
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
         pidSpeed = p * error + i * totalError + d * derivitive;

@@ -8,7 +8,6 @@
 #include "screen.hpp"
 #include "opcontrol.hpp"
 
-extern pros::Imu intertialSensor;
 extern int selection;
 extern pros::Mutex mutex;
 bool recAutonActive;
@@ -56,85 +55,66 @@ void recAutonLoop(void * param) {
 void autoRed1() {
 
     resetGyro();
+    setIndexer(1);
 
-    driveForDistancePID(-2, 75);
-    spinIntake(80);
+    // drive to first roller
+    driveForDistancePID(-14, 150, 1000);
+    gyroTurn(90, 1000);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
     pros::delay(500);
     spinIntake(0);
-    driveForDistancePID(2, 75);
+    driveForDistancePID(2, 150);
+    gyroTurn(-55, 1000);
 
-    gyroTurn(-45, 1000);
-    driveForDistancePID(12, 75);
-    gyroTurn(90, 2000);
-
-	setFlywheelSpeed(450);
+    // drive to firing spot
+	setFlywheelSpeed(470);
 	spinFlywheel(true);
-    pros::delay(500);
 
+    // driveForDistancePID(35, 200);
+    driveForDistancePID(45, 175);
+    // driveForDistancePID(5, 150);
+    pros::delay(200);
+    gyroTurn(100, 1800);
+
+    // fire 2 disks
     setIndexer(0);
+    pros::delay(200);
     setIndexer(1);
 
+    pros::delay(2000);
+
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+	spinFlywheel(false);
+
+    // drive to second roller
+    gyroTurn(92, 1500);
+    driveForDistancePID(-38, 200);
+    gyroTurn(-50, 1000);
+
+    // spin second roller
+    spinIntake(80);
+    // driveForDistancePID(-2, 100);
+    chassisMoveIndividuals(-40, -40, -40, -40);
     pros::delay(1000);
-
-    setIndexer(0);
-    setIndexer(1);
+    driveForDistancePID(2, 100);
+    spinIntake(0);
 }
 
 void autoBlue1() {
-
-    // intertialSensor.set_rotation(0);
-
-    // visPathfind(3, 2000);
-    // setLiftClawPneumatics(1);
-    // pros::Task thread2(closeLiftClaw, (void*)200);
-    // driveForDistancePID(-48, 200);
-    // gyroTurn(45, 100);
-
-    // visPathfind(3, 1500);
-    // setLiftClawPneumatics(1);
-    // pros::Task thread3(closeLiftClaw, (void*)500);
-    // driveForDistancePID(-60, 200);
-
-    // gyroTurn(90, 500);
-    // driveForDistancePID(-48, 200);
-    // setBackClawPneumatics(1);
-    // moveLift(0, 0, 127, -127);
-    // pros::Task thread4(closeBackClaw, (void*)1000);
-    // driveForDistancePID(12, 50);
-    // liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
 
 }
 
 void autoRed2() {
 
-    // intertialSensor.set_rotation(0);
-
-    // visPathfind(3, 2000);
-    // setLiftClawPneumatics(1);
-    // driveForDistancePID(-72, 200);
-
-    // gyroTurn(90, 500);
-    // driveForDistancePID(-24, 50);
-    // setBackClawPneumatics(1);
-    // moveLift(0, 0, 127, -127);
-    // driveForDistancePID(12, 50);
-    // liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
-
 }
 
 void autoBlue2() {
-
-    // test methods
-    // intertialSensor.set_rotation(0);
-    // moveLift(0, 0, 127, -127);
-    // visPathfind(3, 1000);
-    // driveForDistancePID(24, 200);
-    // liftLock(pros::E_MOTOR_BRAKE_BRAKE, true, true);
-    // setLiftClawPneumatics(1);
-    // pros::Task thread5(closeBackClaw, (void*)200);
-    // driveForDistancePID(-24, 200);
-
-    // gyroTurn(90, 500);
 
 }
 
@@ -152,7 +132,12 @@ void skillRun() {
 
     calibrateGyro();
     std::cout << "calibrated" << std::endl;
-    gyroTurn(360, 4000000);
+
+    gyroTurn(-45, 1500);
+    gyroTurn(90, 2000);
+
+
+    // gyroTurn(360, 4000000);
 
     // gyroTurn(90, 1000);
     // pros::delay(1000);
