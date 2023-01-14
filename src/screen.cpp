@@ -102,8 +102,6 @@ lv_obj_t * recordableBtn;
 lv_obj_t * diagLabel = NULL;
 lv_obj_t * recordableLabel;
 
-lv_obj_t * fieldImage;
-
 static lv_res_t btnOnclickAction(lv_obj_t * btn) {
     uint8_t id = lv_obj_get_free_num(btn);
     switch(id) {

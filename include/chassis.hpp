@@ -25,7 +25,7 @@ void trackSpeed(double * coords);
 void chassisGyroPark();
 
 // Helper method to stop all chassis motors
-void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool right);
+void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left=true, bool right=true);
 
 // Reset chassis encoders
 void resetChassisEncoders();

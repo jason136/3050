@@ -54,14 +54,14 @@ void chassisGyroPark() {
     //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }
 
-void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left=false, bool right=false) {
-  if (!left) {
+void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool right) {
+  if (left) {
     frontLeftDriveMotor.set_brake_mode(brakeType);
     backLeftDriveMotor.set_brake_mode(brakeType);
     frontLeftDriveMotor.move_velocity(0);
     backLeftDriveMotor.move_velocity(0);
   }
-  if (!right) {
+  if (right) {
     frontRightDriveMotor.set_brake_mode(brakeType);
     backRightDriveMotor.set_brake_mode(brakeType);
     frontRightDriveMotor.move_velocity(0);

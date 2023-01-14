@@ -3,7 +3,7 @@
 #include "auton.hpp"
 #include "chassis.hpp"
 #include "flywheel.hpp"
-#include "module.hpp"
+#include "misc.hpp"
 #include "file.hpp"
 #include "screen.hpp"
 #include "opcontrol.hpp"
@@ -58,12 +58,13 @@ void autoRed1() {
     setIndexer(1);
 
     // drive to first roller
-    driveForDistancePID(-14, 150, 1000);
+    driveForDistancePID(-15, 150, 1000);
     gyroTurn(90, 1000);
 
     // spin first roller
     driveForDistancePID(-2, 150);
     spinIntake(-80);
+    chassisMoveIndividuals(-20, -20, -20, -20);
     pros::delay(500);
     spinIntake(0);
     driveForDistancePID(2, 150);
@@ -74,10 +75,10 @@ void autoRed1() {
 	spinFlywheel(true);
 
     // driveForDistancePID(35, 200);
-    driveForDistancePID(45, 175);
+    driveForDistancePID(44, 175);
     // driveForDistancePID(5, 150);
     pros::delay(200);
-    gyroTurn(100, 1800);
+    gyroTurn(105, 1800);
 
     // fire 2 disks
     setIndexer(0);
@@ -92,30 +93,175 @@ void autoRed1() {
 
 	spinFlywheel(false);
 
+    // tested code ends here, end here for just roller + 2 shots
+
     // drive to second roller
-    gyroTurn(92, 1500);
-    driveForDistancePID(-38, 200);
-    gyroTurn(-50, 1000);
+
+    // gyroTurn(92, 1500);
+    gyroTurn(-103, 1800);
+
+    // driveForDistancePID(-38, 200);
+    driveForDistancePID(35, 200);
+
+    // gyroTurn(-50, 1000);
+    gyroTurn(130, 1000);
 
     // spin second roller
     spinIntake(80);
     // driveForDistancePID(-2, 100);
     chassisMoveIndividuals(-40, -40, -40, -40);
     pros::delay(1000);
-    driveForDistancePID(2, 100);
+    driveForDistancePID(1, 100);
     spinIntake(0);
+    chassisStopDrive(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void autoBlue1() {
 
+    resetGyro();
+    setIndexer(1);
+
+    // drive to first roller
+    driveForDistancePID(-15, 150, 1000);
+    gyroTurn(-90, 1000);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-20, -20, -20, -20);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+    gyroTurn(55, 1000);
+
+    // drive to firing spot
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+
+    // driveForDistancePID(35, 200);
+    driveForDistancePID(44, 175);
+    // driveForDistancePID(5, 150);
+    pros::delay(200);
+    gyroTurn(-105, 1800);
+
+    // fire 2 disks
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+    pros::delay(2000);
+
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+	spinFlywheel(false);
+
+    // tested code ends here, end here for just roller + 2 shots
+
+    // drive to second roller
+
+    // gyroTurn(-92, 1500);
+    gyroTurn(103, 1800);
+
+    // driveForDistancePID(-38, 200);
+    driveForDistancePID(35, 200);
+
+    // gyroTurn(50, 1000);
+    gyroTurn(-130, 1000);
+
+    // spin second roller
+    spinIntake(80);
+    // driveForDistancePID(-2, 100);
+    chassisMoveIndividuals(-40, -40, -40, -40);
+    pros::delay(1000);
+    driveForDistancePID(1, 100);
+    spinIntake(0);
+    chassisStopDrive(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void autoRed2() {
 
+    resetGyro();
+    setIndexer(1);
+
+    // drive to first roller
+    driveForDistancePID(-15, 150, 1000);
+    gyroTurn(90, 1000);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-20, -20, -20, -20);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+    gyroTurn(-55, 1000);
+
+    // drive to firing spot
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+
+    // driveForDistancePID(35, 200);
+    driveForDistancePID(44, 175);
+    // driveForDistancePID(5, 150);
+    pros::delay(200);
+    gyroTurn(105, 1800);
+
+    // fire 2 disks
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+    pros::delay(2000);
+
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+	spinFlywheel(false);
 }
 
 void autoBlue2() {
 
+    resetGyro();
+    setIndexer(1);
+
+    // drive to first roller
+    driveForDistancePID(-15, 150, 1000);
+    gyroTurn(-90, 1000);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-20, -20, -20, -20);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+    gyroTurn(55, 1000);
+
+    // drive to firing spot
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+
+    // driveForDistancePID(35, 200);
+    driveForDistancePID(44, 175);
+    // driveForDistancePID(5, 150);
+    pros::delay(200);
+    gyroTurn(-105, 1800);
+
+    // fire 2 disks
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+    pros::delay(2000);
+
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+	spinFlywheel(false);
 }
 
 void autoRed3() {
@@ -127,14 +273,57 @@ void autoBlue3() {
 }
 
 void skillRun() {
+
+    resetGyro();
+    setIndexer(1);
+
+    // drive to first roller
+    driveForDistancePID(-15, 150, 1000);
+    gyroTurn(90, 1000);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-20, -20, -20, -20);
+    pros::delay(675);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+    gyroTurn(-55, 1000);
+
+    // drive to firing spot
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+
+    // driveForDistancePID(35, 200);
+    driveForDistancePID(44, 175);
+    // driveForDistancePID(5, 150);
+    pros::delay(200);
+    gyroTurn(105, 1800);
+
+    // fire 2 disks
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+    pros::delay(2000);
+
+    setIndexer(0);
+    pros::delay(200);
+    setIndexer(1);
+
+	spinFlywheel(false);
+
+    driveForDistancePID(8, 150);
+    pros::delay(500);
+    setEndgame(0);
     
-    std::cout << "running skills" << std::endl;
+    // std::cout << "running skills" << std::endl;
 
-    calibrateGyro();
-    std::cout << "calibrated" << std::endl;
+    // calibrateGyro();
+    // std::cout << "calibrated" << std::endl;
 
-    gyroTurn(-45, 1500);
-    gyroTurn(90, 2000);
+    // gyroTurn(-45, 1500);
+    // gyroTurn(90, 2000);
 
 
     // gyroTurn(360, 4000000);
@@ -150,28 +339,4 @@ void skillRun() {
     // driveForDistancePID(12, 200);
     // driveForDistancePID(-12, 200);
 
-}
-
-void courseCorrect(int index, int * recOutputs, double * cords) {
-    double futureCords[3];
-    double currentCords[3];
-    
-    if (index + 10 < getVectorSize()) {
-        updateLocation(index + 10, &futureCords[0]);
-        trackSpeed(&currentCords[0]);
-
-        if (fabs(currentCords[0]) < fabs(futureCords[0]) - 10) {
-            recOutputs[1] *= 1.05;
-        }
-        else if (fabs(currentCords[0]) > fabs(futureCords[0] + 10)) {
-            recOutputs[1] *= 0.95;
-        }
-        
-        if (fabs(currentCords[1]) < fabs(futureCords[1] - 10)) {
-            recOutputs[3] *= 1.05;
-        }
-        else if (fabs(currentCords[1]) > fabs(futureCords[1] + 10)) {
-            recOutputs[3] *= 0.95;
-        }
-    }
 }

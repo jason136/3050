@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "2021v1",
+        "project_name": "2023v4",
         "target": "v5",
         "templates": {
             "kernel": {
@@ -311,7 +311,7 @@
         "upload_options": {
             "compress_bin": true,
             "description": "Created with PROS",
-            "remote_name": "2021v1",
+            "remote_name": "2023v4",
             "slot": 1
         }
     }

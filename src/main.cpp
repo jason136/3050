@@ -6,7 +6,7 @@
 #include "flywheel.hpp"
 #include "screen.hpp"
 #include "file.hpp"
-#include "module.hpp"
+#include "misc.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -23,6 +23,9 @@ void initialize() {
     generateDatastructures();
     drawScreen();
     initializeVision();
+
+    setEndgame(1);
+    setIndexer(0);
 
     // initializeGps(-1.5, -1.14, 90, .223, -.223);
 }
@@ -45,7 +48,6 @@ void disabled() {}
  */
 void competition_initialize() {
 
-    setIndexer(1);
     calibrateGyro();
 
 }

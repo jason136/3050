@@ -1,5 +1,5 @@
-#ifndef _MODULE_H_
-#define _MODULE_H_
+#ifndef _MISC_H_
+#define _MISC_H_
 
 void initializeVision();
 
@@ -17,6 +17,8 @@ void pollGps();
 void toggleIndexer(int toggle);
 
 void setIndexer(int input);
+
+void setEndgame(int input);
 
 void spinIntake(int speed);
 

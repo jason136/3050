@@ -1,5 +1,5 @@
 #include "main.h"
-#include "module.hpp"
+#include "misc.hpp"
 #include "portdef.hpp"
 
 #include <errno.h>
@@ -9,8 +9,8 @@ pros::Motor intakeMotor1(INTAKE_1, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_
 pros::Motor intakeMotor2(INTAKE_2, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Digital out for pneumatics 
-pros::ADIDigitalOut pneumaticsIndexer(PNEUMATIC_LIFT_CLAW);
-pros::ADIDigitalOut pneumaticsBackClaw(PNEUMATIC_BACK_CLAW);
+pros::ADIDigitalOut pneumaticsIndexer(PNEUMATIC_INDEXER);
+pros::ADIDigitalOut pneumaticsEndgame(PNEUMATIC_END_GAME);
 
 pros::Vision visionSensor(VISION_PORT);
 
@@ -49,10 +49,6 @@ void pollGps() {
 
 }
 
-float distanceToTarget() {
-    
-}
-
 bool liftPressed = false;
 bool liftToggle = false;
 void toggleIndexer(int input) {
@@ -68,6 +64,10 @@ void toggleIndexer(int input) {
 
 void setIndexer(int input) {
     pneumaticsIndexer.set_value(input);
+}
+
+void setEndgame(int input) {
+    pneumaticsEndgame.set_value(!input);
 }
 
 bool intakeSpinning = false;

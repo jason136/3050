@@ -2,7 +2,7 @@
 #include "portdef.hpp"
 #include "chassis.hpp"
 #include "flywheel.hpp"
-#include "module.hpp"
+#include "misc.hpp"
 #include "screen.hpp"
 #include "file.hpp"
 #include "opcontrol.hpp"
@@ -152,22 +152,34 @@ void processInput(int * arrInputs) {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 
-	toggleIndexer(instInputs[18] && instInputs[4]);
+	// toggleIndexer(/*instInputs[18] && */instInputs[4]);
 
-	if (arrInputs[27]) setFlywheelSpeed(500);
-	if (arrInputs[26]) setFlywheelSpeed(450);
-	if (arrInputs[25]) setFlywheelSpeed(400);
-	if (arrInputs[24]) setFlywheelSpeed(350);
+	// if (arrInputs[27]) setFlywheelSpeed(500);
+	// if (arrInputs[26]) setFlywheelSpeed(450);
+	// if (arrInputs[25]) setFlywheelSpeed(400);
+	// if (arrInputs[24]) setFlywheelSpeed(350);
+	
+	if (arrInputs[13]) setFlywheelSpeed(500);
+	if (arrInputs[12]) setFlywheelSpeed(450);
+	if (arrInputs[11]) setFlywheelSpeed(400);
+	if (arrInputs[10]) setFlywheelSpeed(350);
 
-	spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
+	// spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
 
-	spinIntake(arrInputs[5] * 80);
+	spinFlywheel(arrInputs[13] || arrInputs[12] || arrInputs[11] || arrInputs[10]);
+
+	spinIntake(arrInputs[5] * 127);
 
 	// pollGps();
+
 	if (instInputs[20]) {
 		calibrateGyro();
 	}
-	pollGyro();
+
+	// pollGyro();
+
+	if (instInputs[6]/* && instInputs[20]*/) setEndgame(0);
+	setIndexer(!abs(instInputs[4]));
 }
 
 void startRecordThread() {
