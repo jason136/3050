@@ -80,10 +80,8 @@ void opcontrol() {
 
 	while (true) {
 
-		mutex.take(25);
         std::fill_n(instInputs, 28, 0);
         readController(instInputs);
-		mutex.give();
 
 		processInput(&instInputs[0]);
 		
@@ -172,14 +170,17 @@ void processInput(int * arrInputs) {
 
 	// pollGps();
 
-	if (instInputs[20]) {
+	if (instInputs[8]) {
 		calibrateGyro();
 	}
 
 	// pollGyro();
 
 	if (instInputs[6]/* && instInputs[20]*/) setEndgame(0);
-	setIndexer(!abs(instInputs[4]));
+	setIndexer(instInputs[4] == 1);
+
+	displace();
+	// accumulateGyroOffset();
 }
 
 void startRecordThread() {
@@ -218,10 +219,8 @@ void recordLoop(void * param) {
     int index = 0;
 	while (pros::millis() < startTime + duration) {
         index++; 
-		mutex.take(5);
         trackSpeed(&cords[0]);
 		recordInput(index, &instInputs[0], &cords[0]);
-		mutex.give();
 
 		pros::delay(20);
 	}

@@ -25,7 +25,7 @@ void initialize() {
     initializeVision();
 
     setEndgame(1);
-    setIndexer(0);
+    setIndexer(1);
 
     // initializeGps(-1.5, -1.14, 90, .223, -.223);
 }

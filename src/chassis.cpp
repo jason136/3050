@@ -13,7 +13,9 @@ pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN
 pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::Imu intertialSensor(INERTIAL_PORT);
+pros::Gps gpsSensor(GPS_PORT);
+
+pros::Imu inertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
 extern pros::Vision visionSensor;
@@ -44,9 +46,9 @@ void trackSpeed(double * coords) {
  
 void chassisGyroPark() {
     //std::cout << "gyro things: ";
-    //std::cout << intertialSensor.get_pitch() << " --  " << intertialSensor.get_yaw() << " --  " << intertialSensor.get_roll() << " --  " << std::endl;
+    //std::cout << inertialSensor.get_pitch() << " --  " << inertialSensor.get_yaw() << " --  " << inertialSensor.get_roll() << " --  " << std::endl;
 
-    double pitch = intertialSensor.get_pitch();
+    double pitch = inertialSensor.get_pitch();
 
     if (pitch < -10) chassisMove(-50);
     else if (pitch > 10) chassisMove(50);
@@ -86,8 +88,8 @@ void driveForDistancePID(int distance, int speed, int maxTime) {
  *
 **/
 
-    float wheelCircum = WHEEL_DIAMETER * 3.14;           // global WHEEL_DIAMETER is set in chassis.h
-    float motorDegree = (distance / wheelCircum) * 360;  // cast into full degrees
+    float wheelCircum = WHEEL_DIAMETER * 3.14;
+    float motorDegree = (distance / wheelCircum) * 360;
 
     float motorUpper = motorDegree + 5;
     float motorLower = motorDegree - 5;
@@ -100,9 +102,7 @@ void driveForDistancePID(int distance, int speed, int maxTime) {
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
     int timer = 0;
-    while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {
-        // Continue running this loop as long as the motor is not within +-5 units of its goal
-        
+    while (!((frontLeftDriveMotor.get_position() < motorUpper) && (frontLeftDriveMotor.get_position() > motorLower))) {        
         if (maxTime != 0 && timer >= maxTime) break;
         maxTime += 2;
         pros::delay(2);
@@ -120,12 +120,8 @@ void pivotTurn(int turnAngle, int speed) {
   * positive angle (45) will turn Clockwise (to the right)
 **/
 
-    // incoming speed variable sanity check
-    speed = abs(speed);               // speed is always absolute
-
-    // pivotTurn - turn radius is 1/2 * dimaeter of wheel base
-    float turnCircum = WHEEL_BASE * 3.14;           // wheel_base is defind in chassis.h
-    float wheelCircum = WHEEL_DIAMETER * 3.14;      // wheel_diameter is defined in chassis.h
+    float turnCircum = WHEEL_BASE * 3.14;
+    float wheelCircum = WHEEL_DIAMETER * 3.14;
     float maxDegrees = 360.0;
     float turnRatio = turnAngle / maxDegrees;
 
@@ -136,53 +132,48 @@ void pivotTurn(int turnAngle, int speed) {
 
     resetChassisEncoders();
 
-    // we are making turns - pivot left turns opposite of right motor
     frontRightDriveMotor.move_absolute(-motorDegree, speed);
     frontLeftDriveMotor.move_absolute(motorDegree, speed);
     backRightDriveMotor.move_absolute(-motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-    intertialSensor.set_rotation(0);
-    // we are moving until both sides of the robot have reached their target - we are using abs
-    // values of both the bounds and the desired distance so we become "insensitive" to to
-    // the direction of turns.
+    inertialSensor.set_rotation(0);
     while ((!((fabs(frontRightDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightDriveMotor.get_position()) > fabs(motorLower)))) &&
             (!((fabs(frontLeftDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftDriveMotor.get_position()) > fabs(motorLower)))))  {
-            // Continue running this loop as long as the motor is not within +-5 units of its goal
             pros::delay(2);
     }
 
-    std::cout << intertialSensor.get_rotation() << std::endl;
+    std::cout << inertialSensor.get_rotation() << std::endl;
 
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 void pollGyro() {
-    if (intertialSensor.is_calibrating()) {
+    if (inertialSensor.is_calibrating()) {
         pros::screen::print(TEXT_MEDIUM, 2, "calibrating");
     }
     else {
-        pros::c::imu_accel_s_t accel1 = intertialSensor.get_accel();
-        pros::screen::print(TEXT_MEDIUM, 2, "gyro: %3f", intertialSensor.get_rotation());
+        pros::c::imu_accel_s_t accel1 = inertialSensor.get_accel();
+        pros::screen::print(TEXT_MEDIUM, 2, "gyro: %3f", inertialSensor.get_rotation());
         pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f, z: %3f", accel1.x, accel1.y, accel1.z);
     }
 }
 
 void calibrateGyro() {
-    intertialSensor.reset();
+    inertialSensor.reset();
 }
 
 void resetGyro() {
-    intertialSensor.set_rotation(0);
+    inertialSensor.set_rotation(0);
 }
 
 void gyroTurn(int turnAngle, int time) {
     
-    while (intertialSensor.is_calibrating()) {
+    while (inertialSensor.is_calibrating()) {
         pros::delay(5);
     }
 
-    double zero_point_offset = intertialSensor.get_rotation();
+    double zero_point_offset = inertialSensor.get_rotation();
     
     // p / i ~ 1 / 30
     double error = turnAngle;
@@ -191,7 +182,7 @@ void gyroTurn(int turnAngle, int time) {
     float i = 0.00005;
     float d = 0.00;
 
-    std::cout << "pre turn rotation: " << intertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
+    std::cout << "pre turn rotation: " << inertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
 
     int direction;
     if (turnAngle < 0) direction = 1;
@@ -200,7 +191,7 @@ void gyroTurn(int turnAngle, int time) {
     for (int x = 0; x < time; x += 20)  {
         std::cout << error << std::endl;
 
-        error = fabs(turnAngle) - fabs(intertialSensor.get_rotation() - zero_point_offset);
+        error = fabs(turnAngle) - fabs(inertialSensor.get_rotation() - zero_point_offset);
         totalError += error * 0.02;
         derivitive = (error - previousError) / 0.02;
         pidSpeed = p * error + i * totalError + d * derivitive;
@@ -214,10 +205,37 @@ void gyroTurn(int turnAngle, int time) {
         pros::delay(20);
     }
 
-    std::cout << "turn done " << intertialSensor.get_rotation() << std::endl;
+    std::cout << "turn done " << inertialSensor.get_rotation() << std::endl;
  
     chassisStopDrive(pros::E_MOTOR_BRAKE_BRAKE);
 }
+
+void initializeGps(double xInit, double yInit, double headingInit, double xOffset, double yOffset) {
+    gpsSensor.set_data_rate(20);
+    // if (xInit || yInit || headingInit) {
+        gpsSensor.set_position(xInit, yInit, headingInit);
+    // }
+    // if (xOffset || yOffset) {
+        gpsSensor.set_offset(xOffset, yOffset);
+    // }
+
+    std::cout << "gps initialized" << std::endl;
+} 
+
+void pollGps() {
+
+    // pros::c::gps_status_s_t status = gpsSensor.get_status();
+
+    // pros::screen::print(TEXT_MEDIUM, 2, "error: %3f", gpsSensor.get_error());
+    // pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f", status.x, status.y);
+    // pros::screen::print(TEXT_MEDIUM, 4, "pitch: %3f, yaw: %3f, roll: %3f", status.pitch, status.yaw, status.roll);
+
+}
+
+
+
+
+// functions below this line suffer too much from sensor error to be viable at this time
 
 int turn_Error;
 double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
@@ -225,7 +243,6 @@ float turn_P = 0.7;
 float turn_I = 0.2;
 float turn_D = 0.05;
 std::vector<int> pastN;
-
 double visAimAssist(int sig) {
 
     // Sig 1 is red
@@ -330,4 +347,45 @@ void visPathfind(int sig, int time) {
         pros::delay(20);
     }
     visionSensor.set_led(COLOR_WHITE);
+}
+
+float offset[2] = {0.0f, 0.0f};
+int count = 0;
+void accumulateGyroOffset() {
+    if (inertialSensor.is_calibrating()) return;
+
+    pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
+    offset[0] += accel.x;
+    offset[1] += accel.y;
+    count += 1;
+
+    if (count == 1000) {
+        std::cout << "Averages after 10000: x = " << offset[0] / 1000 << " y = " << offset[1] / 1000 << std::endl;
+    }
+}
+// these functions are not reliable, 20ms polling rate is just too slow to be useful especially after double integral
+uint64_t previousTime = 0;
+float displacement[2] = {0.0f, 0.0f};
+float velocity[2] = {0.0f, 0.0f};
+void gyroDisplace() {
+    if (inertialSensor.is_calibrating()) return;
+
+    uint64_t deltaTime = pros::micros() - previousTime;
+
+    pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
+    float heading = inertialSensor.get_heading();
+
+    // offsets hardcoded here
+    velocity[0] += (accel.x - 0.0356652) * 9.80665 * deltaTime / 1000000.0;
+    velocity[1] += (accel.y - 0.0623785) * 9.80665 * deltaTime / 1000000.0;
+
+    displacement[0] += velocity[0] * deltaTime / 1000000.0;
+    displacement[1] += velocity[1] * deltaTime / 1000000.0;
+
+    std::cout << displacement[0] << std::endl;
+
+    pros::screen::print(TEXT_MEDIUM, 2, "displacementx: %3f, displacementy: %3f", displacement[0], displacement[1]);
+    pros::screen::print(TEXT_MEDIUM, 3, "velocityx: %3f, velocityy: %3f", velocity[0], velocity[1]);
+
+    previousTime = pros::micros();
 }

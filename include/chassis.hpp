@@ -47,10 +47,22 @@ void pivotTurn(int turnAngle, int speed);
 // positive is ccw, negative is cw
 void gyroTurn(int turnAngle, int time);
 
-// Time parameter for both corresponds to number of milliseconds
+void initializeGps(
+    double xInit = 0.0, 
+    double yInit = 0.0, 
+    double headingInit = 0.0, 
+    double xOffset = 0.0, 
+    double yOffset = 0.0
+);
+
+void pollGps();
 
 double visAimAssist(int sig);
 
 void visPathfind(int sig, int time); 
+
+void accumulateGyroOffset();
+
+void gyroDisplace();
 
 #endif // _CHASSIS_H_
