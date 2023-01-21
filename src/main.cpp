@@ -27,6 +27,8 @@ void initialize() {
     setEndgame(1);
     setIndexer(1);
 
+    pros::Task flywheelPID(flywheelPIDTask);
+
     // initializeGps(-1.5, -1.14, 90, .223, -.223);
 }
 

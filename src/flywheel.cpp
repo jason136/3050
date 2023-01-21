@@ -1,28 +1,74 @@
 #include "main.h"
 #include "portdef.hpp"
 #include "flywheel.hpp"
+#include <atomic>
+#include <vector>
+#include <numeric>
 
 pros::Motor flywheel1(FLYWHEEL_1, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flywheel2(FLYWHEEL_2, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-int flywheelSpeed;
-bool flywheelSpinning = false;
+std::atomic<int> taskFlywheelSpeed (0);
+std::atomic<bool> taskSpinFlywheel (false);
 void spinFlywheel(bool pressed) {
-    if (pressed && !flywheelSpinning) {
-        flywheelSpinning = true;
-
-        flywheel1.move_velocity(flywheelSpeed);
-        flywheel2.move_velocity(-flywheelSpeed);
-
+    if (pressed && !taskSpinFlywheel) {
+        taskSpinFlywheel = true;
     }
-    else if (!pressed && flywheelSpinning) {
-        flywheelSpinning = false;
-        stopFlywheel();
+    else if (!pressed && taskSpinFlywheel) {
+        taskSpinFlywheel = false;
     }
 }
 
 void setFlywheelSpeed(int speed) {
-    flywheelSpeed = speed;
+    taskFlywheelSpeed = speed;
+}
+
+void flywheelPIDTask(void * param) {
+    // p / i ~ 1 / 30
+    double error, pidSpeed, derivitive, totalError, previousError = 0.0;
+    float p = 0.969;
+    float i = 0.0000069;
+    float d = 0.0;
+
+    std::vector<float> dampener;
+    
+    std::cout << "taskstart" << std::endl;
+
+    int count = 0;
+
+    while (true) {
+        if (!taskSpinFlywheel.load()) {
+            error, pidSpeed, derivitive, totalError, previousError = 0.0;
+            // std::cout << "off" << std::endl;
+            flywheel1.move(0);
+            flywheel2.move(0);
+            pros::delay(10);
+            continue;
+        }
+
+        int flywheelSpeed = taskFlywheelSpeed.load();
+        float averageSpeed = (flywheel1.get_actual_velocity() - flywheel2.get_actual_velocity()) / 2.0;
+        
+        dampener.push_back(averageSpeed);
+        if (dampener.size() >= 6) dampener.erase(dampener.begin());
+        float dampedSpeed = std::accumulate(dampener.begin(), dampener.end(), 0.0) / dampener.size();
+        
+        error = dampedSpeed - flywheelSpeed;
+
+        totalError += error * 0.02;
+        derivitive = (error - previousError) / 0.02;
+        pidSpeed = p * error + i * totalError + d * derivitive;
+
+        float voltOffset = (flywheelSpeed / 600.0) * 127.0;
+
+        std::cout << "pidSpeed: " << (pidSpeed - voltOffset)  << " error: " << error << std::endl;
+
+        flywheel1.move(-(pidSpeed - voltOffset));
+        flywheel2.move((pidSpeed - voltOffset));
+
+        previousError = error;
+        pros::delay(10);
+    }
 }
 
 void stopFlywheel() {

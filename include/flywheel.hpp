@@ -8,6 +8,8 @@ void spinFlywheel(bool pressed);
 
 void setFlywheelSpeed(int speed);
 
+void flywheelPIDTask(void * param);
+
 // stop the flywheel with the given brake mode
 void stopFlywheel();
 

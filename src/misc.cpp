@@ -38,21 +38,37 @@ void toggleIndexer(int input) {
     pneumaticsIndexer.set_value(liftToggle);
 }
 
+const int PNEUMATIC_DELAY = 200;
+std::uint32_t timeLastExtend = 0;
+std::uint32_t timeLastCall = 0;
+std::uint32_t timeHeld = 0;
 void setIndexer(int input) {
-    pneumaticsIndexer.set_value(!input);
-}
-
-std::uint32_t timeSinceExtend = 0;
-std::uint32_t timeSinceRetract = 0;
-void setIndexerFancy(int input) {
     if (input) {
-        std::uint32_t deltaTime = pros::millis() - timeSinceExtend;
-        if (timeSinceExtend > 500) {
+        if (timeLastCall == 0) timeLastCall = pros::millis();
+        std::uint32_t deltaTime = pros::millis() - timeLastCall;
+        timeHeld += deltaTime;
+        if ((timeHeld / PNEUMATIC_DELAY) % 2 == 0) {
             pneumaticsIndexer.set_value(0);
+            timeLastExtend = pros::millis();
+        }
+        else {
+            pneumaticsIndexer.set_value(1);
+        }
+        timeLastCall = pros::millis();
+    }
+    else {
+        if (timeLastExtend == 0) {
+            pneumaticsIndexer.set_value(1);
+            return;
+        }
+        std::uint32_t sinceLastExtend = pros::millis() - timeLastExtend;
+        timeHeld = 0;
+        timeLastCall = 0;
+        if (sinceLastExtend > PNEUMATIC_DELAY) {
+            pneumaticsIndexer.set_value(1);
+            timeLastExtend = 0;
         }
     }
-
-    timeSinceLast = pros::millis();
 }
 
 void setEndgame(int input) {

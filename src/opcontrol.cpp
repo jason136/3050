@@ -160,7 +160,7 @@ void processInput(int * arrInputs) {
 	if (arrInputs[13]) setFlywheelSpeed(500);
 	if (arrInputs[12]) setFlywheelSpeed(450);
 	if (arrInputs[11]) setFlywheelSpeed(400);
-	if (arrInputs[10]) setFlywheelSpeed(350);
+	if (arrInputs[10]) setFlywheelSpeed(325);
 
 	// spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
 
@@ -177,9 +177,8 @@ void processInput(int * arrInputs) {
 	// pollGyro();
 
 	if (instInputs[6]/* && instInputs[20]*/) setEndgame(0);
-	setIndexer(instInputs[4] == 1);
+	setIndexer(instInputs[4]);
 
-	displace();
 	// accumulateGyroOffset();
 }
 
