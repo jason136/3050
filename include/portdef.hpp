@@ -23,8 +23,8 @@
 #define VEX_RADIO 11
 
 // V5 Sensors
-#define VISION_PORT 20
-#define GPS_PORT 22
+#define VISION_PORT 22
+#define GPS_PORT 20
 #define INERTIAL_PORT 12
 
 // Tri Port Assignments, Ports A-H are mapped to 1-8

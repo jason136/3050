@@ -168,7 +168,7 @@ void processInput(int * arrInputs) {
 
 	spinIntake(arrInputs[5] * 127);
 
-	// pollGps();
+	pollGps();
 
 	if (instInputs[8]) {
 		calibrateGyro();

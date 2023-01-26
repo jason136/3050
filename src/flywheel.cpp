@@ -26,9 +26,7 @@ void setFlywheelSpeed(int speed) {
 void flywheelPIDTask(void * param) {
     // p / i ~ 1 / 30
     double error, pidSpeed, derivitive, totalError, previousError = 0.0;
-    float p = 0.969;
-    float i = 0.0000069;
-    float d = 0.0;
+    float p, i, d = 0.0;
 
     std::vector<float> dampener;
     
@@ -47,6 +45,17 @@ void flywheelPIDTask(void * param) {
         }
 
         int flywheelSpeed = taskFlywheelSpeed.load();
+        if (flywheelSpeed >= 425) {
+            p = 0.969;
+            i = 0.0000069;
+            d = 0.0;
+        }
+        else {
+            p = 0.5;
+            i = 0.0000069;
+            d = 0.0;
+        }
+
         float averageSpeed = (flywheel1.get_actual_velocity() - flywheel2.get_actual_velocity()) / 2.0;
         
         dampener.push_back(averageSpeed);

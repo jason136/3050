@@ -57,6 +57,8 @@ void initializeGps(
 
 void pollGps();
 
+void seek(int xCord, int yCord, int time);
+
 double visAimAssist(int sig);
 
 void visPathfind(int sig, int time); 

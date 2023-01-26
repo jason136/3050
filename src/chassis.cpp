@@ -13,7 +13,7 @@ pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN
 pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::Gps gpsSensor(GPS_PORT);
+pros::Gps gpsSensor(GPS_PORT, 0.065, -0.23);
 
 pros::Imu inertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
@@ -137,7 +137,6 @@ void pivotTurn(int turnAngle, int speed) {
     backRightDriveMotor.move_absolute(-motorDegree, speed);
     backLeftDriveMotor.move_absolute(motorDegree, speed);
 
-    inertialSensor.set_rotation(0);
     while ((!((fabs(frontRightDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontRightDriveMotor.get_position()) > fabs(motorLower)))) &&
             (!((fabs(frontLeftDriveMotor.get_position()) < fabs(motorUpper)) && (fabs(frontLeftDriveMotor.get_position()) > fabs(motorLower)))))  {
             pros::delay(2);
@@ -224,18 +223,63 @@ void initializeGps(double xInit, double yInit, double headingInit, double xOffse
 
 void pollGps() {
 
-    // pros::c::gps_status_s_t status = gpsSensor.get_status();
+    pros::c::gps_status_s_t status = gpsSensor.get_status();
 
-    // pros::screen::print(TEXT_MEDIUM, 2, "error: %3f", gpsSensor.get_error());
-    // pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f", status.x, status.y);
-    // pros::screen::print(TEXT_MEDIUM, 4, "pitch: %3f, yaw: %3f, roll: %3f", status.pitch, status.yaw, status.roll);
+    pros::screen::print(TEXT_MEDIUM, 2, "error: %3f", gpsSensor.get_error());
+    pros::screen::print(TEXT_MEDIUM, 3, "x: %3f, y: %3f", status.x, status.y);
+    pros::screen::print(TEXT_MEDIUM, 4, "pitch: %3f, yaw: %3f, roll: %3f", status.pitch, status.yaw, status.roll);
 
 }
 
+void seek(int xCord, int yCord, int time) {
+
+    int turn_Error;
+    double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
+    float turn_P = 0.7;
+    float turn_I = 0.18;
+    float turn_D = 0.05;
+
+    int dist_Error;
+    double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
+    float dist_P = 1.2;
+    float dist_I = 0.15;
+    float dist_D = 0.01;
+
+    for (int x = 0; x < time; x += 20) {
+
+        pros::c::gps_status_s_t status = gpsSensor.get_status();
+        int deltaX = xCord - status.x * 1000;
+        int deltaY = yCord - status.y * 1000;
+
+        float angleToTarget = atan(deltaY / deltaX);
+
+        turn_Error = angleToTarget;
+        turn_TotalError += turn_Error * 0.02;
+        turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
+        turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
+        turn_PreviousError = turn_Error;
+
+        float distanceToTarget = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+
+        dist_Error = distanceToTarget;
+        dist_TotalError += dist_Error * 0.02;
+        dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
+        dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
+        dist_PreviousError = dist_Error;
+
+        std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+
+        frontRightDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
+        frontLeftDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
+        backRightDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
+        backLeftDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
+
+        pros::delay(20);
+    }
+}
 
 
-
-// functions below this line suffer too much from sensor error to be viable at this time
+// functions below this line suffer from sensor error too much to be viable at this time
 
 int turn_Error;
 double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
