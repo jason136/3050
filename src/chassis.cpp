@@ -13,7 +13,9 @@ pros::Motor frontLeftDriveMotor(FRONT_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN
 pros::Motor backRightDriveMotor(BACK_RIGHT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::Gps gpsSensor(GPS_PORT, 0.065, -0.23);
+// pros::Gps gpsSensor(GPS_PORT, -0.0115, 0.185);
+pros::Gps gpsSensor(GPS_PORT, -0.0102, 0.1875);
+// pros::Gps gpsSensor(GPS_PORT);
 
 pros::Imu inertialSensor(INERTIAL_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
@@ -210,15 +212,15 @@ void gyroTurn(int turnAngle, int time) {
 }
 
 void initializeGps(double xInit, double yInit, double headingInit, double xOffset, double yOffset) {
-    gpsSensor.set_data_rate(20);
-    // if (xInit || yInit || headingInit) {
-        gpsSensor.set_position(xInit, yInit, headingInit);
-    // }
-    // if (xOffset || yOffset) {
-        gpsSensor.set_offset(xOffset, yOffset);
-    // }
+    // gpsSensor.set_data_rate(20);
+    // // if (xInit || yInit || headingInit) {
+    //     gpsSensor.set_position(xInit, yInit, headingInit);
+    // // }
+    // // if (xOffset || yOffset) {
+    //     gpsSensor.set_offset(xOffset, yOffset);
+    // // }
 
-    std::cout << "gps initialized" << std::endl;
+    // std::cout << "gps initialized" << std::endl;
 } 
 
 void pollGps() {
@@ -233,41 +235,66 @@ void pollGps() {
 
 void seek(int xCord, int yCord, int time) {
 
-    int turn_Error;
+    double turn_Error;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-    float turn_P = 0.7;
-    float turn_I = 0.18;
-    float turn_D = 0.05;
+    float turn_P = 1.0;
+    float turn_I = 0.0;
+    float turn_D = 0.0;
 
-    int dist_Error;
+    double dist_Error;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
     float dist_P = 1.2;
     float dist_I = 0.15;
     float dist_D = 0.01;
 
+    std::vector<float> dampenerH;
+    std::vector<float> dampenerX;
+    std::vector<float> dampenerY;
+
     for (int x = 0; x < time; x += 20) {
 
         pros::c::gps_status_s_t status = gpsSensor.get_status();
-        int deltaX = xCord - status.x * 1000;
-        int deltaY = yCord - status.y * 1000;
+        float deltaX = xCord - status.x * 1000.0;
+        float deltaY = yCord - status.y * 1000.0;
 
-        float angleToTarget = atan(deltaY / deltaX);
+        dampenerX.push_back(deltaX);
+        dampenerY.push_back(deltaY);
+        dampenerH.push_back(status.yaw);
+        if (dampenerX.size() >= 6) dampenerX.erase(dampenerX.begin());
+        if (dampenerY.size() >= 6) dampenerY.erase(dampenerY.begin());
+        if (dampenerH.size() >= 6) dampenerH.erase(dampenerH.begin());
+        float dampedDeltaX = std::accumulate(dampenerX.begin(), dampenerX.end(), 0.0) / dampenerX.size();
+        float dampedDeltaY = std::accumulate(dampenerY.begin(), dampenerY.end(), 0.0) / dampenerY.size();
+        float dampedHeading = std::accumulate(dampenerH.begin(), dampenerH.end(), 0.0) / dampenerH.size();
+        
+        float radiansToTarget = atan(dampedDeltaY / dampedDeltaX);
+        float degreesToTarget = (radiansToTarget / 3.141592) * 180.0;
 
-        turn_Error = angleToTarget;
+        turn_Error = degreesToTarget - dampedHeading;
         turn_TotalError += turn_Error * 0.02;
         turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
         turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
         turn_PreviousError = turn_Error;
 
-        float distanceToTarget = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+        float distanceToTarget = sqrt(pow(dampedDeltaX, 2) + pow(dampedDeltaY, 2));
 
-        dist_Error = distanceToTarget;
-        dist_TotalError += dist_Error * 0.02;
-        dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
-        dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
-        dist_PreviousError = dist_Error;
+        // std::cout << "x: " << dampedDeltaX << " y: " << dampedDeltaY << std::endl;
 
-        std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+        std::cout << "angle to target: " << degreesToTarget << " distance to target: " << distanceToTarget << std::endl;
+
+        std::cout << "heading: " << dampedHeading << " turn_Error: " << turn_Error << std::endl;
+
+        // std::cout << "turn_PidSpeed: " << turn_PidSpeed << std::endl;
+
+        dist_PidSpeed = 0.0;
+
+    //     dist_Error = distanceToTarget;
+    //     dist_TotalError += dist_Error * 0.02;
+    //     dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
+    //     dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
+    //     dist_PreviousError = dist_Error;
+
+    //     std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
 
         frontRightDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
         frontLeftDriveMotor.move(turn_PidSpeed + dist_PidSpeed);

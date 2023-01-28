@@ -171,7 +171,7 @@ void processInput(int * arrInputs) {
 	pollGps();
 
 	if (instInputs[8]) {
-		calibrateGyro();
+		seek(0, 0, 1000);
 	}
 
 	// pollGyro();
