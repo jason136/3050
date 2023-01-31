@@ -237,21 +237,21 @@ void seek(int xCord, int yCord, int time) {
 
     double turn_Error;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-    float turn_P = 1.0;
-    float turn_I = 0.0;
+    float turn_P = 5.0;
+    float turn_I = 0.0066669;
     float turn_D = 0.0;
 
     double dist_Error;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
-    float dist_P = 1.2;
-    float dist_I = 0.15;
-    float dist_D = 0.01;
+    float dist_P = 0.5;
+    float dist_I = 0.0;
+    float dist_D = 0.0;
 
     std::vector<float> dampenerH;
     std::vector<float> dampenerX;
     std::vector<float> dampenerY;
 
-    for (int x = 0; x < time; x += 20) {
+    for (int x = 0; x < time; x += 1) {
 
         pros::c::gps_status_s_t status = gpsSensor.get_status();
         float deltaX = xCord - status.x * 1000.0;
@@ -269,8 +269,9 @@ void seek(int xCord, int yCord, int time) {
         
         float radiansToTarget = atan(dampedDeltaY / dampedDeltaX);
         float degreesToTarget = (radiansToTarget / 3.141592) * 180.0;
+        float headingToTarget = 90.0 - degreesToTarget;
 
-        turn_Error = degreesToTarget - dampedHeading;
+        turn_Error = headingToTarget - dampedHeading;
         turn_TotalError += turn_Error * 0.02;
         turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
         turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
@@ -278,28 +279,30 @@ void seek(int xCord, int yCord, int time) {
 
         float distanceToTarget = sqrt(pow(dampedDeltaX, 2) + pow(dampedDeltaY, 2));
 
+        dist_Error = distanceToTarget;
+        dist_TotalError += dist_Error * 0.02;
+        dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
+        dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
+        dist_PreviousError = dist_Error;
+
         // std::cout << "x: " << dampedDeltaX << " y: " << dampedDeltaY << std::endl;
 
-        std::cout << "angle to target: " << degreesToTarget << " distance to target: " << distanceToTarget << std::endl;
+        // std::cout << "angle to target: " << degreesToTarget << " distance to target: " << distanceToTarget << std::endl;
 
-        std::cout << "heading: " << dampedHeading << " turn_Error: " << turn_Error << std::endl;
+        // std::cout << "heading: " << dampedHeading << " turn_Error: " << turn_Error << std::endl;
 
         // std::cout << "turn_PidSpeed: " << turn_PidSpeed << std::endl;
 
-        dist_PidSpeed = 0.0;
-
-    //     dist_Error = distanceToTarget;
-    //     dist_TotalError += dist_Error * 0.02;
-    //     dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
-    //     dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
-    //     dist_PreviousError = dist_Error;
+        pros::screen::print(TEXT_MEDIUM, 5, "angle to target: %3f, distance to target: %3f", degreesToTarget, distanceToTarget);
+        pros::screen::print(TEXT_MEDIUM, 6, "distance to target: %3f", distanceToTarget);
+        pros::screen::print(TEXT_MEDIUM, 7, "heading: %3f, dist_Error: %3f", dampedHeading, dist_Error);
 
     //     std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
 
-        frontRightDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
-        frontLeftDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
-        backRightDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
-        backLeftDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
+        frontRightDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
+        frontLeftDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
+        backRightDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
+        backLeftDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
 
         pros::delay(20);
     }
@@ -308,155 +311,155 @@ void seek(int xCord, int yCord, int time) {
 
 // functions below this line suffer from sensor error too much to be viable at this time
 
-int turn_Error;
-double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-float turn_P = 0.7;
-float turn_I = 0.2;
-float turn_D = 0.05;
-std::vector<int> pastN;
-double visAimAssist(int sig) {
+// int turn_Error;
+// double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
+// float turn_P = 0.7;
+// float turn_I = 0.2;
+// float turn_D = 0.05;
+// std::vector<int> pastN;
+// double visAimAssist(int sig) {
 
-    // Sig 1 is red
-    // Sig 2 is blue
-    // Sig 3 is yellow
+//     // Sig 1 is red
+//     // Sig 2 is blue
+//     // Sig 3 is yellow
 
-    pros::vision_object_s_t object_array[5];
-    pros::vision_object_s_t preprocessed;
-    bool validSigFound = false;
+//     pros::vision_object_s_t object_array[5];
+//     pros::vision_object_s_t preprocessed;
+//     bool validSigFound = false;
 
-    visionSensor.read_by_sig(0, sig, 5, object_array);
-    for (int x = 0; x < 5; x++) {
-        if (
-                object_array[x].signature != 255 && 
-                object_array[x].width > 10 &&
-                object_array[x].width > object_array[x].height * 2
-            ) {
-            preprocessed = object_array[x];
-            validSigFound = true;
-            break;
-        }
-    }
+//     visionSensor.read_by_sig(0, sig, 5, object_array);
+//     for (int x = 0; x < 5; x++) {
+//         if (
+//                 object_array[x].signature != 255 && 
+//                 object_array[x].width > 10 &&
+//                 object_array[x].width > object_array[x].height * 2
+//             ) {
+//             preprocessed = object_array[x];
+//             validSigFound = true;
+//             break;
+//         }
+//     }
 
-    std::cout << visionSensor.get_object_count() << std::endl;
+//     std::cout << visionSensor.get_object_count() << std::endl;
 
-    if (validSigFound) {
+//     if (validSigFound) {
         
-        pastN.insert(pastN.begin(), preprocessed.x_middle_coord);
-        pastN.resize(25, 158);
-        int average = std::reduce(pastN.begin(), pastN.end()) / 25;
+//         pastN.insert(pastN.begin(), preprocessed.x_middle_coord);
+//         pastN.resize(25, 158);
+//         int average = std::reduce(pastN.begin(), pastN.end()) / 25;
 
-        turn_Error = 220 - average;
-        turn_TotalError += turn_Error * 0.02;
-        turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
-        turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
+//         turn_Error = 220 - average;
+//         turn_TotalError += turn_Error * 0.02;
+//         turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
+//         turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
 
-        turn_PreviousError = turn_Error;
+//         turn_PreviousError = turn_Error;
 
-        return turn_PidSpeed;
-    }
-    else {
-        return 0.0;
-    }    
-}
+//         return turn_PidSpeed;
+//     }
+//     else {
+//         return 0.0;
+//     }    
+// }
 
-void visPathfind(int sig, int time) {
+// void visPathfind(int sig, int time) {
 
-    if (sig == 1) visionSensor.set_led(COLOR_RED);
-    else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
-    else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
+//     if (sig == 1) visionSensor.set_led(COLOR_RED);
+//     else if (sig == 2) visionSensor.set_led(COLOR_TEAL);
+//     else if (sig == 3) visionSensor.set_led(COLOR_GREEN);
 
-    std::cout << "vis pathfind starting, sig: " << sig << std::endl;
+//     std::cout << "vis pathfind starting, sig: " << sig << std::endl;
 
-    int turn_Error;
-    double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
-    float turn_P = 0.7;
-    float turn_I = 0.18;
-    float turn_D = 0.05;
+//     int turn_Error;
+//     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
+//     float turn_P = 0.7;
+//     float turn_I = 0.18;
+//     float turn_D = 0.05;
 
-    int dist_Error;
-    double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
-    float dist_P = 1.2;
-    float dist_I = 0.15;
-    float dist_D = 0.01;
+//     int dist_Error;
+//     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
+//     float dist_P = 1.2;
+//     float dist_I = 0.15;
+//     float dist_D = 0.01;
 
-    for (int x = 0; x < time; x += 20) {
+//     for (int x = 0; x < time; x += 20) {
 
-        pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
+//         pros::vision_object_s_t object = visionSensor.get_by_sig(0, sig);
 
-        std::cout << visionSensor.get_object_count() << std::endl;
+//         std::cout << visionSensor.get_object_count() << std::endl;
 
-        if (object.signature != 255 && object.width > 10) {
+//         if (object.signature != 255 && object.width > 10) {
             
-            std::cout << "object signiture detected " << object.signature << " ";
+//             std::cout << "object signiture detected " << object.signature << " ";
 
-            turn_Error = 160 - object.x_middle_coord;
-            turn_TotalError += turn_Error * 0.02;
-            turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
-            turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
+//             turn_Error = 160 - object.x_middle_coord;
+//             turn_TotalError += turn_Error * 0.02;
+//             turn_Derivitive = (turn_Error - turn_PreviousError) / 0.02;
+//             turn_PidSpeed = turn_P * turn_Error + turn_I * turn_TotalError + turn_D * turn_Derivitive;
 
-            dist_Error = 270 - object.width;
-            dist_TotalError += dist_Error * 0.02;
-            dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
-            dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
+//             dist_Error = 270 - object.width;
+//             dist_TotalError += dist_Error * 0.02;
+//             dist_Derivitive = (dist_Error - dist_PreviousError) / 0.02;
+//             dist_PidSpeed = dist_P * dist_Error + dist_I * dist_TotalError/* + turn_D * turn_Derivitive*/;
 
-            std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+//             std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
 
-            turn_PreviousError = turn_Error;
-            dist_PreviousError = dist_Error;
+//             turn_PreviousError = turn_Error;
+//             dist_PreviousError = dist_Error;
 
-            frontRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
-            frontLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
-            backRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
-            backLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
-        }
-        else {
-            frontRightDriveMotor.move(0);
-            frontLeftDriveMotor.move(0);
-            backRightDriveMotor.move(0);
-            backLeftDriveMotor.move(0);
-        }
-        pros::delay(20);
-    }
-    visionSensor.set_led(COLOR_WHITE);
-}
+//             frontRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
+//             frontLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
+//             backRightDriveMotor.move_velocity(turn_PidSpeed + dist_PidSpeed);
+//             backLeftDriveMotor.move_velocity(-turn_PidSpeed + dist_PidSpeed);
+//         }
+//         else {
+//             frontRightDriveMotor.move(0);
+//             frontLeftDriveMotor.move(0);
+//             backRightDriveMotor.move(0);
+//             backLeftDriveMotor.move(0);
+//         }
+//         pros::delay(20);
+//     }
+//     visionSensor.set_led(COLOR_WHITE);
+// }
 
-float offset[2] = {0.0f, 0.0f};
-int count = 0;
-void accumulateGyroOffset() {
-    if (inertialSensor.is_calibrating()) return;
+// float offset[2] = {0.0f, 0.0f};
+// int count = 0;
+// void accumulateGyroOffset() {
+//     if (inertialSensor.is_calibrating()) return;
 
-    pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
-    offset[0] += accel.x;
-    offset[1] += accel.y;
-    count += 1;
+//     pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
+//     offset[0] += accel.x;
+//     offset[1] += accel.y;
+//     count += 1;
 
-    if (count == 1000) {
-        std::cout << "Averages after 10000: x = " << offset[0] / 1000 << " y = " << offset[1] / 1000 << std::endl;
-    }
-}
-// these functions are not reliable, 20ms polling rate is just too slow to be useful especially after double integral
-uint64_t previousTime = 0;
-float displacement[2] = {0.0f, 0.0f};
-float velocity[2] = {0.0f, 0.0f};
-void gyroDisplace() {
-    if (inertialSensor.is_calibrating()) return;
+//     if (count == 1000) {
+//         std::cout << "Averages after 10000: x = " << offset[0] / 1000 << " y = " << offset[1] / 1000 << std::endl;
+//     }
+// }
+// // these functions are not reliable, 20ms polling rate is just too slow to be useful especially after double integral
+// uint64_t previousTime = 0;
+// float displacement[2] = {0.0f, 0.0f};
+// float velocity[2] = {0.0f, 0.0f};
+// void gyroDisplace() {
+//     if (inertialSensor.is_calibrating()) return;
 
-    uint64_t deltaTime = pros::micros() - previousTime;
+//     uint64_t deltaTime = pros::micros() - previousTime;
 
-    pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
-    float heading = inertialSensor.get_heading();
+//     pros::c::imu_accel_s_t accel = inertialSensor.get_accel();
+//     float heading = inertialSensor.get_heading();
 
-    // offsets hardcoded here
-    velocity[0] += (accel.x - 0.0356652) * 9.80665 * deltaTime / 1000000.0;
-    velocity[1] += (accel.y - 0.0623785) * 9.80665 * deltaTime / 1000000.0;
+//     // offsets hardcoded here
+//     velocity[0] += (accel.x - 0.0356652) * 9.80665 * deltaTime / 1000000.0;
+//     velocity[1] += (accel.y - 0.0623785) * 9.80665 * deltaTime / 1000000.0;
 
-    displacement[0] += velocity[0] * deltaTime / 1000000.0;
-    displacement[1] += velocity[1] * deltaTime / 1000000.0;
+//     displacement[0] += velocity[0] * deltaTime / 1000000.0;
+//     displacement[1] += velocity[1] * deltaTime / 1000000.0;
 
-    std::cout << displacement[0] << std::endl;
+//     std::cout << displacement[0] << std::endl;
 
-    pros::screen::print(TEXT_MEDIUM, 2, "displacementx: %3f, displacementy: %3f", displacement[0], displacement[1]);
-    pros::screen::print(TEXT_MEDIUM, 3, "velocityx: %3f, velocityy: %3f", velocity[0], velocity[1]);
+//     pros::screen::print(TEXT_MEDIUM, 2, "displacementx: %3f, displacementy: %3f", displacement[0], displacement[1]);
+//     pros::screen::print(TEXT_MEDIUM, 3, "velocityx: %3f, velocityy: %3f", velocity[0], velocity[1]);
 
-    previousTime = pros::micros();
-}
+//     previousTime = pros::micros();
+// }
