@@ -42,7 +42,7 @@ const int PNEUMATIC_DELAY = 200;
 std::uint32_t timeLastExtend = 0;
 std::uint32_t timeLastCall = 0;
 std::uint32_t timeHeld = 0;
-void setIndexer(int input) {
+void setIndexerFancy(int input) {
     if (input) {
         if (timeLastCall == 0) timeLastCall = pros::millis();
         std::uint32_t deltaTime = pros::millis() - timeLastCall;
@@ -69,6 +69,10 @@ void setIndexer(int input) {
             timeLastExtend = 0;
         }
     }
+}
+
+void setIndexer(int input) {
+    pneumaticsIndexer.set_value(!input);
 }
 
 void setEndgame(int input) {

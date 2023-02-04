@@ -6,6 +6,8 @@ void initializeVision();
 // Set pneumatics to extend (1) or retract (0)
 void toggleIndexer(int toggle);
 
+void setIndexerFancy(int input);
+
 void setIndexer(int input);
 
 void setEndgame(int input);

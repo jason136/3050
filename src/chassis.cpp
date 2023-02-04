@@ -326,7 +326,7 @@ void seek(int xCord, int yCord, int time) {
         pros::screen::print(TEXT_MEDIUM, 6, "distance to target: %3f", distanceToTarget);
         pros::screen::print(TEXT_MEDIUM, 7, "heading: %3f, dist_Error: %3f", dampedHeading, dist_Error);
 
-    //     std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+        // std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
 
         dist_PidSpeed = 0;
 

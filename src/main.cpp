@@ -25,7 +25,7 @@ void initialize() {
     initializeVision();
 
     setEndgame(1);
-    setIndexer(1);
+    setIndexer(0);
 
     pros::Task flywheelPID(flywheelPIDTask);
 

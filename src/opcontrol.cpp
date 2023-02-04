@@ -177,7 +177,7 @@ void processInput(int * arrInputs) {
 	// pollGyro();
 
 	if (instInputs[6]/* && instInputs[20]*/) setEndgame(0);
-	setIndexer(instInputs[4]);
+	setIndexerFancy(instInputs[4]);
 
 	// accumulateGyroOffset();
 }
