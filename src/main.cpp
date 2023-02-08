@@ -24,7 +24,7 @@ void initialize() {
     drawScreen();
     initializeVision();
 
-    setEndgame(1);
+    setEndgame(0);
     setIndexer(0);
 
     pros::Task flywheelPID(flywheelPIDTask);

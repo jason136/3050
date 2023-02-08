@@ -166,7 +166,7 @@ void processInput(int * arrInputs) {
 
 	spinFlywheel(arrInputs[13] || arrInputs[12] || arrInputs[11] || arrInputs[10]);
 
-	spinIntake(arrInputs[5] * 127);
+	spinIntake(arrInputs[5] * 200);
 
 	pollGps();
 
@@ -176,7 +176,7 @@ void processInput(int * arrInputs) {
 
 	// pollGyro();
 
-	if (instInputs[6]/* && instInputs[20]*/) setEndgame(0);
+	setEndgame(instInputs[6]);
 	setIndexerFancy(instInputs[4]);
 
 	// accumulateGyroOffset();
