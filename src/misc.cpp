@@ -11,7 +11,7 @@ pros::Motor intakeMotor2(INTAKE_2, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_
 // Digital out for pneumatics 
 pros::ADIDigitalOut pneumaticsIndexer(PNEUMATIC_INDEXER);
 pros::ADIDigitalOut pneumaticsEndgame(PNEUMATIC_END_GAME);
-
+pros::ADIDigitalOut pneumaticsBatWings(PNEUMATIC_BAT_WINGS);
 pros::Vision visionSensor(VISION_PORT);
 
 pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 7839, 9557, 8698, -1203, -615, -909, 3.000, 0);
@@ -77,6 +77,10 @@ void setIndexer(int input) {
 
 void setEndgame(int input) {
     pneumaticsEndgame.set_value(input);
+}
+
+void setBatWings (int input) {
+    pneumaticsBatWings.set_value(input);
 }
 
 bool intakeSpinning = false;

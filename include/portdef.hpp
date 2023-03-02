@@ -30,6 +30,7 @@
 // Tri Port Assignments, Ports A-H are mapped to 1-8
 #define PNEUMATIC_INDEXER 1
 #define PNEUMATIC_END_GAME 2
+#define PNEUMATIC_BAT_WINGS 5
 
 #define LATERAL_BASE_ENCODER_TOP 3
 #define LATERAL_BASE_ENCODER_BOTTOM 4

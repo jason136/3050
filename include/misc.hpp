@@ -12,6 +12,8 @@ void setIndexer(int input);
 
 void setEndgame(int input);
 
+void setBatWings (int input);
+
 void spinIntake(int speed);
 
 void stopIntakeDelayed(void* param);

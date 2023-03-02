@@ -127,7 +127,7 @@ void autoBlue1() {
     setIndexer(0);
 
     // drive to first roller
-    driveForDistancePID(-11, 150, 1000);
+    driveForDistancePID(-11, 150);
     gyroTurn(-90, 1000);
 
 	setFlywheelSpeed(505);
@@ -191,6 +191,13 @@ void autoBlue1() {
 }
 
 void autoRed2() {
+
+ resetGyro();
+    setIndexer(0);
+// drive to far side rollers
+    driveForDistancePID(-11, 150);
+    gyroTurn(-90, 1000);
+
 
 }
 

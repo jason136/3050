@@ -178,6 +178,7 @@ void processInput(int * arrInputs) {
 
 	setEndgame(instInputs[6]);
 	setIndexerFancy(instInputs[4]);
+	setBatWings(instInputs[7]);
 
 	// accumulateGyroOffset();
 }
