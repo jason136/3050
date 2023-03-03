@@ -214,18 +214,26 @@ void autoRed2() {
  resetGyro();
     setIndexer(0);
 
+// Rotate either -268 or 92 (same)
+     gyroTurn(92, 1500);
+
+//Startup flywheel
+    setFlywheelSpeed(505);
+	spinFlywheel(true);
+
 //Disc collection
     spinIntake(127);
 
 // drive to far side rollers 
-//(continuing from the midfield positioned at Void autoRed1())
-     gyroTurn(-268, 1500);
+//(continuing from the midfield position at Void autoRed1())
      driveForDistancePID(-40, 75);
-   
+
 // Repostion to shoot
-gyroTurn(235, 1500);
+//Either 235 or -125 (same)
+gyroTurn(-125, 1500);
 
 // fire 2 disks
+ // fire 2 disks
     //Fire disc 1
     setIndexer(1);
     pros::delay(200);
@@ -239,8 +247,12 @@ gyroTurn(235, 1500);
     pros::delay(200);
     setIndexer(0);
 
+	//Stop spinning flywheel
+    spinFlywheel(false);
+
 //Reposition infront of roller
-gyroTurn(153, 1500);
+//Either -7 or 353
+gyroTurn(-7, 1500);
 
 //Spin far side roller
     driveForDistancePID(-2, 150);
