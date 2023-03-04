@@ -211,8 +211,7 @@ void autoBlue1() {
 
 void autoRed2() {
 
-
-
+ 
 }
 
 void autoBlue2() {
@@ -232,6 +231,7 @@ void skillRun() {
     resetGyro();
     setIndexer(0);
 
+    //Origional Code
     // drive to first roller
     driveForDistancePID(-11, 150, 1000);
     gyroTurn(90, 1000);
@@ -247,7 +247,7 @@ void skillRun() {
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-    gyroTurn(7, 1500);
+    gyroTurn(5, 1500);
 
     // fire 2 disks
     setIndexer(1);
@@ -263,7 +263,9 @@ void skillRun() {
 
 	spinFlywheel(false);
 
-    gyroTurn(125, 1500);
+    //Intake 3 disks
+
+    gyroTurn(123, 1500);
 
     spinIntake(127);
 
@@ -275,6 +277,7 @@ void skillRun() {
 
     gyroTurn(-92, 1500);
 
+    //fire 3 disks
     setIndexer(1);
     pros::delay(200);
     setIndexer(0);
@@ -294,11 +297,11 @@ void skillRun() {
     spinIntake(0);
     spinFlywheel(false);
 
-     resetGyro();
+resetGyro();
     setIndexer(0);
 
 // Rotate either -268 or 92 (same)
-     gyroTurn(92, 1500);
+     gyroTurn(90, 1500);
 
 //Startup flywheel
     setFlywheelSpeed(505);
@@ -313,7 +316,7 @@ void skillRun() {
 
 // Repostion to shoot
 //Either 235 or -125 (same)
-gyroTurn(-125, 1500);
+gyroTurn(-90, 1500);
 
 // fire 2 disks
  // fire 2 disks
@@ -345,9 +348,8 @@ gyroTurn(-7, 1500);
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-    gyroTurn(182, 1500);
 
-    driveForDistancePID(-30, 75);
+    gyroTurn(92, 1500);
 
     setEndgame(1);
     pros::delay(200);
