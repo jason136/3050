@@ -211,56 +211,7 @@ void autoBlue1() {
 
 void autoRed2() {
 
- resetGyro();
-    setIndexer(0);
 
-// Rotate either -268 or 92 (same)
-     gyroTurn(92, 1500);
-
-//Startup flywheel
-    setFlywheelSpeed(505);
-	spinFlywheel(true);
-
-//Disc collection
-    spinIntake(127);
-
-// drive to far side rollers 
-//(continuing from the midfield position at Void autoRed1())
-     driveForDistancePID(-40, 75);
-
-// Repostion to shoot
-//Either 235 or -125 (same)
-gyroTurn(-125, 1500);
-
-// fire 2 disks
- // fire 2 disks
-    //Fire disc 1
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-	setFlywheelSpeed(510);
-    pros::delay(2000);
-
-    //Fire disc 2
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-	//Stop spinning flywheel
-    spinFlywheel(false);
-
-//Reposition infront of roller
-//Either -7 or 353
-gyroTurn(-7, 1500);
-
-//Spin far side roller
-    driveForDistancePID(-2, 150);
-    spinIntake(-80);
-    chassisMoveIndividuals(-40, -40, -40, -40);
-    pros::delay(500);
-    spinIntake(0);
-    driveForDistancePID(2, 150);
 
 }
 
@@ -343,7 +294,58 @@ void skillRun() {
     spinIntake(0);
     spinFlywheel(false);
 
-    gyroTurn(92, 1500);
+     resetGyro();
+    setIndexer(0);
+
+// Rotate either -268 or 92 (same)
+     gyroTurn(92, 1500);
+
+//Startup flywheel
+    setFlywheelSpeed(505);
+	spinFlywheel(true);
+
+//Disc collection
+    spinIntake(127);
+
+// drive to far side rollers 
+//(continuing from the midfield position at Void autoRed1())
+     driveForDistancePID(-40, 75);
+
+// Repostion to shoot
+//Either 235 or -125 (same)
+gyroTurn(-125, 1500);
+
+// fire 2 disks
+ // fire 2 disks
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	//Stop spinning flywheel
+    spinFlywheel(false);
+
+//Reposition infront of roller
+//Either -7 or 353
+gyroTurn(-7, 1500);
+
+//Spin far side roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-40, -40, -40, -40);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+
+    gyroTurn(182, 1500);
 
     driveForDistancePID(-30, 75);
 
