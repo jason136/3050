@@ -210,6 +210,79 @@ void autoBlue1() {
 }
 
 void autoRed2() {
+ resetGyro();
+    setIndexer(0);
+
+    // drive to first roller
+    driveForDistancePID(-11, 150, 1000);
+    gyroTurn(-90, 1000);
+
+	setFlywheelSpeed(505);
+	spinFlywheel(true);
+
+    // spin first roller
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-40, -40, -40, -40);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+
+    gyroTurn(-7, 1500);
+
+    // fire 2 disks
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	//Stop spinning flywheel
+    spinFlywheel(false);
+
+    gyroTurn(-125, 1500);
+    
+    //Collect discs
+    spinIntake(127);
+
+    //Drive to center
+    driveForDistancePID(-40, 75);
+
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(200);
+
+    gyroTurn(-92, 1500);
+
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    //Stop spinning flywheel
+    spinIntake(0);
+    spinFlywheel(false);
 
  
 }
