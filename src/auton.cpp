@@ -231,12 +231,11 @@ void skillRun() {
     resetGyro();
     setIndexer(0);
 
-    //Origional Code
-    // drive to first roller
+    // drive to roller1
     driveForDistancePID(-11, 150, 1000);
     gyroTurn(90, 1000);
 
-	setFlywheelSpeed(505);
+	setFlywheelSpeed(525);
 	spinFlywheel(true);
 
     // spin first roller
@@ -247,7 +246,7 @@ void skillRun() {
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-    gyroTurn(5, 1500);
+gyroTurn(8, 1500);
 
     // fire 2 disks
     setIndexer(1);
@@ -265,7 +264,7 @@ void skillRun() {
 
     //Intake 3 disks
 
-    gyroTurn(123, 1500);
+gyroTurn(125, 1500);
 
     spinIntake(127);
 
@@ -275,7 +274,9 @@ void skillRun() {
 	spinFlywheel(true);
     pros::delay(200);
 
-    gyroTurn(-92, 1500);
+gyroTurn(-92, 1500);
+
+    pros::delay(1000);
 
     //fire 3 disks
     setIndexer(1);
@@ -300,26 +301,24 @@ void skillRun() {
 resetGyro();
     setIndexer(0);
 
-// Rotate either -268 or 92 (same)
-     gyroTurn(90, 1500);
+gyroTurn(92, 1500);
 
 //Startup flywheel
     setFlywheelSpeed(505);
 	spinFlywheel(true);
 
-//Disc collection
+//Intake 3 disks
     spinIntake(127);
+    driveForDistancePID(-15, 75);
 
 // drive to far side rollers 
 //(continuing from the midfield position at Void autoRed1())
-     driveForDistancePID(-40, 75);
+     driveForDistancePID(15, 75);
 
 // Repostion to shoot
-//Either 235 or -125 (same)
-gyroTurn(-90, 1500);
+gyroTurn(-92, 1500);
 
-// fire 2 disks
- // fire 2 disks
+// fire 3 disks
     //Fire disc 1
     setIndexer(1);
     pros::delay(200);
@@ -333,14 +332,254 @@ gyroTurn(-90, 1500);
     pros::delay(200);
     setIndexer(0);
 
+    setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
 	//Stop spinning flywheel
     spinFlywheel(false);
 
-//Reposition infront of roller
-//Either -7 or 353
-gyroTurn(-7, 1500);
+//Position to center row of disks
+driveForDistancePID(-10, 75);
+gyroTurn(92, 1500);
 
-//Spin far side roller
+//Intake 3 disks
+ spinIntake(127);
+
+    driveForDistancePID(-30, 75);
+
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(500);
+
+//Reposition to shoot
+gyroTurn(-40, 1500);
+
+// fire 3 disks
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	setFlywheelSpeed(510);
+    pros::delay(200);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	//Stop spinning flywheel
+    spinFlywheel(false);
+
+gyroTurn(40, 1500);
+
+    //Intake 2 disks
+    spinIntake(127);
+    driveForDistancePID(-15, 75);
+
+    //Position infront of roller
+    gyroTurn(30, 1500);
+    driveForDistancePID(-12, 150);
+    gyroTurn(-92, 1500);
+    driveForDistancePID(-12, 150);
+
+    //Spin roller3
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-40, -40, -40, -40);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+
+gyroTurn(-90, 1500);
+driveForDistancePID(-15, 150);
+gyroTurn(-90, 1500);
+driveForDistancePID(-15, 150);
+gyroTurn(90, 1500);
+driveForDistancePID(-15, 150);
+
+    ////Spin roller4
+    driveForDistancePID(-2, 150);
+    spinIntake(-80);
+    chassisMoveIndividuals(-40, -40, -40, -40);
+    pros::delay(500);
+    spinIntake(0);
+    driveForDistancePID(2, 150);
+
+setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(500);
+
+gyroTurn(-60, 1500);
+
+    //Fire 2 disks
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    //Stop spinning flywheel
+    spinFlywheel(false);
+
+gyroTurn(115, 1500);
+
+driveForDistancePID(-2, 75);
+gyroTurn(-3, 1500);
+
+//Intake 3 disks
+
+gyroTurn(125, 1500);
+
+    spinIntake(127);
+
+    driveForDistancePID(-40, 75);
+
+	setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(200);
+
+gyroTurn(-92, 1500);
+
+    pros::delay(1000);
+
+    //fire 3 disks
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    spinIntake(0);
+    spinFlywheel(false);
+
+
+    //Startup flywheel
+    setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(200);
+
+    //Intake 3 disks
+    spinIntake(127);
+    driveForDistancePID(-15, 75);
+     pros::delay(200);
+
+gyroTurn(130, 1500);
+
+    // fire 3 disks
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	//Stop spinning flywheel
+    spinFlywheel(false);
+
+gyroTurn(150, 1500);
+
+    //Intake 3 disks
+    setFlywheelSpeed(470);
+	spinFlywheel(true);
+    pros::delay(200);
+
+    spinIntake(127);
+
+    driveForDistancePID(-10, 75);
+
+    gyroTurn(90, 1500);
+    driveForDistancePID(-25, 75);
+
+gyroTurn(130, 1500);
+
+    //Fire 3 disks
+    //Fire disc 1
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+	setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 2
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    setFlywheelSpeed(510);
+    pros::delay(2000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+gyroTurn(-130, 1500);
+
+    //Intake 2 disks
+    spinIntake(127);
+
+    driveForDistancePID(-20, 75);
+
+gyroTurn (130, 1500);
+
+    //Fire 2 disks
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    setIndexer(1);
+    pros::delay(200);
+    setIndexer(0);
+
+    //Stop spinning flywheel
+    spinFlywheel(false);
+
+    //Spin Roller2
+    driveForDistancePID(15, 75);
+    gyroTurn (90, 1500);
+    driveForDistancePID(-15, 75);
+
     driveForDistancePID(-2, 150);
     spinIntake(-80);
     chassisMoveIndividuals(-40, -40, -40, -40);
@@ -349,7 +588,12 @@ gyroTurn(-7, 1500);
     driveForDistancePID(2, 150);
 
 
-    gyroTurn(92, 1500);
+gyroTurn (-175, 1500);
+
+
+resetGyro();
+    setIndexer(0);
+
 
     setEndgame(1);
     pros::delay(200);
@@ -367,5 +611,4 @@ gyroTurn(-7, 1500);
     pros::delay(200);
     setEndgame(0);
 
-    driveForDistancePID(-10, 75);
 }
