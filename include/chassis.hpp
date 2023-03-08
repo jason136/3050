@@ -44,8 +44,8 @@ void resetGyro();
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
 
-// positive is ccw, negative is cw
-void gyroTurn(int turnAngle, int time);
+// positive is cw, negative is ccw
+void gyroTurn(double turnAngle, int time);
 
 void initializeGps(
     double xInit = 0.0, 

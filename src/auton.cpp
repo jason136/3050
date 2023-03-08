@@ -58,7 +58,7 @@ void autoRed1() {
     setIndexer(0);
 
     // drive to first roller
-    driveForDistancePID(-11, 150, 1000);
+    driveForDistancePID(-10, 120);
     gyroTurn(90, 1000);
 
 	setFlywheelSpeed(505);
@@ -70,9 +70,11 @@ void autoRed1() {
     chassisMoveIndividuals(-40, -40, -40, -40);
     pros::delay(500);
     spinIntake(0);
-    driveForDistancePID(2, 150);
 
-    gyroTurn(7, 1500);
+    driveForDistancePID(3, 150);
+
+    pros::delay(200);
+    gyroTurn(5.5, 1300);
 
     // fire 2 disks
     //Fire disc 1
@@ -80,8 +82,8 @@ void autoRed1() {
     pros::delay(200);
     setIndexer(0);
 
-	setFlywheelSpeed(510);
-    pros::delay(2000);
+	// setFlywheelSpeed(505);
+    pros::delay(1200);
 
     //Fire disc 2
     setIndexer(1);
@@ -91,33 +93,38 @@ void autoRed1() {
 	//Stop spinning flywheel
     spinFlywheel(false);
 
-    gyroTurn(125, 1500);
+    gyroTurn(124, 1300);
+
+    pros::delay(200);
     
     //Collect discs
-    spinIntake(127);
+    spinIntake(200);
 
     //Drive to center
-    driveForDistancePID(-40, 75);
+    driveForDistancePID(-40, 90);
 
-	setFlywheelSpeed(470);
+    gyroTurn(-88, 1200);
+
+    pros::delay(1000);
+
+	setFlywheelSpeed(469);
 	spinFlywheel(true);
-    pros::delay(200);
 
-    gyroTurn(-92, 1500);
-
+    pros::delay(1000);
+    
     //Fire disc 1
     setIndexer(1);
     pros::delay(200);
     setIndexer(0);
 
-    pros::delay(1000);
+    pros::delay(500);
 
     //Fire disc 2
     setIndexer(1);
     pros::delay(200);
     setIndexer(0);
 
-    pros::delay(1000);
+    pros::delay(500);
 
     //Fire disc 3
     setIndexer(1);
@@ -131,81 +138,6 @@ void autoRed1() {
 }
 
 void autoBlue1() {
-
-    resetGyro();
-    setIndexer(0);
-
-    // drive to first roller
-    driveForDistancePID(-11, 150);
-    gyroTurn(-90, 1000);
-
-	setFlywheelSpeed(505);
-	spinFlywheel(true);
-
-    // spin first roller
-    driveForDistancePID(-2, 150);
-    spinIntake(-80);
-    chassisMoveIndividuals(-40, -40, -40, -40);
-    pros::delay(500);
-    spinIntake(0);
-    driveForDistancePID(2, 150);
-
-    gyroTurn(-7, 1500);
-
-    // fire 2 disks
-    // Disc 1
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-	setFlywheelSpeed(510);
-    pros::delay(2000);
-
-   //Disc 2
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    // Stop spinning flywheel
-	spinFlywheel(false);
-
-    //Turn; recollect discs
-    gyroTurn(-125, 1500);
-
-    //Disc collection
-    spinIntake(127);
-
-    // Drive to center
-    driveForDistancePID(-40, 75);
-
-	setFlywheelSpeed(470);
-	spinFlywheel(true);
-    pros::delay(200);
-
-    gyroTurn(92, 1500);
-
-    //Fire disc 1
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    pros::delay(1000);
-
-    //Fire disc 2
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    pros::delay(1000);
-
-    //Fire disc 3
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    //Stop spinning flywheel
-    spinIntake(0);
-    spinFlywheel(false);
 
 }
 
@@ -228,7 +160,7 @@ void autoRed2() {
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-    gyroTurn(-7, 1500);
+    gyroTurn(-10, 1500);
 
     // fire 2 disks
     //Fire disc 1
@@ -250,7 +182,7 @@ void autoRed2() {
     gyroTurn(-125, 1500);
     
     //Collect discs
-    spinIntake(127);
+    spinIntake(200);
 
     //Drive to center
     driveForDistancePID(-40, 75);
@@ -284,7 +216,6 @@ void autoRed2() {
     spinIntake(0);
     spinFlywheel(false);
 
- 
 }
 
 void autoBlue2() {
@@ -306,7 +237,7 @@ void autoBlue2() {
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-    gyroTurn(7, 1500);
+    gyroTurn(10, 1500);
 
     // fire 2 disks
     // Disc 1
@@ -374,78 +305,7 @@ void autoBlue3() {
 
 void skillRun() {
 
-    resetGyro();
-    setIndexer(0);
-
-    // drive to roller1
-    driveForDistancePID(-11, 150, 1000);
-    gyroTurn(90, 1000);
-
-	setFlywheelSpeed(525);
-	spinFlywheel(true);
-
-    // spin first roller
-    driveForDistancePID(-2, 150);
-    spinIntake(-80);
-    chassisMoveIndividuals(-40, -40, -40, -40);
-    pros::delay(675);
-    spinIntake(0);
-    driveForDistancePID(2, 150);
-
-gyroTurn(8, 1500);
-
-    // fire 2 disks
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-	setFlywheelSpeed(510);
-    pros::delay(2000);
-
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-	spinFlywheel(false);
-
-    //Intake 3 disks
-
-gyroTurn(125, 1500);
-
-    spinIntake(127);
-
-    driveForDistancePID(-40, 75);
-
-	setFlywheelSpeed(470);
-	spinFlywheel(true);
-    pros::delay(200);
-
-gyroTurn(-92, 1500);
-
-    pros::delay(1000);
-
-    //fire 3 disks
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    pros::delay(1000);
-
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    pros::delay(1000);
-
-    setIndexer(1);
-    pros::delay(200);
-    setIndexer(0);
-
-    spinIntake(0);
-    spinFlywheel(false);
-
-resetGyro();
-    setIndexer(0);
+    autoRed1();
 
 gyroTurn(92, 1500);
 

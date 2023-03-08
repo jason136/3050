@@ -161,14 +161,16 @@ void pollGyro() {
 }
 
 void calibrateGyro() {
+    pros::screen::print(TEXT_MEDIUM, 2, "calibrating");
     inertialSensor.reset();
+    pros::screen::print(TEXT_MEDIUM, 2, "calibrated");
 }
 
 void resetGyro() {
     inertialSensor.set_rotation(0);
 }
 
-void gyroTurn(int turnAngle, int time) {
+void gyroTurn(double turnAngle, int time) {
     
     while (inertialSensor.is_calibrating()) {
         pros::delay(5);
@@ -186,7 +188,7 @@ void gyroTurn(int turnAngle, int time) {
     std::cout << "pre turn rotation: " << inertialSensor.get_rotation() << " turnAngle " << turnAngle << std::endl;
 
     int direction;
-    if (turnAngle < 0) direction = 1;
+    if (turnAngle < 0.0) direction = 1;
     else direction = -1;
 
     for (int x = 0; x < time; x += 20)  {
