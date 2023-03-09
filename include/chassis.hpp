@@ -44,7 +44,8 @@ void resetGyro();
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
 
-// positive is cw, negative is ccw
+// Flywheel: positive is cw, negative is ccw
+// Intake: positive is ccw, negative is cw
 void gyroTurn(double turnAngle, int time);
 
 void initializeGps(
@@ -57,7 +58,8 @@ void initializeGps(
 
 void pollGps();
 
-void seek(int xCord, int yCord, int time);
+// X and Y cords are -1800 to 1800, direction true is gps frontside to target
+void seek(int xCord, int yCord, int time, bool direction=true);
 
 double visAimAssist(int sig);
 

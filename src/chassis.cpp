@@ -235,7 +235,7 @@ void pollGps() {
 
 }
 
-void seek(int xCord, int yCord, int time) {
+void seek(int xCord, int yCord, int time, bool direction) {
 
     double turn_Error;
     double turn_PidSpeed, turn_Derivitive, turn_TotalError, turn_PreviousError = 0.0;
@@ -253,7 +253,7 @@ void seek(int xCord, int yCord, int time) {
     std::vector<float> dampenerX;
     std::vector<float> dampenerY;
 
-    for (int x = 0; x < time; x += 1) {
+    for (int x = 0; x < time; x += 20) {
 
         pros::c::gps_status_s_t status = gpsSensor.get_status();
         float deltaX = xCord - status.x * 1000.0;
@@ -273,7 +273,7 @@ void seek(int xCord, int yCord, int time) {
         float degreesToTarget = fabs((radiansToTarget / 3.141592) * 180.0);
         float headingToTarget;
         
-        if (true) { // align gps frontside to target
+        if (direction) { // align gps frontside to target
             if (dampedDeltaX <= 0 && dampedDeltaY <= 0) {
                 headingToTarget = -(90 + degreesToTarget);
             }
@@ -287,7 +287,7 @@ void seek(int xCord, int yCord, int time) {
                 headingToTarget = -(90 - degreesToTarget);
             }
         }
-        else if (false) { // align gps backside to target
+        else { // align gps backside to target
             if (dampedDeltaX >= 0 && dampedDeltaY >= 0) {
                 headingToTarget = -(90 + degreesToTarget);
             }
