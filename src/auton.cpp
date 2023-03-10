@@ -323,70 +323,96 @@ void skillRun() {
 
     spinIntake(-80);
     chassisMoveIndividuals(-40, -40, -40, -40);
-    pros::delay(500);
+    pros::delay(750);
     spinIntake(0);
-    driveForDistancePID(2, 150);
+    driveForDistancePID(3, 150);
 
-	setFlywheelSpeed(480);
+	setFlywheelSpeed(462);
     spinFlywheel(true);
 
-    gyroTurn(92, 1500);
+    gyroTurn(86, 1500);
 
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
-	setFlywheelSpeed(510);
-    pros::delay(2000);
+    pros::delay(1000);
 
     //Fire disc 2
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
+
+    pros::delay (1000);
+
+    //Fire bandaid
+    setIndexer(1);
+    pros::delay(500);
+    setIndexer(0);
+
+    pros::delay (1000);
 
 	//Stop spinning flywheel
     spinFlywheel(false);
 
     gyroTurn(90, 1500);
-    spinIntake(127);
 
-    driveForDistancePID(-24, 50);
+    spinIntake(150);
+    driveForDistancePID(-8, 50);
+    driveForDistancePID(2, 50);
+    driveForDistancePID(-13, 25);
+    driveForDistancePID(12, 60);
 
     gyroTurn(-90, 1500);
 
     // COPIED FROM REDAUTO1
 
     // spin first roller
-    driveForDistancePID(-6, 150);
+    driveForDistancePID(-10, 150);
     spinIntake(-80);
     chassisMoveIndividuals(-40, -40, -40, -40);
-    pros::delay(500);
+    pros::delay(750);
     spinIntake(0);
     driveForDistancePID(2, 150);
 
-	setFlywheelSpeed(505);
+	setFlywheelSpeed(470);
 	spinFlywheel(true);
 
-    gyroTurn(-10, 1500);
+    gyroTurn(-102, 1500);
 
-    // fire 2 disks
+    // fire 3 disks
     //Fire disc 1
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
-	setFlywheelSpeed(510);
-    pros::delay(2000);
+    pros::delay(1000);
 
     //Fire disc 2
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    //Fire disc 3
+    setIndexer(1);
+    pros::delay(500);
+    setIndexer(0);
+
+    pros::delay(1000);
+
+    //Fire bandaid
+    setIndexer(1);
+    pros::delay(500);
     setIndexer(0);
 
 	//Stop spinning flywheel
     spinFlywheel(false);
 
-    gyroTurn(-125, 1500);
+    driveForDistancePID(4, 75);
+    pros::delay(200);
+    gyroTurn(-137, 1500);
     
     //Collect discs
     spinIntake(200);
@@ -398,25 +424,25 @@ void skillRun() {
 	spinFlywheel(true);
     pros::delay(200);
 
-    gyroTurn(92, 1500);
+    gyroTurn(93, 1500);
 
     //Fire disc 1
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
     pros::delay(1000);
 
     //Fire disc 2
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
     pros::delay(1000);
 
     //Fire disc 3
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
     //Stop spinning flywheel
@@ -424,7 +450,6 @@ void skillRun() {
     spinFlywheel(false);
 
     // END COPIED BIT
-
 
 gyroTurn(88, 500);
 seek(1200, -600, 1000, false);
@@ -443,21 +468,21 @@ seek(1200, -600, 1000, false);
 //(continuing from the midfield position at Void autoRed1())
     driveForDistancePID(30, 75);
 
-// Repostion to shoot
-gyroTurn(88, 1500);
+// Repostion to shoot (if doesnt work change to 90)
+gyroTurn(85, 1500);
 
 // fire 3 disks
     //Fire disc 1
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
 	setFlywheelSpeed(510);
-    pros::delay(2000);
+    pros::delay(1000);
 
     //Fire disc 2
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
     setFlywheelSpeed(510);
@@ -465,7 +490,7 @@ gyroTurn(88, 1500);
 
     //Fire disc 3
     setIndexer(1);
-    pros::delay(200);
+    pros::delay(500);
     setIndexer(0);
 
 	//Stop spinning flywheel
