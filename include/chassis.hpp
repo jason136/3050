@@ -44,8 +44,9 @@ void resetGyro();
 // Speed must take motor internal gearing into account
 void pivotTurn(int turnAngle, int speed);
 
-// Flywheel: positive is cw, negative is ccw
-// Intake: positive is ccw, negative is cw
+// (In relation to the flywheel:)
+//Flywheel: positive is right, negative is left
+// Intake: positive is left, negative is right
 void gyroTurn(double turnAngle, int time);
 
 void initializeGps(
